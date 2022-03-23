@@ -11,7 +11,7 @@ public class UserDtoConverter {
 
     public LoginDto createUserDtoToLoginDto(CreateUserDto cu){
         return LoginDto.builder()
-                .username(cu.getNick())
+                .username(cu.getUsername())
                 .password(cu.getPassword())
                 .build();
     }

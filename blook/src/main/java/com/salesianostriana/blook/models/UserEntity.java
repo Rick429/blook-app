@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +46,6 @@ public class UserEntity implements UserDetails {
     private String password2;
     private String avatar;
     private UserRole role;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
