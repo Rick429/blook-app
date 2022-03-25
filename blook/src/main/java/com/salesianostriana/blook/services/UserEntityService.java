@@ -7,6 +7,7 @@ import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,19 +18,19 @@ import java.util.UUID;
 
 @Service("userDetailsService")
 @RequiredArgsConstructor
-public class UserEntityService {
+public class UserEntityService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserEntityRepository userEntityRepository;
 
 
-    public UserDetails loadUserByUsername(String nick) throws UsernameNotFoundException {
-        return this.userEntityRepository.findFirstByNick(nick)
-                .orElseThrow(() -> new UsernameNotFoundException(nick + " no encontrado"));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return this.userEntityRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " no encontrado"));
     }
 
-    public Optional<UserEntity> findFirstByNick(String nick) {
-        return userEntityRepository.findFirstByNick(nick);
+    public Optional<UserEntity> findFirstByUsername(String username) {
+        return userEntityRepository.findFirstByUsername(username);
     }
 
     public UserEntity save(CreateUserDto newUser, MultipartFile avatar) {

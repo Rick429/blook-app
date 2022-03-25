@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +47,16 @@ public class UserEntity implements UserDetails {
     private String password2;
     private String avatar;
     private UserRole role;
+    @Builder.Default
+    @OneToMany(mappedBy = "autorLibroPublicado")
+    private List<Book> misLibros = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "userLibroFavorito")
+    private List<Book> misFavoritos = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "comentador", orphanRemoval = true)
+    private List<Comment> misComentarios = new ArrayList<>();
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

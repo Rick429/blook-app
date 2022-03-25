@@ -60,7 +60,7 @@ public class AuthenticationController {
     })
     @GetMapping("/me")
     public ResponseEntity<?> quienSoyYo(@AuthenticationPrincipal UserEntity user) {
-        Optional<UserEntity> u = userEntityService.findFirstByNick(user.getUsername());
+        Optional<UserEntity> u = userEntityService.findFirstByUsername(user.getUsername());
         return ResponseEntity.ok(userDtoConverter.UserEntityToGetUserDto(u.get()));
     }
 

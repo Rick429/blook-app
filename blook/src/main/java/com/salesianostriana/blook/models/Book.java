@@ -3,10 +3,8 @@ package com.salesianostriana.blook.models;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,6 +37,44 @@ public class Book implements Serializable {
     private LocalDate relase_date;
     private String cover;
     @Builder.Default
+    @OneToMany(mappedBy = "libro")
     private List<Chapter> chapters = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "autor_libro_publicado_id")
+    private UserEntity autorLibroPublicado;
+
+    @ManyToOne
+    @JoinColumn(name = "user_libro_favorito_id")
+    private UserEntity userLibroFavorito;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "libroComentado", orphanRemoval = true)
+    private List<Comment> comentarios = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "genreBook")
+    private List<Genre> genres = new ArrayList<>();
+
+    /** Helpers **/
+    public void addBookToUser(UserEntity u) {
+        autorLibroPublicado = u;
+        u.getMisLibros().add(this);
+    }
+
+    public void removeBookFromUser(UserEntity u) {
+        u.getMisLibros().remove(this);
+        autorLibroPublicado = null;
+    }
+
+    public void addBookFavoriteToUser(UserEntity u) {
+        userLibroFavorito = u;
+        u.getMisFavoritos().add(this);
+    }
+
+    public void removeBookFavoriteFromUser(UserEntity u) {
+        u.getMisFavoritos().remove(this);
+        userLibroFavorito = null;
+    }
 
 }
