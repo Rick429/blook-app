@@ -34,8 +34,7 @@ public class Genre implements Serializable {
     @JoinColumn(name = "genre_book_id")
     private Book genreBook;
 
-
-    /** HELPERS **/
+    /* HELPERS */
 
     public void addGenreToBook(Book book) {
         genreBook = book;

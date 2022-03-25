@@ -27,6 +27,7 @@ public class Comment implements Serializable {
     @MapsId("libro_comentado_id")
     @JoinColumn(name = "libro_comentado_id")
     private Book libroComentado;
+    private String comment;
     @CreatedDate
     private LocalDate createdDate;
 

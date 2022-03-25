@@ -36,7 +36,7 @@ public class Chapter implements Serializable {
     @JoinColumn(name = "libro_id")
     private Book libro;
 
-    /** HELPERS **/
+    /* HELPERS */
     public void addChapterToBook(Book b) {
         libro = b;
         b.getChapters().add(this);

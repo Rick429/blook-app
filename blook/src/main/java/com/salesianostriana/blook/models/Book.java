@@ -56,7 +56,7 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "genreBook")
     private List<Genre> genres = new ArrayList<>();
 
-    /** Helpers **/
+    /* HELPERS */
     public void addBookToUser(UserEntity u) {
         autorLibroPublicado = u;
         u.getMisLibros().add(this);
