@@ -7,7 +7,8 @@ class BlookStyle {
   static const Color secondaryColor = Color(0xFF71973F);
   static const Color tertiaryColor = Color(0xFF5B6F3F);
   static const Color quaternaryColor = Color(0xFF404040);
-  static Color greyBoxColor = const Color(0xFF6C727F).withOpacity(40);   
+  static const Color formColor = Color(0xFFC4C4C4);
+  static Color greyBoxColor = const Color(0xFF6C727F).withOpacity(0.6);   
   static const Color whiteColor = Color(0xFFFFFFFF);
   static const Color blackColor = Color(0xFF000000);
 
@@ -32,8 +33,8 @@ class BlookStyle {
         fontSize: 35,
       );
 
-  static TextStyle textTitleCustom(Color c, double fSize) => GoogleFonts.getFont(
-        'Nunito',
+  static TextStyle textCustom(Color c, double fSize) => GoogleFonts.getFont(
+        'Mohave',
         color: c,
         fontWeight: FontWeight.w700,
         fontSize: fSize,
