@@ -1,5 +1,6 @@
-import 'package:blook_app_flutter/screens/login_screen.dart';
-import 'package:blook_app_flutter/screens/menu_screen.dart';
+import 'package:blook_app_flutter/ui/login_screen.dart';
+import 'package:blook_app_flutter/ui/menu_screen.dart';
+import 'package:blook_app_flutter/ui/register_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const MenuScreen(),
         '/login': (context) => const LoginScreen(),
+        '/register':(context) => const RegisterScreen()
       },
     );
   }

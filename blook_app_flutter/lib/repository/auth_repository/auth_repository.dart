@@ -5,6 +5,6 @@ import 'package:blook_app_flutter/models/register_dto.dart';
 abstract class AuthRepository {
   Future<LoginResponse> login(LoginDto loginDto);
 
-  Future<LoginResponse> register(RegisterDto registerDto, filepath);
+  Future<LoginResponse> register(RegisterDto registerDto);
   
 }

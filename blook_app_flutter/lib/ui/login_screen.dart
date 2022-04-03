@@ -2,7 +2,7 @@ import 'package:blook_app_flutter/blocs/login_bloc/login_bloc.dart';
 import 'package:blook_app_flutter/models/login_dto.dart';
 import 'package:blook_app_flutter/repository/auth_repository/auth_repository.dart';
 import 'package:blook_app_flutter/repository/auth_repository/auth_repository_impl.dart';
-import 'package:blook_app_flutter/screens/menu_screen.dart';
+import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
-          margin: const EdgeInsets.only(top: 150),
+          margin: const EdgeInsets.only(top: 140),
           width: 300,
           child: Form(
             key: _formKey,
@@ -96,8 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 250,
                 ),
                 Container(
-                  height: 50,
-                  margin: const EdgeInsets.only(top: 80),
+                  height: 60,
+                  margin: const EdgeInsets.only(top: 50),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Container(
-                  height: 50,
+                  height: 60,
                   margin: const EdgeInsets.only(top: 20),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
@@ -150,9 +150,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   margin: const EdgeInsets.only(top: 180),
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   width: 300,
-                  height: 60,
+                  height: 80,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         primary: BlookStyle.primaryColor,
