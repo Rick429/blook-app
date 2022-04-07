@@ -1,3 +1,4 @@
+import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -7,7 +8,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 70),
+      color: BlookStyle.blackColor,
+      padding: const EdgeInsets.fromLTRB(10,50,10,20),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         Expanded(
           flex: 0,
@@ -25,7 +27,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     },
                   child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Icon(Icons.search),
+                  child: Icon(Icons.search, color: BlookStyle.whiteColor,),
                   ),
                 ),
                  GestureDetector(
@@ -34,7 +36,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     },
                   child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Icon(Icons.add),
+                  child: Icon(Icons.add, color: BlookStyle.whiteColor),
                   ),
                 ),
               ],

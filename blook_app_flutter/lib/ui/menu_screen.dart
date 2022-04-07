@@ -1,3 +1,6 @@
+import 'package:blook_app_flutter/ui/favorite_screen.dart';
+import 'package:blook_app_flutter/ui/my_books_screen.dart';
+import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
@@ -14,14 +17,15 @@ class _MenuScreenState extends State<MenuScreen> {
 
   List<Widget> pages = [
     const HomeScreen(),
-    const HomeScreen(),
-    const HomeScreen(),
+    const FavoriteScreen(),
+    const MyBooksScreen(),
     const HomeScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BlookStyle.quaternaryColor,
         body: pages[_currentIndex], bottomNavigationBar: _buildBottomBar());
   }
 
@@ -30,7 +34,7 @@ class _MenuScreenState extends State<MenuScreen> {
         decoration: const BoxDecoration(
             border: Border(
           top: BorderSide(
-            color: Color(0xfff1f1f1),
+            color: BlookStyle.quaternaryColor,
             width: 1.0,
           ),
         )),
@@ -42,8 +46,8 @@ class _MenuScreenState extends State<MenuScreen> {
             GestureDetector(
               child: Icon(Icons.home,
                   color: _currentIndex == 0
-                      ? Colors.black
-                      : const Color(0xff999999)),
+                      ? BlookStyle.primaryColor
+                      : BlookStyle.whiteColor),
               onTap: () {
                 setState(() {
                   _currentIndex = 0;
@@ -53,8 +57,8 @@ class _MenuScreenState extends State<MenuScreen> {
             GestureDetector(
               child: Icon(Icons.favorite,
                   color: _currentIndex == 1
-                      ? Colors.black
-                      : const Color(0xff999999)),
+                      ? BlookStyle.primaryColor
+                      : BlookStyle.whiteColor),
               onTap: () {
                 setState(() {
                   _currentIndex = 1;
@@ -64,8 +68,8 @@ class _MenuScreenState extends State<MenuScreen> {
             GestureDetector(
               child: Icon(Icons.bookmark,
                   color: _currentIndex == 2
-                      ? Colors.black
-                      : const Color(0xff999999)),
+                      ? BlookStyle.primaryColor
+                      : BlookStyle.whiteColor),
               onTap: () {
                 setState(() {
                   _currentIndex = 2;
@@ -75,8 +79,8 @@ class _MenuScreenState extends State<MenuScreen> {
             GestureDetector(
               child: Icon(Icons.person,
                   color: _currentIndex == 3
-                      ? Colors.black
-                      : const Color(0xff999999)),
+                      ? BlookStyle.primaryColor
+                      : BlookStyle.whiteColor),
               onTap: () {
                 setState(() {
                   _currentIndex = 3;

@@ -110,12 +110,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
-                      hintText: 'Nombre de usuario',
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Icon(Icons.mail_outline),
+                      ),
+                      hintText: 'correo electrónico',
                     ),
                     onSaved: (String? value) {},
                     validator: (String? value) {
                       return (value == null)
-                          ? 'Introduzca su nombre de usuario'
+                          ? 'Introduzca su correo electrónico'
                           : null;
                     },
                   ),
@@ -136,6 +140,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Icon(Icons.lock_outlined),
+                      ),
                       hintText: 'Contraseña',
                     ),
                     onSaved: (String? value) {},
@@ -162,13 +170,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         elevation: 15.0,
                       ),
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
+                        /* if (_formKey.currentState!.validate()) {
                           final loginDto = LoginDto(
                               username: usernameController.text,
                               password: passwordController.text);
                           BlocProvider.of<LoginBloc>(context)
                               .add(DoLoginEvent(loginDto));
-                        }
+                        } */
+                        Navigator.pushNamed(context, '/');
                       },
                       child: Text(
                         'Iniciar Sesión',

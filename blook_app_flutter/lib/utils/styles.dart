@@ -36,7 +36,7 @@ class BlookStyle {
   static TextStyle textCustom(Color c, double fSize) => GoogleFonts.getFont(
         'Mohave',
         color: c,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
         fontSize: fSize,
       );
 }
