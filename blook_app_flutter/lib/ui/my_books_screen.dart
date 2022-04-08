@@ -101,11 +101,16 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    const Icon(Icons.comment, color: BlookStyle.whiteColor),
-                                    Text("2500", style: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeTwo),)
-                                  ],
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/comments');
+                                  },
+                                  child: Column(
+                                    children: [
+                                      const Icon(Icons.comment, color: BlookStyle.whiteColor),
+                                      Text("2500", style: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeTwo),)
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

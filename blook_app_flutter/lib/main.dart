@@ -1,8 +1,13 @@
+import 'package:blook_app_flutter/ui/book_new_screen.dart';
 import 'package:blook_app_flutter/ui/book_screen.dart';
 import 'package:blook_app_flutter/ui/change_password_screen.dart';
+import 'package:blook_app_flutter/ui/chapter_new_screen.dart';
+import 'package:blook_app_flutter/ui/comments_screen.dart';
 import 'package:blook_app_flutter/ui/login_screen.dart';
+import 'package:blook_app_flutter/ui/menu_book_screen.dart';
 import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/ui/register_screen.dart';
+import 'package:blook_app_flutter/ui/report_screen.dart';
 import 'package:blook_app_flutter/ui/search_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +34,12 @@ class MyApp extends StatelessWidget {
         '/register':(context) => const RegisterScreen(),
         '/changepassword':(context) => const ChangePasswordScreen(),
         '/search':(context) => const SearchScreen(),
-        '/book':(context) => const BookScreen()
+        '/book':(context) => const MenuBookScreen(),
+        '/booknew':(context) => const BookNewScreen(),
+        '/chapternew':(context) => const ChapterNewScreen(),
+        '/comments':(context) => const CommentsScren(),
+        '/report':(context) => const ReportScreen(),
+        
       },
     );
   }

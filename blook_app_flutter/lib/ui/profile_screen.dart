@@ -144,7 +144,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   primary: BlookStyle.redColor,
                   elevation: 15.0,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
                 child: Text("Cerrar sesión",
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeThree))),

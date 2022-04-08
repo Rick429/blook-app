@@ -12,11 +12,12 @@ class _BookScreenState extends State<BookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.transparent,
+      backgroundColor: BlookStyle.blackColor,
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: ListView(
@@ -133,26 +134,31 @@ class _BookScreenState extends State<BookScreen> {
                       BlookStyle.textSizeThree,
                     ),
                   ),
-                  Container(
-                    width: 50,
-                    height: 30,
-                    margin: EdgeInsets.symmetric(horizontal:8),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                        color: BlookStyle.primaryColor,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      "+",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree),
-                      textAlign: TextAlign.center,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/chapternew');
+                    },
+                    child: Container(
+                      width: 50,
+                      height: 30,
+                      margin: EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                          color: BlookStyle.primaryColor,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        "+",
+                        style: BlookStyle.textCustom(
+                            BlookStyle.whiteColor, BlookStyle.textSizeThree),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
             Container(
-              margin: EdgeInsets.only(bottom: 20),
+              margin: const EdgeInsets.only(bottom: 20),
               height: 30,
               child: ListView(
                 scrollDirection: Axis.horizontal,
@@ -160,7 +166,7 @@ class _BookScreenState extends State<BookScreen> {
                   Container(
                     width: 70,
                     height: 20,
-                    margin: EdgeInsets.symmetric(horizontal:8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: BlookStyle.quaternaryColor,
@@ -175,7 +181,7 @@ class _BookScreenState extends State<BookScreen> {
                   Container(
                     width: 70,
                     height: 20,
-                    margin: EdgeInsets.symmetric(horizontal:8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: BlookStyle.quaternaryColor,
@@ -190,7 +196,7 @@ class _BookScreenState extends State<BookScreen> {
                   Container(
                     width: 70,
                     height: 20,
-                    margin: EdgeInsets.symmetric(horizontal:8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: BlookStyle.quaternaryColor,
@@ -205,7 +211,7 @@ class _BookScreenState extends State<BookScreen> {
                   Container(
                     width: 70,
                     height: 20,
-                    margin: EdgeInsets.symmetric(horizontal:8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: BlookStyle.quaternaryColor,
@@ -220,7 +226,7 @@ class _BookScreenState extends State<BookScreen> {
                   Container(
                     width: 70,
                     height: 20,
-                    margin: EdgeInsets.symmetric(horizontal:8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: BlookStyle.quaternaryColor,
@@ -235,66 +241,87 @@ class _BookScreenState extends State<BookScreen> {
                 ],
               ),
             ),
-           Container(
-            margin: const EdgeInsets.symmetric(vertical: 2, horizontal:8),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: BlookStyle.greyBoxColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: BlookStyle.greyBoxColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  elevation: 15.0,
                 ),
-                elevation: 15.0,
-              ),
-              onPressed: () {
-                
-              },
-              child: Text(
-                "Capítulo 1",
-                style: BlookStyle.textCustom(
-                    BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Capítulo 1",
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      color: BlookStyle.whiteColor,
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 2, horizontal:8),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: BlookStyle.greyBoxColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: BlookStyle.greyBoxColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  elevation: 15.0,
                 ),
-                elevation: 15.0,
-              ),
-              onPressed: () {
-                
-              },
-              child: Text(
-                "Capítulo 2",
-                style: BlookStyle.textCustom(
-                    BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Capítulo 2",
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      color: BlookStyle.whiteColor,
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 2, horizontal:8),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: BlookStyle.greyBoxColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: BlookStyle.greyBoxColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  elevation: 15.0,
                 ),
-                elevation: 15.0,
-              ),
-              onPressed: () {
-                
-              },
-              child: Text(
-                "Capítulo 3",
-                style: BlookStyle.textCustom(
-                    BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Capítulo 3",
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      color: BlookStyle.whiteColor,
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
           ],
         ),
       ),

@@ -293,7 +293,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             BlookStyle.whiteColor, BlookStyle.textSizeThree),
                         textAlign: TextAlign.center,
                       )),
-                )
+                ),
+                 Container(
+                  padding: const EdgeInsets.all(10),
+                  child: GestureDetector(
+                    child: Text(
+                      '¿Tienes una cuenta? Inicia sesión',
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/login');
+                    },
+                  ),
+                ),
               ],
             ),
           ),

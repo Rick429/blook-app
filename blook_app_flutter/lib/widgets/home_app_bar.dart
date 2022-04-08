@@ -32,7 +32,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                  GestureDetector(
                   onTap: () {
-                      Navigator.pushNamed(context, '/add');
+                      Navigator.pushNamed(context, '/booknew');
                     },
                   child: const Padding(
                   padding: EdgeInsets.all(8.0),
