@@ -54,62 +54,67 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: BlookStyle.quaternaryColor,
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.asset(
-                          "assets/images/portada.jpg",
-                          width: 130,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  SizedBox(
-                    height: 190,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Harry potter",
-                          style: BlookStyle.textCustom(
-                              BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                          textAlign: TextAlign.start,
-                        ),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Icon(Icons.remove_red_eye, color: BlookStyle.whiteColor,),
-                                  Text("3700", style: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeTwo),)
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Icon(Icons.comment, color: BlookStyle.whiteColor),
-                                  Text("2500", style: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeTwo),)
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, "/book");
+              },
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: BlookStyle.quaternaryColor,
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.asset(
+                            "assets/images/portada.jpg",
+                            width: 130,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          )),
                     ),
-                  )
-                ],
+                    SizedBox(
+                      height: 190,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Harry potter",
+                            style: BlookStyle.textCustom(
+                                BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                            textAlign: TextAlign.start,
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.remove_red_eye, color: BlookStyle.whiteColor,),
+                                    Text("3700", style: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeTwo),)
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.comment, color: BlookStyle.whiteColor),
+                                    Text("2500", style: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeTwo),)
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           

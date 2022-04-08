@@ -1,5 +1,6 @@
 import 'package:blook_app_flutter/ui/favorite_screen.dart';
 import 'package:blook_app_flutter/ui/my_books_screen.dart';
+import 'package:blook_app_flutter/ui/profile_screen.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class _MenuScreenState extends State<MenuScreen> {
     const HomeScreen(),
     const FavoriteScreen(),
     const MyBooksScreen(),
-    const HomeScreen(),
+    const ProfileScreen(),
   ];
 
   @override

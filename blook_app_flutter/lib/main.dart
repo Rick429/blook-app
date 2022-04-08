@@ -1,6 +1,9 @@
+import 'package:blook_app_flutter/ui/book_screen.dart';
+import 'package:blook_app_flutter/ui/change_password_screen.dart';
 import 'package:blook_app_flutter/ui/login_screen.dart';
 import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/ui/register_screen.dart';
+import 'package:blook_app_flutter/ui/search_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +26,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const MenuScreen(),
         '/login': (context) => const LoginScreen(),
-        '/register':(context) => const RegisterScreen()
+        '/register':(context) => const RegisterScreen(),
+        '/changepassword':(context) => const ChangePasswordScreen(),
+        '/search':(context) => const SearchScreen(),
+        '/book':(context) => const BookScreen()
       },
     );
   }

@@ -8,6 +8,7 @@ class BlookStyle {
   static const Color tertiaryColor = Color(0xFF5B6F3F);
   static const Color quaternaryColor = Color(0xFF404040);
   static const Color formColor = Color(0xFFC4C4C4);
+  static const Color redColor = Color(0xFFF35050);
   static Color greyBoxColor = const Color(0xFF6C727F).withOpacity(0.6);   
   static const Color whiteColor = Color(0xFFFFFFFF);
   static const Color blackColor = Color(0xFF000000);

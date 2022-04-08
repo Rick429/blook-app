@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late AuthRepository authRepository;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -96,12 +96,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 250,
                 ),
                 Container(
-                  height: 60,
+                  height: 50,
                   margin: const EdgeInsets.only(top: 50),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                    controller: usernameController,
+                    controller: emailController,
+                    textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: BlookStyle.greyBoxColor,
@@ -125,13 +126,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Container(
-                  height: 60,
+                  height: 50,
                   margin: const EdgeInsets.only(top: 20),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: passwordController,
                     obscureText: true,
+                    textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: BlookStyle.greyBoxColor,

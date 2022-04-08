@@ -100,12 +100,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: 250,
                 ),
                 Container(
-                  height: 60,
+                  height: 50,
                   margin: const EdgeInsets.only(top: 50),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: usernameController,
+                    textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: BlookStyle.greyBoxColor,
@@ -125,12 +126,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Container(
-                  height: 60,
+                  height: 50,
                   margin: const EdgeInsets.only(top: 10),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: nameController,
+                    textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: BlookStyle.greyBoxColor,
@@ -150,12 +152,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Container(
-                  height: 60,
+                  height: 50,
                   margin: const EdgeInsets.only(top: 10),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: lastnameController,
+                    textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: BlookStyle.greyBoxColor,
@@ -175,12 +178,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Container(
-                  height: 60,
+                  height: 50,
                   margin: const EdgeInsets.only(top: 10),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: emailController,
+                    textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: BlookStyle.greyBoxColor,
@@ -200,13 +204,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Container(
-                  height: 60,
+                  height: 50,
                   margin: const EdgeInsets.only(top: 10),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: passwordController,
                     obscureText: true,
+                    textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: BlookStyle.greyBoxColor,
@@ -228,13 +233,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Container(
-                  height: 60,
+                  height: 50,
                   margin: const EdgeInsets.only(top: 10),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: password2Controller,
                     obscureText: true,
+                    textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: BlookStyle.greyBoxColor,
