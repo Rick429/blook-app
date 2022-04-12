@@ -1,4 +1,0 @@
-#Thu Apr 07 18:48:16 CEST 2022
-base.0=C\:\\Users\\Intel I5\\Documents\\Repositorios\\blook-app\\blook_app_flutter\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
