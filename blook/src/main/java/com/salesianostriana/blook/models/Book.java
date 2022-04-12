@@ -3,6 +3,8 @@ package com.salesianostriana.blook.models;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Getter @Setter
 @AllArgsConstructor
@@ -34,6 +37,7 @@ public class Book implements Serializable {
     private UUID id;
     private String name;
     private String description;
+    @CreatedDate
     private LocalDate relase_date;
     private String cover;
     @Builder.Default

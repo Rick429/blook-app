@@ -60,14 +60,16 @@ public class AuthenticationController {
     })
     @GetMapping("/me")
     public ResponseEntity<?> quienSoyYo(@AuthenticationPrincipal UserEntity user) {
-        Optional<UserEntity> u = userEntityService.findFirstByUsername(user.getUsername());
+        Optional<UserEntity> u = userEntityService.findFirstByNick(user.getNick());
         return ResponseEntity.ok(userDtoConverter.UserEntityToGetUserDto(u.get()));
     }
 
     private JwtUserResponse convertUserToJwtUserResponse(UserEntity user, String jwt) {
         return JwtUserResponse.builder()
-                .username(user.getUsername())
+                .nick(user.getNick())
                 .email(user.getEmail())
+                .name(user.getName())
+                .lastname(user.getLastname())
                 .avatar(user.getAvatar())
                 .role(user.getRole().name())
                 .token(jwt)
@@ -85,10 +87,9 @@ public class AuthenticationController {
                     content = @Content),
     })
     @PostMapping("/auth/register")
-    public ResponseEntity<?> nuevoUsuario(@Valid @RequestPart("user") CreateUserDto newUser,
-                                          @RequestPart("avatar") MultipartFile avatar) {
+    public ResponseEntity<?> nuevoUsuario(@Valid @RequestPart("user") CreateUserDto newUser) {
 
-        UserEntity saved = userEntityService.save(newUser, avatar);
+        UserEntity saved = userEntityService.save(newUser);
 
         if (saved == null)
             return ResponseEntity.badRequest().build();
@@ -101,7 +102,7 @@ public class AuthenticationController {
         Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                loginDto.getUsername(),
+                                loginDto.getEmail(),
                                 loginDto.getPassword()
                         )
                 );

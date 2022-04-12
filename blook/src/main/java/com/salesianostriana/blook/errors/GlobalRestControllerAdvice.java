@@ -2,6 +2,7 @@ package com.salesianostriana.blook.errors;
 
 import com.salesianostriana.blook.errors.exceptions.BadRequestException;
 import com.salesianostriana.blook.errors.exceptions.EntityNotFound;
+import com.salesianostriana.blook.errors.exceptions.UnauthorizedException;
 import com.salesianostriana.blook.errors.models.ApiError;
 import com.salesianostriana.blook.errors.models.ApiSubError;
 import com.salesianostriana.blook.errors.models.ApiValidationSubError;
@@ -18,6 +19,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import javax.validation.ConstraintViolationException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +37,10 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
         return buildApiError400(ex, request);
     }
 
+    @ExceptionHandler({UnauthorizedException.class})
+    public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
+        return buildApiError403(ex, request);
+    }
 
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
@@ -101,6 +107,10 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> buildApiError404(Exception ex, WebRequest request) {
         return buildApiErrorStatus(HttpStatus.NOT_FOUND, ex, request);
+    }
+
+    private ResponseEntity<Object> buildApiError403(Exception ex, WebRequest request) {
+        return buildApiErrorStatus(HttpStatus.UNAUTHORIZED, ex, request);
     }
 
     private ResponseEntity<Object> buildApiErrorStatus(HttpStatus status, Exception ex, WebRequest request) {

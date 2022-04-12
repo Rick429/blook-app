@@ -1,6 +1,8 @@
 package com.salesianostriana.blook.dtos;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
@@ -15,7 +17,6 @@ public class CreateBookDto {
     @NotBlank
     private String description;
     private LocalDate relase_date;
-    @NotBlank
     private String cover;
 
 }

@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,26 +20,25 @@ import java.util.UUID;
 public class UserEntityService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
+    private final StorageService storageService;
     private final UserEntityRepository userEntityRepository;
 
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return this.userEntityRepository.findFirstByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " no encontrado"));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return this.userEntityRepository.findFirstByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email + " no encontrado"));
     }
 
-    public Optional<UserEntity> findFirstByUsername(String username) {
-        return userEntityRepository.findFirstByUsername(username);
+    public Optional<UserEntity> findFirstByNick(String nick) {
+        return userEntityRepository.findFirstByNick(nick);
     }
 
-    public UserEntity save(CreateUserDto newUser, MultipartFile avatar) {
-        String uri = "";
+    public UserEntity save(CreateUserDto newUser) {
         UserEntity userEntity = UserEntity.builder()
                 .password(passwordEncoder.encode(newUser.getPassword()))
-                .avatar(uri)
                 .name(newUser.getName())
                 .lastname(newUser.getLastname())
-                .username(newUser.getUsername())
+                .nick(newUser.getNick())
                 .email(newUser.getEmail())
                 .role(UserRole.USER)
                 .build();
@@ -50,5 +48,16 @@ public class UserEntityService implements UserDetailsService {
     public UserEntity findById(UUID id) {
         return userEntityRepository.findById(id)
                 .orElseThrow(() -> new OneEntityNotFound(id.toString(), UserEntity.class));
+    }
+
+    public UserEntity uploadAvatar (MultipartFile file, UserEntity user) {
+        Optional<UserEntity> u1 = userEntityRepository.findById(user.getId());
+        if(u1.isEmpty()){
+            throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
+        }else{
+            String uri = storageService.store(file);
+            u1.get().setAvatar(storageService.completeUri(uri));
+            return userEntityRepository.save(u1.get());
+        }
     }
 }

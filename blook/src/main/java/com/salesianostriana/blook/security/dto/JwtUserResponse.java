@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class JwtUserResponse {
 
-    private String username;
+    private String nick;
     private String name, lastname;
     private String email;
     private String avatar;

@@ -11,13 +11,14 @@ public class UserDtoConverter {
 
     public LoginDto createUserDtoToLoginDto(CreateUserDto cu){
         return LoginDto.builder()
-                .username(cu.getUsername())
+                .email(cu.getEmail())
                 .password(cu.getPassword())
                 .build();
     }
 
     public GetUserDto UserEntityToGetUserDto(UserEntity u) {
         return GetUserDto.builder()
+                .id(u.getId())
                 .name(u.getName())
                 .lastname(u.getLastname())
                 .avatar(u.getAvatar())

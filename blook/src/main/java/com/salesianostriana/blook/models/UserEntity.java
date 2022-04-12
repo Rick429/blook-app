@@ -39,7 +39,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     @NaturalId
-    private String username;
+    private String nick;
     private String name;
     private String lastname;
     private String email;
@@ -64,7 +64,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

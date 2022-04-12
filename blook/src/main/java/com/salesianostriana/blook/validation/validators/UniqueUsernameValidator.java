@@ -15,7 +15,7 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
     public void initialize(UniqueUsername constraintAnnotation) { }
 
     @Override
-    public boolean isValid(String username, ConstraintValidatorContext context) {
-        return !repository.existsByUsername(username);
+    public boolean isValid(String nick, ConstraintValidatorContext context) {
+        return !repository.existsByNick(nick);
     }
 }

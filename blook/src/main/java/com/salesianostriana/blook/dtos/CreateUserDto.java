@@ -18,8 +18,8 @@ import javax.validation.constraints.NotBlank;
 public class CreateUserDto {
 
     @NotBlank
-    @UniqueUsername(message = "{user.unique.username}")
-    private String username;
+    @UniqueUsername(message = "{user.unique.nick}")
+    private String nick;
     private String name;
     private String lastname;
     @NotBlank
