@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,19 +31,5 @@ public class Genre implements Serializable {
     private UUID id;
     private String name;
     private String description;
-    @ManyToOne
-    @JoinColumn(name = "genre_book_id")
-    private Book genreBook;
 
-    /* HELPERS */
-
-    public void addGenreToBook(Book book) {
-        genreBook = book;
-        book.getGenres().add(this);
-    }
-
-    public void removeGenreFromBook(Book book) {
-        book.getGenres().remove(this);
-        genreBook = null;
-    }
 }

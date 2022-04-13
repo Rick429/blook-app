@@ -57,7 +57,13 @@ public class Book implements Serializable {
     private List<Comment> comentarios = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "genreBook")
+    @ManyToMany
+    @JoinTable(joinColumns = @JoinColumn(name = "book_id",
+            foreignKey = @ForeignKey(name="FK_GENRES_BOOK")),
+            inverseJoinColumns = @JoinColumn(name = "genre_id",
+                    foreignKey = @ForeignKey(name="FK_BOOKS_GENRE")),
+            name = "genres"
+    )
     private List<Genre> genres = new ArrayList<>();
 
     /* HELPERS */

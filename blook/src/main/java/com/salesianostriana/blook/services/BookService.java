@@ -5,12 +5,13 @@ import com.salesianostriana.blook.dtos.CreateBookDto;
 import com.salesianostriana.blook.dtos.GetBookDto;
 import com.salesianostriana.blook.enums.UserRole;
 import com.salesianostriana.blook.errors.exceptions.EntityNotFound;
+import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
 import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
-import com.salesianostriana.blook.errors.exceptions.UnauthorizedException;
 import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.BookRepository;
+import com.salesianostriana.blook.repositories.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,13 +29,20 @@ public class BookService {
     private final StorageService storageService;
     private final BookDtoConverter bookDtoConverter;
     private final UserEntityService userEntityService;
+    private final UserEntityRepository userEntityRepository;
 
 
     public Book save(CreateBookDto createBookDto, MultipartFile file, UserEntity user){
-        String uri = storageService.store(file);
-        uri = storageService.completeUri(uri);
-
-        return bookRepository.save(bookDtoConverter.createBookDtoToBook(createBookDto, uri, user));
+        Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+        if(u.isEmpty()) {
+            throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
+        } else {
+            String uri = storageService.store(file);
+            uri = storageService.completeUri(uri);
+            Book b = bookDtoConverter.createBookDtoToBook(createBookDto, uri);
+            b.addBookToUser(u.get());
+            return bookRepository.save(b);
+        }
     }
 
     public Book findById (UUID id) {
@@ -50,15 +58,18 @@ public class BookService {
             throw new OneEntityNotFound(id.toString(), Book.class);
         } else {
             if(b1.get().getAutorLibroPublicado().getId().equals(user.getId())||
-                    b1.get().getAutorLibroPublicado().getRole().equals(UserRole.ADMIN)){
+                    user.getRole().equals(UserRole.ADMIN)){
                 String uri = storageService.store(file);
                 uri = storageService.completeUri(uri);
                 b1.get().setName(c.getName());
                 b1.get().setDescription(c.getDescription());
+                if(!b1.get().getCover().isEmpty()) {
+                    storageService.deleteFile(b1.get().getCover());
+                }
                 b1.get().setCover(uri);
                 return bookRepository.save(b1.get());
             } else {
-                throw new UnauthorizedException("No tiene permisos para realizar esta acción");
+                throw new ForbiddenException("No tiene permisos para realizar esta acción");
             }
         }
     }
@@ -103,8 +114,6 @@ public class BookService {
                         .collect(Collectors.toList());
             }
         }
-
     }
-
 
 }

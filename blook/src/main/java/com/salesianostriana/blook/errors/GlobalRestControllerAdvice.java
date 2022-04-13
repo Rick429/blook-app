@@ -2,7 +2,7 @@ package com.salesianostriana.blook.errors;
 
 import com.salesianostriana.blook.errors.exceptions.BadRequestException;
 import com.salesianostriana.blook.errors.exceptions.EntityNotFound;
-import com.salesianostriana.blook.errors.exceptions.UnauthorizedException;
+import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
 import com.salesianostriana.blook.errors.models.ApiError;
 import com.salesianostriana.blook.errors.models.ApiSubError;
 import com.salesianostriana.blook.errors.models.ApiValidationSubError;
@@ -37,8 +37,8 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
         return buildApiError400(ex, request);
     }
 
-    @ExceptionHandler({UnauthorizedException.class})
-    public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
+    @ExceptionHandler({ForbiddenException.class})
+    public ResponseEntity<?> handleUnauthorizedException(ForbiddenException ex, WebRequest request) {
         return buildApiError403(ex, request);
     }
 
@@ -110,7 +110,7 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> buildApiError403(Exception ex, WebRequest request) {
-        return buildApiErrorStatus(HttpStatus.UNAUTHORIZED, ex, request);
+        return buildApiErrorStatus(HttpStatus.FORBIDDEN, ex, request);
     }
 
     private ResponseEntity<Object> buildApiErrorStatus(HttpStatus status, Exception ex, WebRequest request) {

@@ -39,9 +39,8 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GetBookDto> findBookById(@PathVariable UUID id) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(bookDtoConverter.bookToGetBookDto(bookService.findById(id)));
+    public GetBookDto findBookById(@PathVariable UUID id) {
+        return bookDtoConverter.bookToGetBookDto(bookService.findById(id));
     }
 
     @PutMapping("/{id}")

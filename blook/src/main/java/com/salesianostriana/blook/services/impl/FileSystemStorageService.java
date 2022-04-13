@@ -132,12 +132,13 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void deleteFile(String filename) {
-        Path file = load(filename);
+    public void deleteFile(String uri) {
+        String name = uri.split("/")[4];
         try {
+            Path file = load(name);
             Files.delete(file);
         } catch (IOException e) {
-            throw new StorageException("No se pudo eliminar el fichero: " + filename, e);
+            throw new StorageException("No se pudo eliminar el fichero: " + name, e);
         }
     }
 

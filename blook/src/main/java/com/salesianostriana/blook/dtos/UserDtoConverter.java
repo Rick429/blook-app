@@ -5,9 +5,13 @@ import com.salesianostriana.blook.security.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class UserDtoConverter {
+
+    private final BookDtoConverter bookDtoConverter;
 
     public LoginDto createUserDtoToLoginDto(CreateUserDto cu){
         return LoginDto.builder()
@@ -19,12 +23,13 @@ public class UserDtoConverter {
     public GetUserDto UserEntityToGetUserDto(UserEntity u) {
         return GetUserDto.builder()
                 .id(u.getId())
+                .nick(u.getNick())
                 .name(u.getName())
                 .lastname(u.getLastname())
                 .avatar(u.getAvatar())
                 .email(u.getEmail())
-                .username(u.getUsername())
                 .role(u.getRole())
+                .libros(u.getMisLibros().stream().map(bookDtoConverter::bookToGetBookDto).collect(Collectors.toList()))
                 .build();
     }
 

@@ -5,6 +5,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +19,6 @@ public class CreateBookDto {
     @NotBlank
     private String description;
     private LocalDate relase_date;
-    private String cover;
+    private List<CreateGenreDto> generos = new ArrayList<>();
 
 }
