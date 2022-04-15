@@ -1,21 +1,16 @@
 package com.salesianostriana.blook.dtos;
 
 import lombok.*;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
 @Builder
-public class GetBookDto {
+public class GetGenreDto {
 
     private UUID id;
     private String name;
     private String description;
-    private LocalDate relase_date;
-    private String cover;
-    private List<GetChapterDto> chapters;
-    private List<GetCommentDto> comments;
+
 }

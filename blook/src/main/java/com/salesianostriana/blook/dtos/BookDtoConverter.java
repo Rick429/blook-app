@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public class BookDtoConverter {
 
     private final ChapterDtoConverter chapterDtoConverter;
+    private final CommentDtoConverter commentDtoConverter;
 
     public Book createBookDtoToBook(CreateBookDto createBookDto, String uri) {
         return Book.builder()
@@ -29,6 +30,7 @@ public class BookDtoConverter {
                 .cover(b.getCover())
                 .relase_date(b.getRelase_date())
                 .chapters(b.getChapters().stream().map(chapterDtoConverter::chapterToGetChapterDto).collect(Collectors.toList()))
+                .comments(b.getComentarios().stream().map(commentDtoConverter::commentToGetCommentDto).collect(Collectors.toList()))
                 .build();
     }
 }

@@ -1,6 +1,5 @@
 package com.salesianostriana.blook.dtos;
 
-import com.salesianostriana.blook.controllers.GetCommentDto;
 import com.salesianostriana.blook.models.Comment;
 import org.springframework.stereotype.Component;
 

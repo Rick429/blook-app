@@ -20,4 +20,12 @@ public class GenreDtoConverter {
                 .build();
     }
 
+    public GetGenreDto genreToGetGenreDto(Genre g) {
+        return GetGenreDto.builder()
+                .id(g.getId())
+                .name(g.getName())
+                .description(g.getDescription())
+                .build();
+    }
+
 }

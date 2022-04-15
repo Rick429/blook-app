@@ -1,4 +1,4 @@
-package com.salesianostriana.blook.controllers;
+package com.salesianostriana.blook.dtos;
 
 import lombok.*;
 

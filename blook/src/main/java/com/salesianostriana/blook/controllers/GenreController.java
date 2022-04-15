@@ -1,9 +1,6 @@
 package com.salesianostriana.blook.controllers;
 
-import com.salesianostriana.blook.dtos.CreateChapterDto;
-import com.salesianostriana.blook.dtos.CreateGenreDto;
-import com.salesianostriana.blook.dtos.GenreDtoConverter;
-import com.salesianostriana.blook.dtos.GetChapterDto;
+import com.salesianostriana.blook.dtos.*;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.services.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -49,5 +47,9 @@ public class GenreController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/all")
+    public List<GetGenreDto> findAllGenres (@AuthenticationPrincipal UserEntity user) {
+        return genreService.findAllGenres();
+    }
 
 }

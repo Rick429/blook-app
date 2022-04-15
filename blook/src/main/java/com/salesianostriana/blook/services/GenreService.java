@@ -1,18 +1,24 @@
 package com.salesianostriana.blook.services;
 
-import com.salesianostriana.blook.dtos.CreateGenreDto;
-import com.salesianostriana.blook.dtos.GenreDtoConverter;
+import com.salesianostriana.blook.dtos.*;
 import com.salesianostriana.blook.enums.UserRole;
 import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
+import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
 import com.salesianostriana.blook.models.Genre;
+import com.salesianostriana.blook.models.Report;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.BookRepository;
 import com.salesianostriana.blook.repositories.GenreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +67,18 @@ public class GenreService {
             genreRepository.deleteById(id);
         }
     }
+
+    public List<GetGenreDto> findAllGenres () {
+        List<Genre> lista = genreRepository.findAll();
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(Genre.class);
+        } else {
+            return lista.stream()
+                    .map(genreDtoConverter::genreToGetGenreDto)
+                    .collect(Collectors.toList());
+        }
+    }
+
 
 }
