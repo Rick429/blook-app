@@ -1,6 +1,9 @@
+import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/home_app_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -9,7 +12,16 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
+
+
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  @override
+  void initState() {
+    PreferenceUtils.init();
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   elevation: 15.0,
                 ),
                 onPressed: () {
+                  PreferenceUtils.remove(Constant.token);
                   Navigator.pushNamed(context, '/login');
                 },
                 child: Text("Cerrar sesión",

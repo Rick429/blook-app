@@ -25,7 +25,7 @@ class AuthRepositoryImpl extends AuthRepository {
         body: jsonEncode(loginDto.toJson()));
     if (response.statusCode == 201) {
       LoginResponse userLogged = LoginResponse.fromJson(json.decode(response.body));
-      PreferenceUtils.setString('username', userLogged.username);
+      PreferenceUtils.setString('nick', userLogged.nick);
       return userLogged;
     } else {
       final error = ErrorResponse.fromJson(json.decode(response.body));
@@ -35,24 +35,30 @@ class AuthRepositoryImpl extends AuthRepository {
 
   @override
   Future<LoginResponse> register(RegisterDto registerDto) async {
-    Map<String, String> headers = {
-      'Content-Type': 'application/json'
+     Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
     };
 
-      final response = await _client.post(
-        Uri.parse('${Constant.baseurl}auth/register'),
-        headers: headers,
-        body: jsonEncode(registerDto.toJson()));
-    
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('${Constant.baseurl}auth/register'),
+    );
+    request.files.add(http.MultipartFile.fromString(
+      'user',
+      jsonEncode(registerDto.toJson()),
+      contentType: MediaType('application', 'json'),
+      filename: "user",
+    ));
 
-    if (response.statusCode == 201) {
-      LoginResponse userLogged = LoginResponse.fromJson(json.decode(response.body));
-      PreferenceUtils.setString('token', userLogged.token);
-      PreferenceUtils.setString('username', userLogged.username);
+    request.headers.addAll(headers);
+    var res = await request.send();
+    final respStr = await res.stream.bytesToString();
+    if (res.statusCode == 201) {
+      LoginResponse userLogged = LoginResponse.fromJson(json.decode(respStr));
       return userLogged;
     } else {
-      final error = ErrorResponse.fromJson(json.decode(response.body));
-      throw Exception(error.mensaje);
+      final error = ErrorResponse.fromJson(json.decode(respStr));
+      throw error;
     }
   }
 }

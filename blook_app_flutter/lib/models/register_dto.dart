@@ -1,13 +1,13 @@
 class RegisterDto {
   RegisterDto({
-    required this.username,
+    required this.nick,
     required this.name,
     required this.lastname,
     required this.email,
     required this.password,
     required this.password2,
   });
-  late final String username;
+  late final String nick;
   late final String name;
   late final String lastname;
   late final String email;
@@ -16,7 +16,7 @@ class RegisterDto {
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['username'] = username;
+    _data['nick'] = nick;
     _data['name'] = name;
     _data['lastname'] = lastname;
     _data['email'] = email;

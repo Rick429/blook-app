@@ -18,7 +18,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController nickController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -105,7 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                    controller: usernameController,
+                    controller: nickController,
                     textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
@@ -277,7 +277,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           final registerDto = RegisterDto(
-                              username: usernameController.text,
+                              nick: nickController.text,
                               name: nameController.text,
                               lastname: lastnameController.text,
                               email: emailController.text,

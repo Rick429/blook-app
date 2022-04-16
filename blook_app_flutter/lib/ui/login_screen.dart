@@ -172,14 +172,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         elevation: 15.0,
                       ),
                       onPressed: () {
-                        /* if (_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           final loginDto = LoginDto(
-                              username: usernameController.text,
+                              email: emailController.text,
                               password: passwordController.text);
                           BlocProvider.of<LoginBloc>(context)
                               .add(DoLoginEvent(loginDto));
-                        } */
-                        Navigator.pushNamed(context, '/');
+                        }            
                       },
                       child: Text(
                         'Iniciar Sesión',
