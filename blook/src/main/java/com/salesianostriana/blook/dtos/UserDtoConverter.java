@@ -20,7 +20,7 @@ public class UserDtoConverter {
                 .build();
     }
 
-    public GetUserDto UserEntityToGetUserDto(UserEntity u) {
+    public GetUserDto userEntityToGetUserDto(UserEntity u) {
         return GetUserDto.builder()
                 .id(u.getId())
                 .nick(u.getNick())

@@ -61,7 +61,7 @@ public class AuthenticationController {
     @GetMapping("/me")
     public ResponseEntity<?> quienSoyYo(@AuthenticationPrincipal UserEntity user) {
         Optional<UserEntity> u = userEntityService.findFirstByNick(user.getNick());
-        return ResponseEntity.ok(userDtoConverter.UserEntityToGetUserDto(u.get()));
+        return ResponseEntity.ok(userDtoConverter.userEntityToGetUserDto(u.get()));
     }
 
     private JwtUserResponse convertUserToJwtUserResponse(UserEntity user, String jwt) {

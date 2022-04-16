@@ -1,6 +1,7 @@
 package com.salesianostriana.blook.services;
 
 import com.salesianostriana.blook.dtos.CreateUserDto;
+import com.salesianostriana.blook.dtos.EditUserDto;
 import com.salesianostriana.blook.enums.UserRole;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
 import com.salesianostriana.blook.models.UserEntity;
@@ -58,6 +59,32 @@ public class UserEntityService implements UserDetailsService {
             String uri = storageService.store(file);
             u1.get().setAvatar(storageService.completeUri(uri));
             return userEntityRepository.save(u1.get());
+        }
+    }
+
+    public UserEntity editUser(EditUserDto editUserDto, UserEntity user) {
+        Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+        if(u.isEmpty()){
+            throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
+        } else {
+            if(!editUserDto.getNick().isEmpty()) {
+                u.get().setNick(editUserDto.getNick());
+            }
+            if(!editUserDto.getName().isEmpty()){
+                u.get().setName(editUserDto.getName());
+            }
+            if(!editUserDto.getLastname().isEmpty()){
+                u.get().setLastname(editUserDto.getLastname());
+            }
+            if(!editUserDto.getEmail().isEmpty()){
+                u.get().setEmail(editUserDto.getEmail());
+            }
+            if(!editUserDto.getPassword().isEmpty()&&!editUserDto.getPassword2().isEmpty()){
+                u.get().setPassword(editUserDto.getPassword());
+                u.get().setPassword2(editUserDto.getPassword2());
+            }
+
+            return userEntityRepository.save(u.get());
         }
     }
 }

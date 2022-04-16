@@ -1,8 +1,15 @@
 package com.salesianostriana.blook.controllers;
 
 import com.salesianostriana.blook.dtos.*;
+import com.salesianostriana.blook.models.Chapter;
+import com.salesianostriana.blook.models.Comment;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.services.CommentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +27,16 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentDtoConverter commentDtoConverter;
 
+    @Operation(summary = "Crear un comentario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se crea el comentario correctamente",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Comment.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+    })
     @PostMapping("/{id}")
     public ResponseEntity<GetCommentDto> createComment(@Valid @RequestPart("comment") CreateCommentDto c,
                                                        @AuthenticationPrincipal UserEntity user,
@@ -28,11 +45,34 @@ public class CommentController {
                 .body(commentDtoConverter.commentToGetCommentDto(commentService.save(c,user, id)));
     }
 
+    @Operation(summary = "Obtener un comentario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se encuentra el comentario con el id dado",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Comment.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontró ningún comentario",
+                    content = @Content),
+    })
     @GetMapping("/{id}")
     public GetCommentDto findCommentById(@PathVariable UUID id, @AuthenticationPrincipal UserEntity user) {
         return commentDtoConverter.commentToGetCommentDto(commentService.findById(id, user.getId()));
     }
 
+    @Operation(summary = "Editar un comentario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se edita el comentario correctamente",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Comment.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontró el comentario",
+                    content = @Content),
+    })
     @PutMapping("/{id}")
     public GetCommentDto editComment(@Valid @RequestPart("comment") CreateCommentDto c,
                                      @AuthenticationPrincipal UserEntity user,
@@ -40,7 +80,16 @@ public class CommentController {
         return commentDtoConverter.commentToGetCommentDto(commentService.editComment(c, user, id));
     }
 
-
+    @Operation(summary = "Eliminar un comentario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se elimina el comentario correctamente",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Comment.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encuentró el comentario",
+                    content = @Content),
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id, @AuthenticationPrincipal UserEntity user){
         commentService.deleteComment(id, user.getId());
