@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:blook_app_flutter/blocs/upload_avatar_bloc/upload_avatar_bloc.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository_impl.dart';
 import 'package:flutter/material.dart';
