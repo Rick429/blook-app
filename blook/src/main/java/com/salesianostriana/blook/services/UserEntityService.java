@@ -1,12 +1,15 @@
 package com.salesianostriana.blook.services;
 
-import com.salesianostriana.blook.dtos.CreateUserDto;
-import com.salesianostriana.blook.dtos.EditUserDto;
+import com.salesianostriana.blook.dtos.*;
 import com.salesianostriana.blook.enums.UserRole;
+import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
+import com.salesianostriana.blook.models.Genre;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +26,7 @@ public class UserEntityService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
     private final UserEntityRepository userEntityRepository;
+    private final UserDtoConverter userDtoConverter;
 
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -85,6 +89,16 @@ public class UserEntityService implements UserDetailsService {
             }
 
             return userEntityRepository.save(u.get());
+        }
+    }
+
+    public Page<GetUserDto> findAllUsers (Pageable pageable) {
+        Page<UserEntity> lista = userEntityRepository.findAll(pageable);
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(UserEntity.class);
+        } else {
+            return lista.map(userDtoConverter::userEntityToGetUserDto);
         }
     }
 }

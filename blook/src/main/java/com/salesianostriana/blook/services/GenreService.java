@@ -11,6 +11,9 @@ import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.BookRepository;
 import com.salesianostriana.blook.repositories.GenreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +32,7 @@ public class GenreService {
 
     public Genre save(CreateGenreDto createGenreDto, UserEntity user){
 
-        if(user.getRole().equals(UserRole.ADMIN)){
+        if(user.getRole().equals(UserRole.USER)){
             return genreRepository.save(genreDtoConverter.createGenreDtoToGenre(createGenreDto));
         } else {
             throw new ForbiddenException("No tiene perminos para realizar esta acción");
@@ -68,17 +71,14 @@ public class GenreService {
         }
     }
 
-    public List<GetGenreDto> findAllGenres () {
-        List<Genre> lista = genreRepository.findAll();
+    public Page<GetGenreDto> findAllGenres (Pageable pageable) {
+        Page<Genre> lista = genreRepository.findAll(pageable);
 
         if(lista.isEmpty()) {
             throw new ListEntityNotFoundException(Genre.class);
         } else {
-            return lista.stream()
-                    .map(genreDtoConverter::genreToGetGenreDto)
-                    .collect(Collectors.toList());
+            return lista.map(genreDtoConverter::genreToGetGenreDto);
         }
     }
-
 
 }

@@ -13,6 +13,8 @@ import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.BookRepository;
 import com.salesianostriana.blook.repositories.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,32 +88,28 @@ public class BookService {
         }
     }
 
-    public List<GetBookDto> findAllBooks () {
-        List<Book> lista = bookRepository.findAll();
+    public Page<GetBookDto> findAllBooks (Pageable pageable) {
+        Page<Book> lista = bookRepository.findAll(pageable);
 
         if(lista.isEmpty()) {
             throw new ListEntityNotFoundException(Book.class);
         } else {
-            return lista.stream()
-                    .map(bookDtoConverter::bookToGetBookDto)
-                    .collect(Collectors.toList());
+            return lista.map(bookDtoConverter::bookToGetBookDto);
         }
     }
 
-    public List<GetBookDto> findAllBooksUser (String nick) {
+    public Page<GetBookDto> findAllBooksUser (String nick, Pageable pageable) {
         Optional<UserEntity> u1 = userEntityService.findFirstByNick(nick);
 
         if(u1.isEmpty()) {
             throw new EntityNotFound("No se pudo encontrar el usuario con nick: "+ nick );
         } else {
-            List<Book> lista = bookRepository.findByAutorLibroPublicado(u1.get());
+            Page<Book> lista = bookRepository.findByAutorLibroPublicado(u1.get(), pageable);
 
             if(lista.isEmpty()) {
                 throw new ListEntityNotFoundException(Book.class);
             } else {
-                return lista.stream()
-                        .map(bookDtoConverter::bookToGetBookDto)
-                        .collect(Collectors.toList());
+                return lista.map(bookDtoConverter::bookToGetBookDto);
             }
         }
     }

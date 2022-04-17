@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("*", "/auth/*").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/post/*").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/*").anonymous()
-                .antMatchers("*", "/download/*").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/giveadmin/*").anonymous()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("*").permitAll()
