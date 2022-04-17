@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
               return state is LoginSuccessState || state is LoginErrorState;
             }, listener: (context, state) {
               if (state is LoginSuccessState) {
-                PreferenceUtils.setString('token', state.loginResponse.token);
+                
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const MenuScreen()),

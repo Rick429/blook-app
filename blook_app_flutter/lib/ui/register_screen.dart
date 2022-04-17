@@ -1,4 +1,5 @@
 import 'package:blook_app_flutter/blocs/register_bloc/register_bloc.dart';
+import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/register_dto.dart';
 import 'package:blook_app_flutter/repository/auth_repository/auth_repository.dart';
 import 'package:blook_app_flutter/repository/auth_repository/auth_repository_impl.dart';
@@ -54,6 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return state is RegisterSuccessState || state is RegisterErrorState;
         }, listener: (context, state) {
           if (state is RegisterSuccessState) {
+            PreferenceUtils.setString(Constant.token, state.loginResponse.token);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const MenuScreen()),

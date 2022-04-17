@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:equatable/equatable.dart';
 import 'package:blook_app_flutter/models/login_dto.dart';
 import 'package:blook_app_flutter/models/login_response.dart';
@@ -17,6 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _doLoginEvent(DoLoginEvent event, Emitter<LoginState> emit) async {
     try {
       final loginResponse = await authRepository.login(event.loginDto);
+      PreferenceUtils.setString('token', loginResponse.token);
       emit(LoginSuccessState(loginResponse));
       return;
     } on Exception catch (e) {
