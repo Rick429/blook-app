@@ -40,25 +40,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => ImagePickBloc()),
-          BlocProvider(create: (context) => UploadAvatarBloc(userRepository))
-        ],
-        child: Scaffold(
-          backgroundColor: BlookStyle.blackColor,
+    return Scaffold(
+      backgroundColor: BlookStyle.blackColor,
       appBar: const HomeAppBar(),
-            body: RefreshIndicator(
-                onRefresh: () async {},
-                child: SingleChildScrollView(child: _createBody(context)))));
-  }
-
-  
-  Widget _createBody(BuildContext context) {
-    return  Container(
-    
-      child: Column(children: [
-        BlocConsumer<ImagePickBloc, ImagePickState>(
+      body: BlocProvider(
+        create: (context) {
+          return ImagePickBloc(userRepository);
+        },
+        child: BlocConsumer<ImagePickBloc, ImagePickState>(
             listenWhen: (context, state) {
               return state is ImageSelectedSuccessState;
             },
@@ -69,41 +58,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
             builder: (context, state) {
               if (state is ImageSelectedSuccessState) {
-                PreferenceUtils.setString(Constant.avatar, state.pickedFile.path);
-                return Column(
-                  children: [
-                   Center(
-              child: Text("MI PERFIL",
-                  style: BlookStyle.textCustom(
-                      BlookStyle.whiteColor, BlookStyle.textSizeFive)),
-            ),
-            GestureDetector(
-              onTap: () {
-               BlocProvider.of<ImagePickBloc>(context)
-                          .add(const SelectImageEvent(ImageSource.gallery));
-                BlocProvider.of<UploadAvatarBloc>(context).add(
-                                  AvatarUploadEvent(PreferenceUtils.getString('avatar') ?? ""));
-              },
-              child: Container(
-                  width: 130,
-                  height: 130,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage(PreferenceUtils.getString("avat")??"assets/images/portada.jpg",
-                        headers: {
-                          'Authorization':
-                              'Bearer ${PreferenceUtils.getString('token')}'
-                        },)))),
-            ),
-                  ],
-                );
-                
+                return buildProfile(context, state);
               }
-              return Column(
-                  children: [
-                   Center(
+              return buildProfile(context, state);
+            }),
+      ),
+    );
+  }
+
+
+  Widget buildProfile(BuildContext context, state) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+          children: [
+            Center(
               child: Text("MI PERFIL",
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeFive)),
@@ -112,8 +81,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
               BlocProvider.of<ImagePickBloc>(context)
                           .add(const SelectImageEvent(ImageSource.gallery));
-                          BlocProvider.of<UploadAvatarBloc>(context).add(
-                                  AvatarUploadEvent(PreferenceUtils.getString('avatar') ?? ""));
               },
               child: Container(
                   width: 130,
@@ -126,50 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         headers: {
                           'Authorization':
                               'Bearer ${PreferenceUtils.getString('token')}'
-                        },)))),)
-                  ],
-                );
-            }),
-        BlocConsumer<UploadAvatarBloc, UploadAvatarState>(listenWhen: (context, state) {
-          return state is UploadAvatarSuccessState ||
-              state is UploadAvatarErrorState;
-        }, listener: (context, state) {
-          if (state is UploadAvatarSuccessState) {
-            Navigator.pushNamed(context, "/");
-    
-          } else if (state is UploadAvatarErrorState) {
-            _showSnackbar(context, state.toString());
-          }
-        }, buildWhen: (context, state) {
-          return state is UploadAvatarInitial || state is UploadAvatarLoadingState;
-        }, builder: (ctx, state) {
-          if (state is UploadAvatarInitial) {
-            return buildProfile(ctx, state);
-          } else if (state is UploadAvatarLoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return buildProfile(ctx, state);
-          }
-        })
-      ]),
-    );
-  }
-
- 
-  void _showSnackbar(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-
-  Widget buildProfile(BuildContext context, state) {
-    return SizedBox(
-      height: 420,
-      child: Column(
-          children: [
-            
+                        },)))),),
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(14.0),
