@@ -1,5 +1,17 @@
+import 'dart:io';
+
+import 'package:blook_app_flutter/blocs/book_new_bloc/book_new_bloc.dart';
+import 'package:blook_app_flutter/models/create_book_dto.dart';
+import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
+import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
+import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+typedef OnPickImageCallback = void Function(
+    double? maxWidth, double? maxHeight, int? quality);
 
 class BookNewScreen extends StatefulWidget {
   const BookNewScreen({Key? key}) : super(key: key);
@@ -9,10 +21,23 @@ class BookNewScreen extends StatefulWidget {
 }
 
 class _BookNewScreenState extends State<BookNewScreen> {
+  List<XFile>? _imageFileList;
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController genreController = TextEditingController();
+  late BookRepository bookRepository;
+  final ImagePicker _picker = ImagePicker();
+  set _imageFile(XFile? value) {
+    _imageFileList = value == null ? null : <XFile>[value];
+  }
+
+  @override
+  void initState() {
+    bookRepository = BookRepositoryImpl();
+    PreferenceUtils.init();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +57,30 @@ class _BookNewScreenState extends State<BookNewScreen> {
         ),
       ),
       backgroundColor: BlookStyle.blackColor,
-      body: SingleChildScrollView(
+      body: BlocProvider(
+        create: (context) {
+          return BookNewBloc(bookRepository);
+        },
+        child: BlocConsumer<BookNewBloc, BookNewState>(
+            listenWhen: (context, state) {
+              return state is CreateBookSuccessState;
+            },
+            listener: (context, state) {},
+            buildWhen: (context, state) {
+              return state is BookNewInitial || state is CreateBookSuccessState;
+            },
+            builder: (context, state) {
+              if (state is CreateBookSuccessState) {
+                return buildForm(context, state);
+              }
+              return buildForm(context, state);
+            }),
+      ),
+    );
+  }
+
+  Widget buildForm(BuildContext context, state) {
+    return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -42,12 +90,16 @@ class _BookNewScreenState extends State<BookNewScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      height: 200,
-                      decoration: BoxDecoration(
-                          color: BlookStyle.greyBoxColor,
-                          borderRadius: BorderRadius.circular(20)),
+                    GestureDetector(
+                      onTap: () async {
+                        final XFile? pickedFile = await _picker.pickImage(
+                            source: ImageSource.gallery);
+                            setState(() {
+                              PreferenceUtils.setString("cover", pickedFile!.path);
+                            });
+                        
+                      },
+                      child: Image.file(File(PreferenceUtils.getString("cover")??""), height: 200,),
                     ),
                     Container(
                       height: 50,
@@ -126,7 +178,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
                               : null;
                         },
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -139,7 +191,16 @@ class _BookNewScreenState extends State<BookNewScreen> {
                       elevation: 15.0,
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/chapternew');
+                      if (_formKey.currentState!.validate()) {
+                        final createBookDto = CreateBookDto(
+                            name: nameController.text,
+                            description: descriptionController.text);
+
+                        BlocProvider.of<BookNewBloc>(context).add(
+                            CreateBookEvent(PreferenceUtils.getString("cover")!,
+                                createBookDto));
+                        Navigator.pushNamed(context, '/chapternew');
+                      }
                     },
                     child: Text("Siguiente",
                         style: BlookStyle.textCustom(
@@ -147,7 +208,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
               )
             ],
           ),
-        ),
+        
       ),
     );
   }
