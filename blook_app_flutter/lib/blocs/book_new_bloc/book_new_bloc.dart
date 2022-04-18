@@ -11,6 +11,7 @@ part 'book_new_state.dart';
 
 class BookNewBloc extends Bloc<BookNewEvent, BookNewState> {
   final BookRepository bookRepository;
+  
   BookNewBloc(this.bookRepository) : super(BookNewInitial()) {
     on<CreateBookEvent>(_onSelectImage);
   }

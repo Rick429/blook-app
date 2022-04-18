@@ -1,14 +1,21 @@
 import 'dart:io';
 
 import 'package:blook_app_flutter/blocs/book_new_bloc/book_new_bloc.dart';
+import 'package:blook_app_flutter/blocs/genres_bloc/genres_bloc.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
+import 'package:blook_app_flutter/models/genre_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
+import 'package:blook_app_flutter/repository/genre_repository/genre_repository.dart';
+import 'package:blook_app_flutter/repository/genre_repository/genre_repository_impl.dart';
+import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
+import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
@@ -27,7 +34,11 @@ class _BookNewScreenState extends State<BookNewScreen> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController genreController = TextEditingController();
   late BookRepository bookRepository;
+  late GenreRepository genreRepository;
   final ImagePicker _picker = ImagePicker();
+  late List<Genre> lista;
+  late GenresBloc _genresbloc;
+  late List<Object?> _selectedgenres;
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
   }
@@ -35,33 +46,49 @@ class _BookNewScreenState extends State<BookNewScreen> {
   @override
   void initState() {
     bookRepository = BookRepositoryImpl();
+    genreRepository = GenreRepositoryImpl();
     PreferenceUtils.init();
+    _genresbloc = GenresBloc(genreRepository)..add(FetchAllGenres());
+
     super.initState();
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Center(
-          child: Container(
-            margin: const EdgeInsets.only(right: 60),
-            child: Text(
-              "PUBLICAR",
-              style: BlookStyle.textCustom(
-                  BlookStyle.whiteColor, BlookStyle.textSizeFive),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => BookNewBloc(bookRepository)),
+          BlocProvider(create: (context) => _genresbloc)
+        ],
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              iconTheme: const IconThemeData(color: Colors.white),
+              title: Center(
+                child: Container(
+                  margin: const EdgeInsets.only(right: 60),
+                  child: Text(
+                    "PUBLICAR",
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeFive),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-      backgroundColor: BlookStyle.blackColor,
-      body: BlocProvider(
-        create: (context) {
-          return BookNewBloc(bookRepository);
-        },
-        child: BlocConsumer<BookNewBloc, BookNewState>(
+            backgroundColor: BlookStyle.blackColor,
+            body: RefreshIndicator(
+                onRefresh: () async {},
+                child: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    child: _createBody(context)))));
+  }
+
+  Widget _createBody(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(children: [
+        BlocConsumer<BookNewBloc, BookNewState>(
             listenWhen: (context, state) {
               return state is CreateBookSuccessState;
             },
@@ -75,140 +102,154 @@ class _BookNewScreenState extends State<BookNewScreen> {
               }
               return buildForm(context, state);
             }),
-      ),
+        BlocBuilder<GenresBloc, GenresState>(
+          bloc: _genresbloc,
+          builder: (context, state) {
+            if (state is GenresInitial) {
+              return Container(
+                  child: const Center(child: CircularProgressIndicator()));
+            } else if (state is GenresFetchError) {
+              return ErrorPage(
+                message: state.message,
+                retry: () {
+                  context.watch<GenresBloc>().add(FetchAllGenres());
+                },
+              );
+            } else if (state is GenresFetched) {
+              return _genresList(context, state.genres);
+            } else {
+              return const Text('Not support');
+            }
+          },
+        ),
+      ]),
+    );
+  }
+
+  Widget _genresList(context, List<Genre> genresList) {
+    return Column(
+      children: [
+        Container(
+            margin: const EdgeInsets.all(10),
+            height: 150,
+            child: MultiSelectDialogField(
+              decoration: BoxDecoration(
+                color: BlookStyle.greyBoxColor,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              items: genresList.map((e) => MultiSelectItem(e, e.name)).toList(),
+              listType: MultiSelectListType.CHIP,
+              onConfirm: (values) {
+                _selectedgenres = values;
+              },
+            )),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 8),
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: BlookStyle.primaryColor,
+                elevation: 15.0,
+              ),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  final createBookDto = CreateBookDto(
+                      name: nameController.text,
+                      description: descriptionController.text,
+                      generos: _selectedgenres);
+
+                  BlocProvider.of<BookNewBloc>(context).add(CreateBookEvent(
+                      PreferenceUtils.getString("cover")!, createBookDto));
+                  Navigator.pushNamed(context, '/chapternew');
+                }
+              },
+              child: Text("Siguiente",
+                  style: BlookStyle.textCustom(
+                      BlookStyle.whiteColor, BlookStyle.textSizeThree))),
+        )
+      ],
     );
   }
 
   Widget buildForm(BuildContext context, state) {
-    return SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: ListView(
-            children: [
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        final XFile? pickedFile = await _picker.pickImage(
-                            source: ImageSource.gallery);
-                            setState(() {
-                              PreferenceUtils.setString("cover", pickedFile!.path);
-                            });
-                        
-                      },
-                      child: Image.file(File(PreferenceUtils.getString("cover")??""), height: 200,),
-                    ),
-                    Container(
-                      height: 50,
-                      margin: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                        controller: nameController,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: BlookStyle.greyBoxColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          hintStyle: BlookStyle.textCustom(
-                              BlookStyle.formColor, BlookStyle.textSizeTwo),
-                          hintText: 'Nombre del libro',
-                        ),
-                        onSaved: (String? value) {},
-                        validator: (String? value) {
-                          return (value == null)
-                              ? 'Introduzca el nombre del libro'
-                              : null;
-                        },
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      margin: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                        controller: descriptionController,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: BlookStyle.greyBoxColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          hintStyle: BlookStyle.textCustom(
-                              BlookStyle.formColor, BlookStyle.textSizeTwo),
-                          hintText: 'Descripción del libro',
-                        ),
-                        onSaved: (String? value) {},
-                        validator: (String? value) {
-                          return (value == null)
-                              ? 'Introduzca la descripción del libro'
-                              : null;
-                        },
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      margin: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                        controller: descriptionController,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: BlookStyle.greyBoxColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          hintStyle: BlookStyle.textCustom(
-                              BlookStyle.formColor, BlookStyle.textSizeTwo),
-                          hintText: 'Géneros',
-                        ),
-                        onSaved: (String? value) {},
-                        validator: (String? value) {
-                          return (value == null)
-                              ? 'Seleccione los géneros del libro'
-                              : null;
-                        },
-                      ),
-                    ),
-                  ],
+    return SizedBox(
+      height: 345,
+      child: Column(
+        children: [
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    BlocProvider.of<GenresBloc>(context).add(FetchAllGenres());
+                    final XFile? pickedFile =
+                        await _picker.pickImage(source: ImageSource.gallery);
+                    setState(() {
+                      PreferenceUtils.setString("cover", pickedFile!.path);
+                    });
+                  },
+                  child: Image.file(
+                    File(PreferenceUtils.getString("cover") ?? ""),
+                    height: 200,
+                  ),
                 ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.fromLTRB(10, 100, 10, 8),
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: BlookStyle.primaryColor,
-                      elevation: 15.0,
+                Container(
+                  height: 50,
+                  margin: const EdgeInsets.all(10),
+                  child: TextFormField(
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                    controller: nameController,
+                    textAlignVertical: TextAlignVertical.bottom,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: BlookStyle.greyBoxColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      hintStyle: BlookStyle.textCustom(
+                          BlookStyle.formColor, BlookStyle.textSizeTwo),
+                      hintText: 'Nombre del libro',
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final createBookDto = CreateBookDto(
-                            name: nameController.text,
-                            description: descriptionController.text);
-
-                        BlocProvider.of<BookNewBloc>(context).add(
-                            CreateBookEvent(PreferenceUtils.getString("cover")!,
-                                createBookDto));
-                        Navigator.pushNamed(context, '/chapternew');
-                      }
+                    onSaved: (String? value) {},
+                    validator: (String? value) {
+                      return (value == null)
+                          ? 'Introduzca el nombre del libro'
+                          : null;
                     },
-                    child: Text("Siguiente",
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeThree))),
-              )
-            ],
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  margin: const EdgeInsets.all(10),
+                  child: TextFormField(
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                    controller: descriptionController,
+                    textAlignVertical: TextAlignVertical.bottom,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: BlookStyle.greyBoxColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      hintStyle: BlookStyle.textCustom(
+                          BlookStyle.formColor, BlookStyle.textSizeTwo),
+                      hintText: 'Descripción del libro',
+                    ),
+                    onSaved: (String? value) {},
+                    validator: (String? value) {
+                      return (value == null)
+                          ? 'Introduzca la descripción del libro'
+                          : null;
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        
+        ],
       ),
     );
   }
