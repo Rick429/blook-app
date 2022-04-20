@@ -1,5 +1,6 @@
 package com.salesianostriana.blook.dtos;
 
+import com.salesianostriana.blook.models.Genre;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -19,6 +20,6 @@ public class CreateBookDto {
     @NotBlank
     private String description;
     private LocalDate relase_date;
-    private List<CreateGenreDto> generos = new ArrayList<>();
+    private List<Genre> generos = new ArrayList<>();
 
 }

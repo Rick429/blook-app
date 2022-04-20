@@ -9,8 +9,10 @@ import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
 import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
 import com.salesianostriana.blook.models.Book;
+import com.salesianostriana.blook.models.Genre;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.BookRepository;
+import com.salesianostriana.blook.repositories.GenreRepository;
 import com.salesianostriana.blook.repositories.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +35,7 @@ public class BookService {
     private final BookDtoConverter bookDtoConverter;
     private final UserEntityService userEntityService;
     private final UserEntityRepository userEntityRepository;
+    private final GenreRepository genreRepository;
 
 
     public Book save(CreateBookDto createBookDto, MultipartFile file, UserEntity user){
@@ -42,6 +46,11 @@ public class BookService {
             String uri = storageService.store(file);
             uri = storageService.completeUri(uri);
             Book b = bookDtoConverter.createBookDtoToBook(createBookDto, uri);
+            List<Genre> list= new ArrayList<>();
+            for (Genre g:createBookDto.getGeneros()) {
+                list.add(genreRepository.findById(g.getId()).get());
+            }
+            b.getGenres().addAll(list);
             b.addBookToUser(u.get());
             return bookRepository.save(b);
         }
