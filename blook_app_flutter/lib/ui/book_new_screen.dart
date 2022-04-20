@@ -39,6 +39,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
   late List<Genre> lista;
   late GenresBloc _genresbloc;
   late List<Object?> _selectedgenres;
+
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
   }
@@ -49,11 +50,9 @@ class _BookNewScreenState extends State<BookNewScreen> {
     genreRepository = GenreRepositoryImpl();
     PreferenceUtils.init();
     _genresbloc = GenresBloc(genreRepository)..add(FetchAllGenres());
-
     super.initState();
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -98,6 +97,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
             },
             builder: (context, state) {
               if (state is CreateBookSuccessState) {
+                PreferenceUtils.setString("idbook", state.book.id);
                 return buildForm(context, state);
               }
               return buildForm(context, state);

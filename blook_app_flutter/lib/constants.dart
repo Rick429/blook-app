@@ -3,4 +3,5 @@ class Constant {
   static String baseurlapi = "https://api-blook.herokuapp.com/";
   static String token = "token";
   static String avatar = "avatar";
+  static String file = "file";
 }

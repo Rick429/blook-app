@@ -13,10 +13,10 @@ class BookNewBloc extends Bloc<BookNewEvent, BookNewState> {
   final BookRepository bookRepository;
   
   BookNewBloc(this.bookRepository) : super(BookNewInitial()) {
-    on<CreateBookEvent>(_onSelectImage);
+    on<CreateBookEvent>(_createNewBook);
   }
 
-  void _onSelectImage(CreateBookEvent event, Emitter<BookNewState> emit) async {
+  void _createNewBook(CreateBookEvent event, Emitter<BookNewState> emit) async {
     try {
       final book = await bookRepository.createBook(
           event.createBookDto, event.source.toString());
