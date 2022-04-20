@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:blook_app_flutter/constants.dart';
-import 'package:blook_app_flutter/models/book_dto.dart';
+import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
 import 'package:blook_app_flutter/models/error_response.dart';
 import 'package:blook_app_flutter/models/user_dto.dart';
@@ -14,7 +14,7 @@ class BookRepositoryImpl extends BookRepository {
 
   @override
   Future<Book> createBook(CreateBookDto createBookDto, String filename) async{
- var request = http.MultipartRequest(
+    var request = http.MultipartRequest(
       'POST', Uri.parse('${Constant.baseurl}book/'),);
 
       request.files.add(http.MultipartFile.fromString('book', jsonEncode(createBookDto.toJson()),
@@ -39,4 +39,19 @@ class BookRepositoryImpl extends BookRepository {
       throw Exception(error.mensaje);
     }
   }
+
+  @override
+  Future<List<Book>>fetchMyBooks() async{
+     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/user/${PreferenceUtils.getString("nick")}?size=100'), headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    if (response.statusCode == 200) {
+      return BookResponse.fromJson(json.decode(response.body)).content;
+    } else {
+      throw Exception('Fail to load books');
+    }
+  }
+
 }

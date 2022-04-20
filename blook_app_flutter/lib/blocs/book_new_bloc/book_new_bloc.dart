@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:blook_app_flutter/models/book_dto.dart';
+import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:meta/meta.dart';

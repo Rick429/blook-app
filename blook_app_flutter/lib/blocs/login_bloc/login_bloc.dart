@@ -19,6 +19,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       final loginResponse = await authRepository.login(event.loginDto);
       PreferenceUtils.setString('token', loginResponse.token);
+      PreferenceUtils.setString('nick', loginResponse.nick);
       emit(LoginSuccessState(loginResponse));
       return;
     } on Exception catch (e) {
