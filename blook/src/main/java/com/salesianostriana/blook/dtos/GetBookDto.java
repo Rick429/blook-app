@@ -16,6 +16,7 @@ public class GetBookDto {
     private String description;
     private LocalDate relase_date;
     private String cover;
+    private String autor;
     private List<GetChapterDto> chapters;
     private List<GetCommentDto> comments;
 }
