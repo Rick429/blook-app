@@ -153,7 +153,7 @@ Widget _booksList(context, List<Book> mybooks) {
 
             GestureDetector(
               onTap: () {
-                PreferenceUtils.setString("id", book.id);
+                PreferenceUtils.setString("idbook", book.id);
                 Navigator.pushNamed(context, "/book");
               },
               child: Container(

@@ -1,4 +1,4 @@
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+
 import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
@@ -302,7 +302,8 @@ class _BookScreenState extends State<BookScreen> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(bottom: 20),
+            margin: const EdgeInsets.only(bottom: 150),
+            padding: EdgeInsets.only(bottom: 50),
             height: 300,
             child: ListView.builder(
               shrinkWrap: true,

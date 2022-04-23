@@ -16,7 +16,7 @@ class BookBloc extends Bloc<BookEvent, BookState> {
 
   void _BookFetched(FetchOneBook event, Emitter<BookState> emit) async {
     try {
-      final book = await bookRepository.findBookById(PreferenceUtils.getString("id")!);
+      final book = await bookRepository.findBookById(PreferenceUtils.getString("idbook")!);
       emit(OneBookFetched(book));
       return;
     } on Exception catch (e) {

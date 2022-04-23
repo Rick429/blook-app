@@ -174,7 +174,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                   borderRadius: BorderRadius.circular(20)
                 ),
                 child: Text(PreferenceUtils.getString(
-                          'image',)!, style: BlookStyle.textCustom(
+                          'image',) ?? "...", style: BlookStyle.textCustom(
                           BlookStyle.whiteColor, BlookStyle.textSizeTwo),),
               ),
               Container(

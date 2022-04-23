@@ -55,6 +55,7 @@ class AuthRepositoryImpl extends AuthRepository {
     final respStr = await res.stream.bytesToString();
     if (res.statusCode == 201) {
       LoginResponse userLogged = LoginResponse.fromJson(json.decode(respStr));
+      PreferenceUtils.setString('nick', userLogged.nick);
       return userLogged;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));
