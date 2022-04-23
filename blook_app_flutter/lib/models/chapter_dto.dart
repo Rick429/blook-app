@@ -1,4 +1,4 @@
-class Chapter {
+/* class Chapter {
   Chapter({
     required this.id,
     required this.name,
@@ -21,4 +21,4 @@ class Chapter {
     _data['file'] = file;
     return _data;
   }
-}
+} */

@@ -6,5 +6,7 @@ abstract class BookRepository {
   Future<Book> createBook(CreateBookDto createBookDto, String filename);
 
   Future<List<Book>>fetchMyBooks();
+
+  Future<Book> findBookById(String id);
   
 }

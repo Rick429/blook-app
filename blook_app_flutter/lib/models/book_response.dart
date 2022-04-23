@@ -62,6 +62,7 @@ class Book {
     required this.description,
     required this.relaseDate,
     required this.cover,
+    required this.autor,
     required this.chapters,
     required this.comments,
   });
@@ -70,8 +71,9 @@ class Book {
   late final String description;
   late final String relaseDate;
   late final String cover;
-  late final List<Chapters> chapters;
-  late final List<dynamic> comments;
+  late final String autor;
+  late final List<Chapter> chapters;
+  late final List<Comment> comments;
   
   Book.fromJson(Map<String, dynamic> json){
     id = json['id'];
@@ -79,8 +81,9 @@ class Book {
     description = json['description'];
     relaseDate = json['relase_date'];
     cover = json['cover'];
-    chapters = List.from(json['chapters']).map((e)=>Chapters.fromJson(e)).toList();
-    comments = List.castFrom<dynamic, dynamic>(json['comments']);
+    autor = json['autor'];
+    chapters = List.from(json['chapters']).map((e)=>Chapter.fromJson(e)).toList();
+    comments = List.from(json['comments']).map((e)=>Comment.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -90,14 +93,15 @@ class Book {
     _data['description'] = description;
     _data['relase_date'] = relaseDate;
     _data['cover'] = cover;
+    _data['autor'] = autor;
     _data['chapters'] = chapters.map((e)=>e.toJson()).toList();
-    _data['comments'] = comments;
+    _data['comments'] = comments.map((e)=>e.toJson()).toList();
     return _data;
   }
 }
 
-class Chapters {
-  Chapters({
+class Chapter {
+  Chapter({
     required this.id,
     required this.name,
     required this.file,
@@ -106,7 +110,7 @@ class Chapters {
   late final String name;
   late final String file;
   
-  Chapters.fromJson(Map<String, dynamic> json){
+  Chapter.fromJson(Map<String, dynamic> json){
     id = json['id'];
     name = json['name'];
     file = json['file'];
@@ -121,6 +125,42 @@ class Chapters {
   }
 }
 
+class Comment {
+  Comment({
+    required this.comment,
+    required this.userId,
+    required this.nick,
+     this.avatar,
+    required this.bookId,
+    required this.createdDate,
+  });
+  late final String comment;
+  late final String userId;
+  late final String nick;
+  late final Null avatar;
+  late final String bookId;
+  late final String createdDate;
+  
+  Comment.fromJson(Map<String, dynamic> json){
+    comment = json['comment'];
+    userId = json['user_id'];
+    nick = json['nick'];
+    avatar = null;
+    bookId = json['book_id'];
+    createdDate = json['created_date'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['comment'] = comment;
+    _data['user_id'] = userId;
+    _data['nick'] = nick;
+    _data['avatar'] = avatar;
+    _data['book_id'] = bookId;
+    _data['created_date'] = createdDate;
+    return _data;
+  }
+   }
 class Pageable {
   Pageable({
     required this.sort,

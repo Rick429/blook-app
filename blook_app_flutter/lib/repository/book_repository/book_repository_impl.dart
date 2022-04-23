@@ -54,4 +54,18 @@ class BookRepositoryImpl extends BookRepository {
     }
   }
 
+  @override
+  Future<Book>findBookById(String id) async{
+     final response = await _client.get(Uri.parse('${Constant.baseurl}book/${id}'), headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    if (response.statusCode == 200) {
+      return Book.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Fail to load book');
+    }
+  }
+
 }

@@ -1,14 +1,21 @@
+
+
+import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 
 class CommentsScren extends StatefulWidget {
-  const CommentsScren({Key? key}) : super(key: key);
+  final List<Comment> comments;
+  const CommentsScren({Key? key, required this.comments}) : super(key: key);
 
   @override
-  State<CommentsScren> createState() => _CommentsScrenState();
+  State<CommentsScren> createState() => _CommentsScrenState(comentarios: comments);
 }
 
 class _CommentsScrenState extends State<CommentsScren> {
+  List<Comment> comentarios;
+
+  _CommentsScrenState({required this.comentarios});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,10 +36,25 @@ class _CommentsScrenState extends State<CommentsScren> {
       backgroundColor: BlookStyle.blackColor,
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: ListView(
-              children: [
+          child: Container(
+          margin: const EdgeInsets.only(bottom: 100),
+          height: 500,
+          child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+            itemCount: comentarios.length,
+            itemBuilder: (context, index) {
+            return _comment(comentarios.elementAt(index));
+            },
+            ),
+          ),
+          )
+    );
+  }
+
+  Widget _comment(Comment comment){
+    return Column(
+      children: [
                 Container(
                   margin: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -101,8 +123,6 @@ class _CommentsScrenState extends State<CommentsScren> {
                   ),
                 )
               ],
-            ),
-          )),
     );
   }
 }

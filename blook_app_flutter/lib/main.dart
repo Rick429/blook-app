@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         '/book':(context) => const MenuBookScreen(),
         '/booknew':(context) => const BookNewScreen(),
         '/chapternew':(context) => const ChapterNewScreen(),
-        '/comments':(context) => const CommentsScren(),
+        '/comments':(context) => CommentsScren(comments: [],),
         '/report':(context) => const ReportScreen(),
         
       },

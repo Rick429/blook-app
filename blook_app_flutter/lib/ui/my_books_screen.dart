@@ -3,6 +3,7 @@ import 'package:blook_app_flutter/blocs/my_books_bloc/my_books_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
+import 'package:blook_app_flutter/ui/comments_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/error_page.dart';
@@ -55,12 +56,36 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
               return Container(
                   child: const Center(child: CircularProgressIndicator()));
             } else if (state is MyBooksFetchError) {
-              return ErrorPage(
-                message: state.message,
-                retry: () {
-                  context.watch<MyBooksBloc>().add(FetchAllMyBooks());
-                },
-              );
+              return Column(children: [
+                  Center(
+                child: Text("MIS LIBROS",
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeFive)),
+              ),Container(
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: BlookStyle.quaternaryColor,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        "Ordenado por: nombre",
+                        style: BlookStyle.textCustom(
+                            BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Icon(Icons.filter_list, color: BlookStyle.whiteColor,),
+                    )
+                  ],
+                ),
+              ),
+              ],);
             } else if (state is MyBooksFetched) {
               return _booksList(context, state.mybooks);
             } else {
@@ -128,6 +153,7 @@ Widget _booksList(context, List<Book> mybooks) {
 
             GestureDetector(
               onTap: () {
+                PreferenceUtils.setString("id", book.id);
                 Navigator.pushNamed(context, "/book");
               },
               child: Container(
@@ -178,7 +204,10 @@ Widget _booksList(context, List<Book> mybooks) {
                                 padding: const EdgeInsets.all(8.0),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.pushNamed(context, '/comments');
+                                     Navigator.of(context).push(
+                                       MaterialPageRoute(builder: (context)=>CommentsScren(comments: book.comments,)));
+                                  
+                                    
                                   },
                                   child: Column(
                                     children: [
