@@ -130,6 +130,7 @@ class _BookScreenState extends State<BookScreen> {
   Widget buildOne(context, Book book) {
     var lista;
     return SizedBox(
+      width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: ListView(
         children: [
@@ -175,15 +176,21 @@ class _BookScreenState extends State<BookScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            book.name,
-                            style: BlookStyle.textCustom(
-                                BlookStyle.whiteColor, BlookStyle.textSizeFive),
+                          SizedBox(
+                            width: 200,
+                            child: Text(
+                              book.name,
+                              style: BlookStyle.textCustom(
+                                  BlookStyle.whiteColor, BlookStyle.textSizeFive),
+                            ),
                           ),
-                          Text(
-                            book.autor,
-                            style: BlookStyle.textCustom(
-                                BlookStyle.whiteColor, BlookStyle.textSizeFour),
+                          SizedBox(
+                            width: 200,
+                            child: Text(
+                              book.autor,
+                              style: BlookStyle.textCustom(
+                                  BlookStyle.whiteColor, BlookStyle.textSizeFour),
+                            ),
                           ),
                         ],
                       ),

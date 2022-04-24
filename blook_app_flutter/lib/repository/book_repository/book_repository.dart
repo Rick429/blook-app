@@ -12,4 +12,6 @@ abstract class BookRepository {
   Future<Book> addFavoriteBook(String id);
 
   Future<List<Book>>fetchMyFavoriteBooks();
+
+   Future<List<Book>> fetchBooks(String type);
 }

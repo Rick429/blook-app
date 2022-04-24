@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: _createBody(context));
   }
 
-  _createBody(BuildContext context) {
+  Widget _createBody(BuildContext context) {
     return Scaffold(
       backgroundColor: BlookStyle.blackColor,
       body: Center(

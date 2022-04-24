@@ -79,7 +79,7 @@ class Book {
     id = json['id'];
     name = json['name'];
     description = json['description'];
-    releaseDate = json['release_date'];
+    releaseDate = json['releaseDate'];
     cover = json['cover'];
     autor = json['autor'];
     chapters = List.from(json['chapters']).map((e)=>Chapter.fromJson(e)).toList();
@@ -91,7 +91,7 @@ class Book {
     _data['id'] = id;
     _data['name'] = name;
     _data['description'] = description;
-    _data['release_date'] = releaseDate;
+    _data['releaseDate'] = releaseDate;
     _data['cover'] = cover;
     _data['autor'] = autor;
     _data['chapters'] = chapters.map((e)=>e.toJson()).toList();
