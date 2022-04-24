@@ -147,6 +147,20 @@ public class BookController {
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
 
+    @PostMapping("/favorite/{id}")
+    public ResponseEntity<GetBookDto> addFavoriteBook(@PathVariable UUID id,
+                                                      @AuthenticationPrincipal UserEntity user) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(bookDtoConverter.bookToGetBookDto(bookService.addFavoriteBook(id, user)));
+    }
 
+    @GetMapping("/all/favorite/{nick}")
+    public ResponseEntity<Page<GetBookDto>> findAllFavoriteBooks (@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                                  HttpServletRequest request,
+                                                                  @PathVariable String nick) {
+        Page<GetBookDto> lista = bookService.findAllFavoriteBooks(nick, pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
 
 }

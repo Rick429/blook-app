@@ -123,4 +123,36 @@ public class BookService {
         }
     }
 
+    public Book addFavoriteBook(UUID idbook, UserEntity user){
+        Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+        if(u.isEmpty()) {
+            throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
+        } else {
+            Optional<Book> b = bookRepository.findById(idbook);
+            if(b.isEmpty()) {
+                throw new OneEntityNotFound(idbook.toString(), Book.class);
+            } else {
+
+                b.get().addBookFavoriteToUser(u.get());
+                return bookRepository.save(b.get());
+            }
+        }
+    }
+
+    public Page<GetBookDto> findAllFavoriteBooks (String nick, Pageable pageable) {
+        Optional<UserEntity> u1 = userEntityService.findFirstByNick(nick);
+
+        if(u1.isEmpty()) {
+            throw new EntityNotFound("No se pudo encontrar el usuario con nick: "+ nick );
+        } else {
+            Page<Book> lista = bookRepository.findByUserLibroFavorito(u1.get(), pageable);
+
+            if(lista.isEmpty()) {
+                throw new ListEntityNotFoundException(Book.class);
+            } else {
+                return lista.map(bookDtoConverter::bookToGetBookDto);
+            }
+        }
+    }
+
 }

@@ -1,10 +1,8 @@
 package com.salesianostriana.blook.controllers;
 
 import com.salesianostriana.blook.dtos.EditUserDto;
-import com.salesianostriana.blook.dtos.GetBookDto;
 import com.salesianostriana.blook.dtos.GetUserDto;
 import com.salesianostriana.blook.dtos.UserDtoConverter;
-import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.services.UserEntityService;
 import com.salesianostriana.blook.utils.PaginationLinksUtils;
