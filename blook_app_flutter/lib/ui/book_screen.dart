@@ -1,8 +1,9 @@
-
 import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
+import 'package:blook_app_flutter/blocs/book_favorite_bloc/book_favorite_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
+import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/ui/pdf_viewer.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
@@ -32,7 +33,10 @@ class _BookScreenState extends State<BookScreen> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [BlocProvider(create: (context) => _oneBookBloc)],
+        providers: [
+          BlocProvider(create: (context) => _oneBookBloc),
+          BlocProvider(create: (context) => BookFavoriteBloc(bookRepository))
+        ],
         child: Scaffold(
             backgroundColor: BlookStyle.blackColor,
             appBar: AppBar(
@@ -49,27 +53,78 @@ class _BookScreenState extends State<BookScreen> {
   Widget _createBody(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: BlocBuilder<BookBloc, BookState>(
-        bloc: _oneBookBloc,
-        builder: (context, state) {
-          if (state is BookInitial) {
-            return Container(
-                child: const Center(child: CircularProgressIndicator()));
-          } else if (state is OneBookFetchError) {
-            return ErrorPage(
-              message: state.message,
-              retry: () {
-                context.watch<BookBloc>().add(FetchOneBook());
-              },
-            );
-          } else if (state is OneBookFetched) {
-            return buildOne(context, state.book);
-          } else {
-            return const Text('Not support');
-          }
-        },
+      child: Column(
+        children: [
+          BlocBuilder<BookBloc, BookState>(
+            bloc: _oneBookBloc,
+            builder: (context, state) {
+              if (state is BookInitial) {
+                return Container(
+                    child: const Center(child: CircularProgressIndicator()));
+              } else if (state is OneBookFetchError) {
+                return ErrorPage(
+                  message: state.message,
+                  retry: () {
+                    context.watch<BookBloc>().add(FetchOneBook());
+                  },
+                );
+              } else if (state is OneBookFetched) {
+                return buildOne(context, state.book);
+              } else {
+                return const Text('Not support');
+              }
+            },
+          ),
+
+          BlocConsumer<BookFavoriteBloc, BookFavoriteState>(
+                listenWhen: (context, state) {
+              return state is BookFavorite || state is BookFavoriteError;
+            }, listener: (context, state) {
+              if (state is BookFavorite) {
+                
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MenuScreen()),
+                );
+              } else if (state is BookFavoriteError) {
+                _showSnackbar(context, state.message);
+              }
+            }, buildWhen: (context, state) {
+              return state is BookFavoriteInitial;
+            }, builder: (ctx, state) {
+              if (state is BookFavoriteInitial) {
+                return favorite(ctx);
+              } else {
+                return favorite(ctx);
+              }
+            })
+        ],
       ),
     );
+  }
+
+  void _showSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Widget favorite (context) {
+    return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children:  [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        BlocProvider.of<BookFavoriteBloc>(context)
+                              .add(AddBookFavorite());
+                      },
+                      child: const Icon(Icons.favorite_border_outlined),),
+                  ),
+                ],
+              );
   }
 
   Widget buildOne(context, Book book) {
@@ -89,16 +144,18 @@ class _BookScreenState extends State<BookScreen> {
                           'Bearer ${PreferenceUtils.getString('token')}'
                     },
                     height: 260,
+                    width: 50,
                     fit: BoxFit.cover,
                   )),
               Container(
                 height: 260,
                 decoration: BoxDecoration(color: Colors.grey.withOpacity(0.5)),
               ),
+              favorite(context),
               Container(
                 height: 250,
-                margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   children: [
                     ClipRRect(
@@ -124,7 +181,7 @@ class _BookScreenState extends State<BookScreen> {
                                 BlookStyle.whiteColor, BlookStyle.textSizeFive),
                           ),
                           Text(
-                           book.autor,
+                            book.autor,
                             style: BlookStyle.textCustom(
                                 BlookStyle.whiteColor, BlookStyle.textSizeFour),
                           ),
@@ -321,7 +378,6 @@ class _BookScreenState extends State<BookScreen> {
   }
 
   Widget _chapterItem(Chapter chapter, index) {
-    
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
       child: ElevatedButton(
@@ -332,19 +388,15 @@ class _BookScreenState extends State<BookScreen> {
           ),
           elevation: 15.0,
         ),
-        
-        onPressed: ()  {
-
-          Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context)=>PdfViewer(document: chapter.file)));
- 
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => PdfViewer(document: chapter.file)));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Capitulo ${index+1}: "+
-              chapter.name,
+              "Capitulo ${index + 1}: " + chapter.name,
               style: BlookStyle.textCustom(
                   BlookStyle.whiteColor, BlookStyle.textSizeTwo),
             ),

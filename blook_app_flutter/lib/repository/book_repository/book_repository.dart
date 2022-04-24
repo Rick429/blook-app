@@ -9,4 +9,7 @@ abstract class BookRepository {
 
   Future<Book> findBookById(String id);
   
+  Future<Book> addFavoriteBook(String id);
+
+  Future<List<Book>>fetchMyFavoriteBooks();
 }

@@ -13,14 +13,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
-
 
 class _ProfileScreenState extends State<ProfileScreen> {
   List<XFile>? _imageFileList;
@@ -29,6 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
   }
+  var url = "https://i.ibb.co/RDRz7Ft/upload.png";
 
   @override
   void initState() {
@@ -65,7 +64,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-
   Widget buildProfile(BuildContext context, state) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
@@ -88,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           fit: BoxFit.fill,
-                         image: NetworkImage(PreferenceUtils.getString("avat")??"assets/images/portada.jpg",
+                         image: NetworkImage(PreferenceUtils.getString("avat")!,
                         headers: {
                           'Authorization':
                               'Bearer ${PreferenceUtils.getString('token')}'

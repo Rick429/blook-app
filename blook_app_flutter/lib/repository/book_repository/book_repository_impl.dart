@@ -68,4 +68,32 @@ class BookRepositoryImpl extends BookRepository {
     }
   }
 
+  @override
+  Future<Book>addFavoriteBook(String id) async{
+     final response = await _client.post(Uri.parse('${Constant.baseurl}book/favorite/${id}'), headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    if (response.statusCode == 201) {
+      return Book.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Fail to load book');
+    }
+  }
+
+  @override
+  Future<List<Book>>fetchMyFavoriteBooks() async{
+     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/favorite/${PreferenceUtils.getString("nick")}?size=100'), headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    if (response.statusCode == 200) {
+      return BookResponse.fromJson(json.decode(response.body)).content;
+    } else {
+      throw Exception('Fail to load books');
+    }
+  }
+
 }

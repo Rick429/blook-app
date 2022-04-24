@@ -1,5 +1,6 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
+import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -36,9 +37,11 @@ class _PdfViewerState extends State<PdfViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: BlookStyle.blackColor,
       appBar: AppBar(
-        title: Text('Example'),
-      ),
+              backgroundColor: Colors.transparent,
+              iconTheme: const IconThemeData(color: Colors.white),
+            ),
       body: Center(
         child: _isLoading
             ? Center(child: CircularProgressIndicator())

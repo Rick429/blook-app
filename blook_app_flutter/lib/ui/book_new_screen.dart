@@ -181,18 +181,14 @@ class _BookNewScreenState extends State<BookNewScreen> {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () async {
-                    BlocProvider.of<GenresBloc>(context).add(FetchAllGenres());
+                  onTap: () async {                
                     final XFile? pickedFile =
                         await _picker.pickImage(source: ImageSource.gallery);
                     setState(() {
                       PreferenceUtils.setString("cover", pickedFile!.path);
                     });
                   },
-                  child: Image.file(
-                    File(PreferenceUtils.getString("cover") ?? ""),
-                    height: 200,
-                  ),
+                  child: Image.file(File(PreferenceUtils.getString("cover")!), height: 200,)
                 ),
                 Container(
                   height: 50,
