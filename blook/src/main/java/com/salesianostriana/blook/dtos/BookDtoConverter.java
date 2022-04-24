@@ -28,7 +28,7 @@ public class BookDtoConverter {
                 .name(b.getName())
                 .description(b.getDescription())
                 .cover(b.getCover())
-                .relase_date(b.getReleaseDate())
+                .releaseDate(b.getReleaseDate())
                 .autor(b.getAutorLibroPublicado().getNick())
                 .chapters(b.getChapters().stream().map(chapterDtoConverter::chapterToGetChapterDto).collect(Collectors.toList()))
                 .comments(b.getComentarios().stream().map(commentDtoConverter::commentToGetCommentDto).collect(Collectors.toList()))

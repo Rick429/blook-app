@@ -14,7 +14,7 @@ public class GetBookDto {
     private UUID id;
     private String name;
     private String description;
-    private LocalDate relase_date;
+    private LocalDate releaseDate;
     private String cover;
     private String autor;
     private List<GetChapterDto> chapters;
