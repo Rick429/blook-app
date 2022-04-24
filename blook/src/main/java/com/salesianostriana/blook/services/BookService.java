@@ -156,7 +156,7 @@ public class BookService {
     }
 
     public Page<GetBookDto> findAllNewBooks (Pageable pageable) {
-        Page<Book> lista = bookRepository.findTop10OrderByRelease_DateDesc(pageable);
+        Page<Book> lista = bookRepository.findTop10OrderByReleaseDateDesc(pageable);
 
         if(lista.isEmpty()) {
             throw new ListEntityNotFoundException(Book.class);
@@ -167,7 +167,7 @@ public class BookService {
     }
 
     public Page<GetBookDto> findAllBooksOrderByName (Pageable pageable) {
-        Page<Book> lista = bookRepository.findAllOrderByNameDesc(pageable);
+        Page<Book> lista = bookRepository.findAllByOrderByNameDesc(pageable);
 
         if(lista.isEmpty()) {
             throw new ListEntityNotFoundException(Book.class);

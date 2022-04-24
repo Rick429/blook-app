@@ -38,7 +38,7 @@ public class Book implements Serializable {
     private String name;
     private String description;
     @CreatedDate
-    private LocalDate relase_date;
+    private LocalDate releaseDate;
     private String cover;
     @Builder.Default
     @OneToMany(mappedBy = "libro")
