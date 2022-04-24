@@ -154,9 +154,7 @@ class _BookScreenState extends State<BookScreen> {
               ),
               favorite(context),
               Container(
-                height: 250,
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.symmetric(vertical: 10),
+                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                 child: Row(
                   children: [
                     ClipRRect(
@@ -177,7 +175,7 @@ class _BookScreenState extends State<BookScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: 200,
+                            width: 180,
                             child: Text(
                               book.name,
                               style: BlookStyle.textCustom(
@@ -185,7 +183,7 @@ class _BookScreenState extends State<BookScreen> {
                             ),
                           ),
                           SizedBox(
-                            width: 200,
+                            width: 180,
                             child: Text(
                               book.autor,
                               style: BlookStyle.textCustom(

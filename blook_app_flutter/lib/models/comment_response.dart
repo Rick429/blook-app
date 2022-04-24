@@ -1,12 +1,10 @@
-import 'package:blook_app_flutter/models/comment_response.dart';
-
-class BookResponse {
-  BookResponse({
+class CommentResponse {
+  CommentResponse({
     required this.content,
     required this.pageable,
     required this.last,
-    required this.totalElements,
     required this.totalPages,
+    required this.totalElements,
     required this.size,
     required this.number,
     required this.sort,
@@ -14,11 +12,11 @@ class BookResponse {
     required this.numberOfElements,
     required this.empty,
   });
-  late final List<Book> content;
+  late final List<Comment> content;
   late final Pageable pageable;
   late final bool last;
-  late final int totalElements;
   late final int totalPages;
+  late final int totalElements;
   late final int size;
   late final int number;
   late final Sort sort;
@@ -26,12 +24,12 @@ class BookResponse {
   late final int numberOfElements;
   late final bool empty;
   
-  BookResponse.fromJson(Map<String, dynamic> json){
-    content = List.from(json['content']).map((e)=>Book.fromJson(e)).toList();
+  CommentResponse.fromJson(Map<String, dynamic> json){
+    content = List.from(json['content']).map((e)=>Comment.fromJson(e)).toList();
     pageable = Pageable.fromJson(json['pageable']);
     last = json['last'];
-    totalElements = json['totalElements'];
     totalPages = json['totalPages'];
+    totalElements = json['totalElements'];
     size = json['size'];
     number = json['number'];
     sort = Sort.fromJson(json['sort']);
@@ -45,8 +43,8 @@ class BookResponse {
     _data['content'] = content.map((e)=>e.toJson()).toList();
     _data['pageable'] = pageable.toJson();
     _data['last'] = last;
-    _data['totalElements'] = totalElements;
     _data['totalPages'] = totalPages;
+    _data['totalElements'] = totalElements;
     _data['size'] = size;
     _data['number'] = number;
     _data['sort'] = sort.toJson();
@@ -57,110 +55,76 @@ class BookResponse {
   }
 }
 
-class Book {
-  Book({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.releaseDate,
-    required this.cover,
-    required this.autor,
-    required this.chapters,
-    required this.comments,
+class Comment {
+  Comment({
+    required this.comment,
+    required this.userId,
+    required this.nick,
+     this.avatar,
+    required this.bookId,
+    required this.createdDate,
   });
-  late final String id;
-  late final String name;
-  late final String description;
-  late final String releaseDate;
-  late final String cover;
-  late final String autor;
-  late final List<Chapter> chapters;
-  late final List<Comment> comments;
+  late final String comment;
+  late final String userId;
+  late final String nick;
+  late final Null avatar;
+  late final String bookId;
+  late final String createdDate;
   
-  Book.fromJson(Map<String, dynamic> json){
-    id = json['id'];
-    name = json['name'];
-    description = json['description'];
-    releaseDate = json['releaseDate'];
-    cover = json['cover'];
-    autor = json['autor'];
-    chapters = List.from(json['chapters']).map((e)=>Chapter.fromJson(e)).toList();
-    comments = List.from(json['comments']).map((e)=>Comment.fromJson(e)).toList();
+  Comment.fromJson(Map<String, dynamic> json){
+    comment = json['comment'];
+    userId = json['user_id'];
+    nick = json['nick'];
+    avatar = null;
+    bookId = json['book_id'];
+    createdDate = json['created_date'];
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['name'] = name;
-    _data['description'] = description;
-    _data['releaseDate'] = releaseDate;
-    _data['cover'] = cover;
-    _data['autor'] = autor;
-    _data['chapters'] = chapters.map((e)=>e.toJson()).toList();
-    _data['comments'] = comments.map((e)=>e.toJson()).toList();
+    _data['comment'] = comment;
+    _data['user_id'] = userId;
+    _data['nick'] = nick;
+    _data['avatar'] = avatar;
+    _data['book_id'] = bookId;
+    _data['created_date'] = createdDate;
     return _data;
   }
 }
-
-class Chapter {
-  Chapter({
-    required this.id,
-    required this.name,
-    required this.file,
-  });
-  late final String id;
-  late final String name;
-  late final String file;
-  
-  Chapter.fromJson(Map<String, dynamic> json){
-    id = json['id'];
-    name = json['name'];
-    file = json['file'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['name'] = name;
-    _data['file'] = file;
-    return _data;
-  }
-}
-
 
 class Pageable {
   Pageable({
     required this.sort,
     required this.offset,
-    required this.pageSize,
     required this.pageNumber,
-    required this.unpaged,
+    required this.pageSize,
     required this.paged,
+    required this.unpaged,
   });
   late final Sort sort;
   late final int offset;
-  late final int pageSize;
   late final int pageNumber;
-  late final bool unpaged;
+  late final int pageSize;
   late final bool paged;
+  late final bool unpaged;
   
   Pageable.fromJson(Map<String, dynamic> json){
     sort = Sort.fromJson(json['sort']);
     offset = json['offset'];
-    pageSize = json['pageSize'];
     pageNumber = json['pageNumber'];
-    unpaged = json['unpaged'];
+    pageSize = json['pageSize'];
     paged = json['paged'];
+    unpaged = json['unpaged'];
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['sort'] = sort.toJson();
     _data['offset'] = offset;
-    _data['pageSize'] = pageSize;
     _data['pageNumber'] = pageNumber;
-    _data['unpaged'] = unpaged;
+    _data['pageSize'] = pageSize;
     _data['paged'] = paged;
+    _data['unpaged'] = unpaged;
     return _data;
   }
 }

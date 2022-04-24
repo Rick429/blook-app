@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:blook_app_flutter/constants.dart';
-import 'package:blook_app_flutter/models/book_response.dart';
+import 'package:blook_app_flutter/models/comment_response.dart';
 import 'package:blook_app_flutter/models/create_comment_dto.dart';
 import 'package:blook_app_flutter/models/error_response.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
@@ -39,4 +39,19 @@ class CommentRepositoryImpl extends CommentRepository {
       throw Exception(error.mensaje);
     }
   }
+
+  @override
+  Future<List<Comment>>fetchComments() async{
+     final response = await _client.get(Uri.parse('${Constant.baseurl}comment/all/${PreferenceUtils.getString("idbook")}?size=100'), headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    if (response.statusCode == 200) {
+      return CommentResponse.fromJson(json.decode(response.body)).content;
+    } else {
+      throw Exception('Fail to load comments');
+    }
+  }
+
 }

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:blook_app_flutter/models/book_response.dart';
+import 'package:blook_app_flutter/models/comment_response.dart';
 import 'package:blook_app_flutter/models/create_comment_dto.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
 import 'package:equatable/equatable.dart';

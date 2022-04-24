@@ -1,26 +1,44 @@
-import 'package:blook_app_flutter/models/book_response.dart';
+
+import 'package:blook_app_flutter/blocs/comments_bloc/comments_bloc.dart';
+import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
+import 'package:blook_app_flutter/repository/comment_repository/comment_repository_impl.dart';
 import 'package:blook_app_flutter/ui/comment_menu.dart';
+import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
+import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../models/comment_response.dart';
+
 class CommentsScren extends StatefulWidget {
-  final List<Comment> comments;
-  const CommentsScren({Key? key, required this.comments}) : super(key: key);
+  const CommentsScren({Key? key}) : super(key: key);
 
   @override
-  State<CommentsScren> createState() =>
-      _CommentsScrenState(comentarios: comments);
+  State<CommentsScren> createState() => _CommentsScrenState();
 }
 
 class _CommentsScrenState extends State<CommentsScren> {
-  List<Comment> comentarios;
+  late CommentRepository commentRepository;
+  late CommentsBloc _commentsbloc;
 
-  _CommentsScrenState({required this.comentarios});
+  @override
+  void initState() {
+    PreferenceUtils.init();
+    commentRepository = CommentRepositoryImpl();
+    _commentsbloc = CommentsBloc(commentRepository)..add(FetchAllComments());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        bottomNavigationBar: CommentMenu(),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => _commentsbloc)
+        ],
+        child: Scaffold(
+          bottomNavigationBar: CommentMenu(),
         appBar: AppBar(
           backgroundColor: Colors.black,
           iconTheme: const IconThemeData(color: Colors.white),
@@ -36,7 +54,40 @@ class _CommentsScrenState extends State<CommentsScren> {
           ),
         ),
         backgroundColor: BlookStyle.blackColor,
-        body: SingleChildScrollView(
+            body: RefreshIndicator(
+                onRefresh: () async {},
+                child: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    child: _createBody(context)))));
+  }
+
+  Widget _createBody(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child:  BlocBuilder<CommentsBloc, CommentsState>(
+          bloc: _commentsbloc,
+          builder: (context, state) {
+            if (state is CommentsInitial) {
+              return Container(
+                  child: const Center(child: CircularProgressIndicator()));
+            } else if (state is CommentsFetchError) {
+              return Center(
+                child: Text("No hay ningún comentario, se el primero en escribir algo", style: BlookStyle.textCustom(
+                              BlookStyle.whiteColor, BlookStyle.textSizeTwo),),
+              );
+            } else if (state is CommentsFetched) {
+              return _commentsList(context, state.comments);
+            } else {
+              return const Text('Not support');
+            }
+          },
+        ),
+      
+    );
+  }
+
+  Widget _commentsList(context, List<Comment> comentarios) {
+    return SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
             margin: const EdgeInsets.only(bottom: 100),
@@ -50,7 +101,7 @@ class _CommentsScrenState extends State<CommentsScren> {
               },
             ),
           ),
-        ));
+        );
   }
 
   Widget _comment(Comment comment) {
@@ -86,8 +137,8 @@ class _CommentsScrenState extends State<CommentsScren> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width / 2.5),
-                      padding: const EdgeInsets.only(left: 36),
+                          left: MediaQuery.of(context).size.width / 3.5),
+                      padding: const EdgeInsets.only(left: 8),
                       child: Text(
                         comment.createdDate,
                         style: BlookStyle.textCustom(

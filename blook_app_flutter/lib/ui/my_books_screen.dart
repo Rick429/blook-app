@@ -205,8 +205,7 @@ Widget _booksList(context, List<Book> mybooks) {
                                 padding: const EdgeInsets.all(8.0),
                                 child: GestureDetector(
                                   onTap: () {
-                                     Navigator.of(context).push(
-                                       MaterialPageRoute(builder: (context)=>CommentsScren(comments: book.comments,)));
+                                     Navigator.pushNamed(context, "/comments");
                                   
                                     
                                   },

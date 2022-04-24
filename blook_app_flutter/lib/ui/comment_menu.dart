@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentMenu extends StatefulWidget {
-
   const CommentMenu({Key? key}) : super(key: key);
 
   @override
@@ -19,22 +18,17 @@ class CommentMenu extends StatefulWidget {
 }
 
 class _CommentMenuState extends State<CommentMenu> {
-
-
-  
-
   final _formKey = GlobalKey<FormState>();
   TextEditingController commentController = TextEditingController();
 
   late CommentRepository commentRepository;
   @override
   void initState() {
-  
     commentRepository = CommentRepositoryImpl();
     super.initState();
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) {
@@ -43,34 +37,27 @@ class _CommentMenuState extends State<CommentMenu> {
         child: _createComment(context));
   }
 
-
   Widget _createComment(BuildContext context) {
     return BlocConsumer<CommentNewBloc, CommentNewState>(
-                listenWhen: (context, state) {
-              return state is CommentSuccessState || state is CommentErrorState;
-            }, listener: (context, state) {
-              if (state is CommentSuccessState) {
-                
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MenuScreen()),
-                );
-              } else if (state is CommentErrorState) {
-                _showSnackbar(context, state.message);
-              }
-            }, buildWhen: (context, state) {
-              return state is CommentNewInitial || state is CommentLoadingState;
-            }, builder: (ctx, state) {
-              if (state is CommentNewInitial) {
-                return _buildBottomBar(ctx);
-              } else if (state is CommentLoadingState) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return _buildBottomBar(ctx);
-              }
-            }
-      
-    );
+        listenWhen: (context, state) {
+      return state is CommentSuccessState || state is CommentErrorState;
+    }, listener: (context, state) {
+      if (state is CommentSuccessState) {
+        Navigator.pushNamed(context, "/comments");
+      } else if (state is CommentErrorState) {
+        _showSnackbar(context, state.message);
+      }
+    }, buildWhen: (context, state) {
+      return state is CommentNewInitial || state is CommentLoadingState;
+    }, builder: (ctx, state) {
+      if (state is CommentNewInitial) {
+        return _buildBottomBar(ctx);
+      } else if (state is CommentLoadingState) {
+        return const Center(child: CircularProgressIndicator());
+      } else {
+        return _buildBottomBar(ctx);
+      }
+    });
   }
 
   void _showSnackbar(BuildContext context, String message) {
@@ -91,7 +78,7 @@ class _CommentMenuState extends State<CommentMenu> {
         padding: const EdgeInsets.all(20),
         height: 100,
         child: Form(
-            key: _formKey,
+          key: _formKey,
           child: Row(
             children: [
               SizedBox(
@@ -124,21 +111,24 @@ class _CommentMenuState extends State<CommentMenu> {
               Padding(
                 padding: const EdgeInsets.all(4),
                 child: Container(
-                   width: 50,
+                    width: 50,
                     height: 50,
                     decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: BlookStyle.primaryColor),
-                  child: GestureDetector(
-                    onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          final createCommentDto = CreateCommentDto(
-                              comment: commentController.text);
-                          BlocProvider.of<CommentNewBloc>(context)
-                              .add(createCommentEvent(createCommentDto, PreferenceUtils.getString("idbook")!));
-                        }            
-                      },
-                    child: const Icon(Icons.send, color: BlookStyle.whiteColor,))),
+                        shape: BoxShape.circle, color: BlookStyle.primaryColor),
+                    child: GestureDetector(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            final createCommentDto = CreateCommentDto(
+                                comment: commentController.text);
+                            BlocProvider.of<CommentNewBloc>(context).add(
+                                createCommentEvent(createCommentDto,
+                                    PreferenceUtils.getString("idbook")!));
+                          }
+                        },
+                        child: const Icon(
+                          Icons.send,
+                          color: BlookStyle.whiteColor,
+                        ))),
               )
             ],
           ),
