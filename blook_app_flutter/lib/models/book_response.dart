@@ -60,7 +60,7 @@ class Book {
     required this.id,
     required this.name,
     required this.description,
-    required this.relaseDate,
+    required this.releaseDate,
     required this.cover,
     required this.autor,
     required this.chapters,
@@ -69,7 +69,7 @@ class Book {
   late final String id;
   late final String name;
   late final String description;
-  late final String relaseDate;
+  late final String releaseDate;
   late final String cover;
   late final String autor;
   late final List<Chapter> chapters;
@@ -79,7 +79,7 @@ class Book {
     id = json['id'];
     name = json['name'];
     description = json['description'];
-    relaseDate = json['relase_date'];
+    releaseDate = json['release_date'];
     cover = json['cover'];
     autor = json['autor'];
     chapters = List.from(json['chapters']).map((e)=>Chapter.fromJson(e)).toList();
@@ -91,7 +91,7 @@ class Book {
     _data['id'] = id;
     _data['name'] = name;
     _data['description'] = description;
-    _data['relase_date'] = relaseDate;
+    _data['release_date'] = releaseDate;
     _data['cover'] = cover;
     _data['autor'] = autor;
     _data['chapters'] = chapters.map((e)=>e.toJson()).toList();
@@ -137,7 +137,7 @@ class Comment {
   late final String comment;
   late final String userId;
   late final String nick;
-  late final Null avatar;
+  late final String? avatar;
   late final String bookId;
   late final String createdDate;
   
