@@ -1,16 +1,18 @@
 package com.salesianostriana.blook.services;
 
-import com.salesianostriana.blook.dtos.CommentDtoConverter;
-import com.salesianostriana.blook.dtos.CreateChapterDto;
-import com.salesianostriana.blook.dtos.CreateCommentDto;
+import com.salesianostriana.blook.dtos.*;
 import com.salesianostriana.blook.enums.UserRole;
+import com.salesianostriana.blook.errors.exceptions.EntityNotFound;
 import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
+import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
 import com.salesianostriana.blook.models.*;
 import com.salesianostriana.blook.repositories.BookRepository;
 import com.salesianostriana.blook.repositories.CommentRepository;
 import com.salesianostriana.blook.repositories.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -82,5 +84,19 @@ public class CommentService {
 
     }
 
+    public Page<GetCommentDto> findAllCommentsByBookId (UUID bookId, Pageable pageable) {
+        Optional<Book> b1 = bookRepository.findById(bookId);
 
+        if(b1.isEmpty()) {
+            throw new EntityNotFound("No se pudo encontrar el libro con id: "+ bookId );
+        } else {
+            Page<Comment> lista = commentRepository.findByLibroComentado(b1.get(), pageable);
+
+            if(lista.isEmpty()) {
+                throw new ListEntityNotFoundException(Comment.class);
+            } else {
+                return lista.map(commentDtoConverter::commentToGetCommentDto);
+            }
+        }
+    }
 }

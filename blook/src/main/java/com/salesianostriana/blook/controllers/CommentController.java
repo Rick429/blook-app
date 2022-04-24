@@ -1,22 +1,33 @@
 package com.salesianostriana.blook.controllers;
 
 import com.salesianostriana.blook.dtos.*;
+import com.salesianostriana.blook.errors.exceptions.EntityNotFound;
+import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
+import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.Chapter;
 import com.salesianostriana.blook.models.Comment;
 import com.salesianostriana.blook.models.UserEntity;
+import com.salesianostriana.blook.repositories.BookRepository;
 import com.salesianostriana.blook.services.CommentService;
+import com.salesianostriana.blook.utils.PaginationLinksUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -26,6 +37,7 @@ public class CommentController {
 
     private final CommentService commentService;
     private final CommentDtoConverter commentDtoConverter;
+    private final PaginationLinksUtils paginationLinksUtils;
 
     @Operation(summary = "Crear un comentario")
     @ApiResponses(value = {
@@ -94,6 +106,15 @@ public class CommentController {
     public ResponseEntity<?> delete(@PathVariable UUID id, @AuthenticationPrincipal UserEntity user){
         commentService.deleteComment(id, user.getId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/all/{id}")
+    public ResponseEntity<Page<GetCommentDto>> findAllCommentsByBookId (@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                                  HttpServletRequest request,
+                                                                  @PathVariable UUID id) {
+        Page<GetCommentDto> lista = commentService.findAllCommentsByBookId(id, pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
 
 }
