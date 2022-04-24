@@ -1,7 +1,6 @@
 package com.salesianostriana.blook.controllers;
 
 import com.salesianostriana.blook.dtos.*;
-import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.Chapter;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.services.ChapterService;

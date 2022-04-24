@@ -155,4 +155,26 @@ public class BookService {
         }
     }
 
+    public Page<GetBookDto> findAllNewBooks (Pageable pageable) {
+        Page<Book> lista = bookRepository.findTop10OrderByRelease_DateDesc(pageable);
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(Book.class);
+        } else {
+            return lista.map(bookDtoConverter::bookToGetBookDto);
+
+        }
+    }
+
+    public Page<GetBookDto> findAllBooksOrderByName (Pageable pageable) {
+        Page<Book> lista = bookRepository.findAllOrderByNameDesc(pageable);
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(Book.class);
+        } else {
+            return lista.map(bookDtoConverter::bookToGetBookDto);
+
+        }
+    }
+
 }

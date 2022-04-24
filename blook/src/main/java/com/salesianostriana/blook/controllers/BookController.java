@@ -147,6 +147,16 @@ public class BookController {
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
 
+    @Operation(summary = "Agregar a favoritos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Agrega un libro a la lista de favoritos del usuario",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontro el libro",
+                    content = @Content),
+    })
     @PostMapping("/favorite/{id}")
     public ResponseEntity<GetBookDto> addFavoriteBook(@PathVariable UUID id,
                                                       @AuthenticationPrincipal UserEntity user) {
@@ -154,6 +164,16 @@ public class BookController {
                 .body(bookDtoConverter.bookToGetBookDto(bookService.addFavoriteBook(id, user)));
     }
 
+    @Operation(summary = "Listar todos los libros favoritos de un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se devuelve una lista con todos los libros favoritos del usuario",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
     @GetMapping("/all/favorite/{nick}")
     public ResponseEntity<Page<GetBookDto>> findAllFavoriteBooks (@PageableDefault(size = 10, page = 0) Pageable pageable,
                                                                   HttpServletRequest request,
@@ -163,4 +183,39 @@ public class BookController {
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
 
+    @Operation(summary = "Listar 10 libros agregados recientemente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se devuelve una lista con los ultimos 10 libros agregados",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @GetMapping("/all/new/")
+    public ResponseEntity<Page<GetBookDto>> findAllNewBooks (@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                                  HttpServletRequest request) {
+        Page<GetBookDto> lista = bookService.findAllNewBooks(pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
+
+    @Operation(summary = "Listar libros ordenados por el nombre")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se devuelve una lista con todos los libros ordenados por nombre",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @GetMapping("/all/order/")
+    public ResponseEntity<Page<GetBookDto>> findAllBooksOrderByName (@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                             HttpServletRequest request) {
+        Page<GetBookDto> lista = bookService.findAllBooksOrderByName(pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
 }

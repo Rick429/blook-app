@@ -15,4 +15,7 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     Page<Book> findByUserLibroFavorito(UserEntity user, Pageable pageable);
 
+    Page<Book> findTop10OrderByRelease_DateDesc(Pageable pageable);
+
+    Page<Book> findAllOrderByNameDesc(Pageable pageable);
 }
