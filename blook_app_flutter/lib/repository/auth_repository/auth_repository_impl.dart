@@ -26,6 +26,11 @@ class AuthRepositoryImpl extends AuthRepository {
     if (response.statusCode == 201) {
       LoginResponse userLogged = LoginResponse.fromJson(json.decode(response.body));
       PreferenceUtils.setString('nick', userLogged.nick);
+      if(userLogged.avatar.isEmpty){
+        PreferenceUtils.setString('avatar', '');
+      }else {
+        PreferenceUtils.setString('avatar', userLogged.avatar);
+      }
       return userLogged;
     } else {
       final error = ErrorResponse.fromJson(json.decode(response.body));
@@ -56,6 +61,11 @@ class AuthRepositoryImpl extends AuthRepository {
     if (res.statusCode == 201) {
       LoginResponse userLogged = LoginResponse.fromJson(json.decode(respStr));
       PreferenceUtils.setString('nick', userLogged.nick);
+      if(userLogged.avatar.isEmpty){
+        PreferenceUtils.setString('avatar', '');
+      }else {
+        PreferenceUtils.setString('avatar', userLogged.avatar);
+      }
       return userLogged;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));

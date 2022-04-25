@@ -188,7 +188,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
                       PreferenceUtils.setString("cover", pickedFile!.path);
                     });
                   },
-                  child: Image.file(File(PreferenceUtils.getString("cover")!), height: 200,)
+                  child: Image.file(File(PreferenceUtils.getString("cover")??""), height: 200,)
                 ),
                 Container(
                   height: 50,

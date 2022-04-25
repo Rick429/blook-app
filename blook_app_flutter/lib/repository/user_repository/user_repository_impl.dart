@@ -12,7 +12,7 @@ class UserRepositoryImpl extends UserRepository {
 
   @override
   Future<User> uploadAvatar(String filename) async{
- var request = http.MultipartRequest(
+    var request = http.MultipartRequest(
       'POST', Uri.parse('${Constant.baseurl}user/avatar/'),);
     
       request.files.add(await http.MultipartFile.fromPath('file',filename));
@@ -27,11 +27,25 @@ class UserRepositoryImpl extends UserRepository {
     if (res.statusCode == 200) {
       
       User userAvatar = User.fromJson(json.decode(respStr));
-      PreferenceUtils.setString("avat", userAvatar.avatar);
+      PreferenceUtils.setString("avatar", userAvatar.avatar);
       return userAvatar;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));
       throw Exception(error.mensaje);
+    }
+  }
+
+  @override
+  Future<User> userLogged()async{
+    final response = await _client.get(Uri.parse('${Constant.baseurl}me'), headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    if (response.statusCode == 200) {
+      return User.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Fail to load user');
     }
   }
 }

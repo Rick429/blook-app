@@ -212,7 +212,7 @@ Widget _booksList(context, List<Book> mybooks) {
                                   child: Column(
                                     children: [
                                       const Icon(Icons.comment, color: BlookStyle.whiteColor),
-                                      Text("2500", style: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeTwo),)
+                                      Text('${book.comments.length}', style: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeTwo),)
                                     ],
                                   ),
                                 ),

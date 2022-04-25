@@ -21,7 +21,7 @@ class LoginResponse {
     email = json['email'];
     name = json['name'];
     lastname = json['lastname'];
-    avatar = json['avatar'] ?? "";
+    avatar = json['avatar'];
     role = json['role'];
     token = json['token'];
   }

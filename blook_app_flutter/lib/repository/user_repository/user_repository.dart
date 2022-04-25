@@ -4,4 +4,5 @@ abstract class UserRepository {
 
   Future<User> uploadAvatar(String filename);
   
+  Future<User> userLogged();
 }

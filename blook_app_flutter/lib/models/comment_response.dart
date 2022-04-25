@@ -60,14 +60,14 @@ class Comment {
     required this.comment,
     required this.userId,
     required this.nick,
-     this.avatar,
+    required this.avatar,
     required this.bookId,
     required this.createdDate,
   });
   late final String comment;
   late final String userId;
   late final String nick;
-  late final Null avatar;
+  late final String avatar;
   late final String bookId;
   late final String createdDate;
   
@@ -75,7 +75,7 @@ class Comment {
     comment = json['comment'];
     userId = json['user_id'];
     nick = json['nick'];
-    avatar = null;
+    avatar = json['avatar'];
     bookId = json['book_id'];
     createdDate = json['created_date'];
   }
