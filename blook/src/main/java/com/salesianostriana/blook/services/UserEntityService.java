@@ -44,6 +44,7 @@ public class UserEntityService implements UserDetailsService {
                 .name(newUser.getName())
                 .lastname(newUser.getLastname())
                 .nick(newUser.getNick())
+                .avatar("")
                 .email(newUser.getEmail())
                 .role(UserRole.USER)
                 .build();
