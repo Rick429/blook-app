@@ -1,5 +1,6 @@
 
 import 'package:blook_app_flutter/blocs/comments_bloc/comments_bloc.dart';
+import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository_impl.dart';
 import 'package:blook_app_flutter/ui/comment_menu.dart';
@@ -166,6 +167,8 @@ class _CommentsScrenState extends State<CommentsScren> {
                   children: [
                     GestureDetector(
                         onTap: () {
+                          PreferenceUtils.setString(Constant.typereport, "COMENTARIO");
+                          PreferenceUtils.setString("idbook", comment.bookId);
                           Navigator.pushNamed(context, '/report');
                         },
                         child: const Icon(Icons.report_problem_rounded,

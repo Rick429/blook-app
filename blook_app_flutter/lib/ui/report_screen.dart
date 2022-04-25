@@ -1,5 +1,12 @@
+import 'package:blook_app_flutter/blocs/report_bloc/report_bloc.dart';
+import 'package:blook_app_flutter/models/create_report.dart';
+import 'package:blook_app_flutter/repository/report_repository/report_repository.dart';
+import 'package:blook_app_flutter/repository/report_repository/report_repository_impl.dart';
+import 'package:blook_app_flutter/ui/menu_screen.dart';
+import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({Key? key}) : super(key: key);
@@ -11,11 +18,27 @@ class ReportScreen extends StatefulWidget {
 class _ReportScreenState extends State<ReportScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController commentController = TextEditingController();
+  late ReportRepository reportRepository;
+
+  @override
+  void initState() {
+    PreferenceUtils.init();
+    reportRepository = ReportRepositoryImpl();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+        create: (context) {
+          return ReportBloc(reportRepository);
+        },
+        child: _createBody(context));
+  }
+
+   Widget _createBody(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+       appBar:  AppBar(
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Center(
@@ -30,7 +53,46 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
       ),
       backgroundColor: BlookStyle.blackColor,
-      body: SingleChildScrollView(
+      body: Center(
+        child: Container(
+            padding: const EdgeInsets.all(20),
+            child: BlocConsumer<ReportBloc, ReportState>(
+                listenWhen: (context, state) {
+              return state is ReportSuccessState || state is ReportErrorState;
+            }, listener: (context, state) {
+              if (state is ReportSuccessState) {
+                
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MenuScreen()),
+                );
+              } else if (state is ReportErrorState) {
+                _showSnackbar(context, state.message);
+              }
+            }, buildWhen: (context, state) {
+              return state is ReportInitial || state is ReportLoadingState;
+            }, builder: (ctx, state) {
+              if (state is ReportInitial) {
+                return _createForm(ctx);
+              } else if (state is ReportLoadingState) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return _createForm(ctx);
+              }
+            })),
+      ),
+    );
+  }
+
+  void _showSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Widget _createForm(BuildContext context) {
+    return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -39,104 +101,7 @@ class _ReportScreenState extends State<ReportScreen> {
               Form(
                 key: _formKey,
                 child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(
-                        "Marcar la opción a reportar",
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeThree),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 4),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: BlookStyle.blackColor,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                color: BlookStyle.formColor, width: 2),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          elevation: 15.0,
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          "No se carga el contenido",
-                          style: BlookStyle.textCustom(
-                              BlookStyle.formColor, BlookStyle.textSizeTwo),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 4),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: BlookStyle.blackColor,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                color: BlookStyle.formColor, width: 2),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          elevation: 15.0,
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          "Capítulos incorrectos",
-                          style: BlookStyle.textCustom(
-                              BlookStyle.formColor, BlookStyle.textSizeTwo),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 4),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: BlookStyle.blackColor,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                color: BlookStyle.formColor, width: 2),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          elevation: 15.0,
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          "Contenido inapropiado",
-                          style: BlookStyle.textCustom(
-                              BlookStyle.formColor, BlookStyle.textSizeTwo),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 4),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: BlookStyle.blackColor,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                color: BlookStyle.formColor, width: 2),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          elevation: 15.0,
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          "Otros",
-                          style: BlookStyle.textCustom(
-                              BlookStyle.formColor, BlookStyle.textSizeTwo),
-                        ),
-                      ),
-                    ),
+                  children: [             
                     Container(
                       padding: const EdgeInsets.all(8),
                       width: MediaQuery.of(context).size.width,
@@ -172,7 +137,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           hintStyle: BlookStyle.textCustom(
                               BlookStyle.formColor, BlookStyle.textSizeTwo),
                           hintText:
-                              '¿Quieres agregar algo más? Escribelo \nRecuerda no incluir datos sensibles',
+                              '¿Quieres reportar un error? Escribelo \nRecuerda no incluir datos sensibles',
                         ),
                         onSaved: (String? value) {},
                       ),
@@ -189,6 +154,12 @@ class _ReportScreenState extends State<ReportScreen> {
                           elevation: 15.0,
                         ),
                         onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                          final createReport = CreateReport(
+                              reportComment: commentController.text, typeReport: PreferenceUtils.getString('typereport')!);
+                          BlocProvider.of<ReportBloc>(context)
+                              .add(DoReportEvent(createReport));
+                        } 
                           Navigator.pushNamed(context, '/');
                         },
                         child: Text("Enviar",
@@ -197,7 +168,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   )
             ],
           ),
-        ),
+        
       ),
     );
   }

@@ -4,4 +4,5 @@ class Constant {
   static String token = "token";
   static String avatar = "avatar";
   static String file = "file";
+  static String typereport = "typereport";
 }
