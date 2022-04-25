@@ -49,6 +49,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
     bookRepository = BookRepositoryImpl();
     genreRepository = GenreRepositoryImpl();
     PreferenceUtils.init();
+    PreferenceUtils.setString("cover", "");
     _genresbloc = GenresBloc(genreRepository)..add(FetchAllGenres());
     super.initState();
   }
@@ -171,6 +172,32 @@ class _BookNewScreenState extends State<BookNewScreen> {
     );
   }
 
+  Widget coverUrl(String cover) {
+    if(cover.isEmpty) {
+      return GestureDetector(
+                  onTap: () async {                
+                    final XFile? pickedFile =
+                        await _picker.pickImage(source: ImageSource.gallery);
+                    setState(() {
+                      PreferenceUtils.setString("cover", pickedFile!.path);
+                    });
+                  },
+                  child: Image.asset("assets/images/upload.png", height: 200),
+                );
+    } else {
+      return GestureDetector(
+                  onTap: () async {                
+                    final XFile? pickedFile =
+                        await _picker.pickImage(source: ImageSource.gallery);
+                    setState(() {
+                      PreferenceUtils.setString("cover", pickedFile!.path);
+                    });
+                  },
+                  child: Image.file(File(PreferenceUtils.getString("cover")!), height: 200,)
+                );
+    }
+  }
+
   Widget buildForm(BuildContext context, state) {
     return SizedBox(
       height: 345,
@@ -180,16 +207,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
             key: _formKey,
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: () async {                
-                    final XFile? pickedFile =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    setState(() {
-                      PreferenceUtils.setString("cover", pickedFile!.path);
-                    });
-                  },
-                  child: Image.file(File(PreferenceUtils.getString("cover")??""), height: 200,)
-                ),
+                coverUrl(PreferenceUtils.getString("cover")??""),
                 Container(
                   height: 50,
                   margin: const EdgeInsets.all(10),
