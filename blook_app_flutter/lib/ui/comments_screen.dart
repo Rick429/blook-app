@@ -1,3 +1,4 @@
+import 'dart:convert';
 
 import 'package:blook_app_flutter/blocs/comments_bloc/comments_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
@@ -6,11 +7,8 @@ import 'package:blook_app_flutter/repository/comment_repository/comment_reposito
 import 'package:blook_app_flutter/ui/comment_menu.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
-import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
-
 import '../models/comment_response.dart';
 
 class CommentsScren extends StatefulWidget {
@@ -28,81 +26,81 @@ class _CommentsScrenState extends State<CommentsScren> {
   void initState() {
     PreferenceUtils.init();
     commentRepository = CommentRepositoryImpl();
-    _commentsbloc = CommentsBloc(commentRepository)..add(FetchAllComments());
+    _commentsbloc = CommentsBloc(commentRepository)
+      ..add(const FetchAllComments());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => _commentsbloc)
-        ],
+        providers: [BlocProvider(create: (context) => _commentsbloc)],
         child: Scaffold(
-          bottomNavigationBar: CommentMenu(),
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: Center(
-            child: Container(
-              margin: const EdgeInsets.only(right: 60),
-              child: Text(
-                "COMENTARIOS",
-                style: BlookStyle.textCustom(
-                    BlookStyle.whiteColor, BlookStyle.textSizeFive),
+            bottomNavigationBar: const CommentMenu(),
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              iconTheme: const IconThemeData(color: Colors.white),
+              title: Center(
+                child: Container(
+                  margin: const EdgeInsets.only(right: 60),
+                  child: Text(
+                    "COMENTARIOS",
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeFive),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        backgroundColor: BlookStyle.blackColor,
+            backgroundColor: BlookStyle.blackColor,
             body: RefreshIndicator(
                 onRefresh: () async {},
                 child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     child: _createBody(context)))));
   }
 
   Widget _createBody(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child:  BlocBuilder<CommentsBloc, CommentsState>(
-          bloc: _commentsbloc,
-          builder: (context, state) {
-            if (state is CommentsInitial) {
-              return Container(
-                  child: const Center(child: CircularProgressIndicator()));
-            } else if (state is CommentsFetchError) {
-              return Center(
-                child: Text("No hay ningún comentario, se el primero en escribir algo", style: BlookStyle.textCustom(
-                              BlookStyle.whiteColor, BlookStyle.textSizeTwo),),
-              );
-            } else if (state is CommentsFetched) {
-              return _commentsList(context, state.comments);
-            } else {
-              return const Text('Not support');
-            }
-          },
-        ),
-      
+      child: BlocBuilder<CommentsBloc, CommentsState>(
+        bloc: _commentsbloc,
+        builder: (context, state) {
+          if (state is CommentsInitial) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is CommentsFetchError) {
+            return Center(
+              child: Text(
+                "No hay ningún comentario, se el primero en escribir algo",
+                style: BlookStyle.textCustom(
+                    BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+              ),
+            );
+          } else if (state is CommentsFetched) {
+            return _commentsList(context, state.comments);
+          } else {
+            return const Text('Not support');
+          }
+        },
+      ),
     );
   }
 
   Widget _commentsList(context, List<Comment> comentarios) {
     return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 100),
+        height: MediaQuery.of(context).size.height,
+        child: ListView.builder(
+          shrinkWrap: true,
           scrollDirection: Axis.vertical,
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 100),
-            height: MediaQuery.of(context).size.height,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: comentarios.length,
-              itemBuilder: (context, index) {
-                return _comment(comentarios.elementAt(index));
-              },
-            ),
-          ),
-        );
+          itemCount: comentarios.length,
+          itemBuilder: (context, index) {
+            return _comment(comentarios.elementAt(index));
+          },
+        ),
+      ),
+    );
   }
 
   Widget _comment(Comment comment) {
@@ -131,7 +129,7 @@ class _CommentsScrenState extends State<CommentsScren> {
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        comment.nick,
+                        utf8.decode(comment.nick.codeUnits),
                         style: BlookStyle.textCustom(
                             BlookStyle.whiteColor, BlookStyle.textSizeOne),
                       ),
@@ -153,7 +151,7 @@ class _CommentsScrenState extends State<CommentsScren> {
                 padding: const EdgeInsets.only(left: 8.0),
                 width: MediaQuery.of(context).size.width,
                 child: Text(
-                  comment.comment,
+                  utf8.decode(comment.comment.codeUnits),
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeOne),
                   textAlign: TextAlign.left,
@@ -167,7 +165,8 @@ class _CommentsScrenState extends State<CommentsScren> {
                   children: [
                     GestureDetector(
                         onTap: () {
-                          PreferenceUtils.setString(Constant.typereport, "COMENTARIO");
+                          PreferenceUtils.setString(
+                              Constant.typereport, "COMENTARIO");
                           PreferenceUtils.setString("idbook", comment.bookId);
                           Navigator.pushNamed(context, '/report');
                         },

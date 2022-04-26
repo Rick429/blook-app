@@ -155,9 +155,9 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                       allowedExtensions: ['jpg', 'pdf', 'doc'],
                     );
                     setState(() {
-                       PreferenceUtils.setString(
-                        'image', pickedFile!.files[0].path ?? "");
-                    });              
+                      PreferenceUtils.setString(
+                          'image', pickedFile!.files[0].path ?? "");
+                    });
                   },
                   child: Text(
                     "Seleccionar Archivo",
@@ -171,12 +171,13 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                 height: 60,
                 margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: BlookStyle.secondaryColor.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(20)
+                    color: BlookStyle.secondaryColor.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(20)),
+                child: Text(
+                  PreferenceUtils.getString('image')!,
+                  style: BlookStyle.textCustom(
+                      BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                 ),
-                child: Text(PreferenceUtils.getString(
-                          'image')!, style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeTwo),),
               ),
               Container(
                 width: MediaQuery.of(context).size.width,

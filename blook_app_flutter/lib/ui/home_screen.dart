@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:blook_app_flutter/blocs/books_bloc/books_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
@@ -238,9 +240,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     fit: BoxFit.cover,
                   )),
             ),
-            Text(book.name,
-                style: BlookStyle.textCustom(
-                    BlookStyle.whiteColor, BlookStyle.textSizeTwo))
+            SizedBox(
+              width: 130,
+              child: Text(utf8.decode(book.name.codeUnits),
+      overflow: TextOverflow.ellipsis,
+                  style: BlookStyle.textCustom(
+                      BlookStyle.whiteColor, BlookStyle.textSizeTwo)),
+            )
           ],
         ),
       ),

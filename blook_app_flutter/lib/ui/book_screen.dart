@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
 import 'package:blook_app_flutter/blocs/book_favorite_bloc/book_favorite_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
@@ -75,29 +77,27 @@ class _BookScreenState extends State<BookScreen> {
               }
             },
           ),
-
           BlocConsumer<BookFavoriteBloc, BookFavoriteState>(
-                listenWhen: (context, state) {
-              return state is BookFavorite || state is BookFavoriteError;
-            }, listener: (context, state) {
-              if (state is BookFavorite) {
-                
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MenuScreen()),
-                );
-              } else if (state is BookFavoriteError) {
-                _showSnackbar(context, state.message);
-              }
-            }, buildWhen: (context, state) {
-              return state is BookFavoriteInitial;
-            }, builder: (ctx, state) {
-              if (state is BookFavoriteInitial) {
-                return favorite(ctx);
-              } else {
-                return favorite(ctx);
-              }
-            })
+              listenWhen: (context, state) {
+            return state is BookFavorite || state is BookFavoriteError;
+          }, listener: (context, state) {
+            if (state is BookFavorite) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MenuScreen()),
+              );
+            } else if (state is BookFavoriteError) {
+              _showSnackbar(context, state.message);
+            }
+          }, buildWhen: (context, state) {
+            return state is BookFavoriteInitial;
+          }, builder: (ctx, state) {
+            if (state is BookFavoriteInitial) {
+              return favorite(ctx);
+            } else {
+              return favorite(ctx);
+            }
+          })
         ],
       ),
     );
@@ -110,21 +110,21 @@ class _BookScreenState extends State<BookScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Widget favorite (context) {
+  Widget favorite(context) {
     return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children:  [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        BlocProvider.of<BookFavoriteBloc>(context)
-                              .add(AddBookFavorite());
-                      },
-                      child: const Icon(Icons.favorite_border_outlined),),
-                  ),
-                ],
-              );
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              BlocProvider.of<BookFavoriteBloc>(context).add(const AddBookFavorite());
+            },
+            child: const Icon(Icons.favorite_border_outlined),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget buildOne(context, Book book) {
@@ -177,17 +177,19 @@ class _BookScreenState extends State<BookScreen> {
                           SizedBox(
                             width: 180,
                             child: Text(
-                              book.name,
+                              utf8.decode(book.name.codeUnits),
                               style: BlookStyle.textCustom(
-                                  BlookStyle.whiteColor, BlookStyle.textSizeFive),
+                                  BlookStyle.whiteColor,
+                                  BlookStyle.textSizeFive),
                             ),
                           ),
                           SizedBox(
                             width: 180,
                             child: Text(
-                              book.autor,
+                              utf8.decode(book.autor.codeUnits),
                               style: BlookStyle.textCustom(
-                                  BlookStyle.whiteColor, BlookStyle.textSizeFour),
+                                  BlookStyle.whiteColor,
+                                  BlookStyle.textSizeFour),
                             ),
                           ),
                         ],
@@ -224,7 +226,7 @@ class _BookScreenState extends State<BookScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              book.description,
+              utf8.decode(book.description.codeUnits),
               style: BlookStyle.textCustom(
                 BlookStyle.whiteColor,
                 BlookStyle.textSizeTwo,
@@ -263,7 +265,7 @@ class _BookScreenState extends State<BookScreen> {
                   child: Container(
                     width: 50,
                     height: 30,
-                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                         color: BlookStyle.primaryColor,
@@ -365,7 +367,7 @@ class _BookScreenState extends State<BookScreen> {
           ),
           Container(
             margin: const EdgeInsets.only(bottom: 150),
-            padding: EdgeInsets.only(bottom: 50),
+            padding: const EdgeInsets.only(bottom: 50),
             height: 300,
             child: ListView.builder(
               shrinkWrap: true,
@@ -401,7 +403,7 @@ class _BookScreenState extends State<BookScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Capitulo ${index + 1}: " + chapter.name,
+              "Capitulo ${index + 1}: " + utf8.decode(chapter.name.codeUnits),
               style: BlookStyle.textCustom(
                   BlookStyle.whiteColor, BlookStyle.textSizeTwo),
             ),

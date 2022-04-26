@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:blook_app_flutter/blocs/my_favorite_books/my_favorite_books_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
@@ -23,7 +24,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   void initState() {
     PreferenceUtils.init();
     bookRepository = BookRepositoryImpl();
-     _myfavoritebooksbloc = MyFavoriteBooksBloc(bookRepository)..add(FetchAllMyFavoriteBooks());
+     _myfavoritebooksbloc = MyFavoriteBooksBloc(bookRepository)..add(const FetchAllMyFavoriteBooks());
     super.initState();
   }
 
@@ -39,7 +40,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             body: RefreshIndicator(
                 onRefresh: () async {},
                 child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     child: _createBody(context)))));
   }
 
@@ -50,8 +51,7 @@ Widget _createBody(BuildContext context) {
           bloc: _myfavoritebooksbloc,
           builder: (context, state) {
             if (state is MyFavoriteBooksInitial) {
-              return Container(
-                  child: const Center(child: CircularProgressIndicator()));
+              return const Center(child: CircularProgressIndicator());
             } else if (state is MyFavoriteBooksFetchError) {
               return Column(children: [
                    Center(
@@ -151,7 +151,8 @@ Widget _createBody(BuildContext context) {
   }
 
   Widget _bookItem(Book book) {
-    return Column(children: [
+    return Column(
+      children: [
        GestureDetector(
           onTap: () {
                 PreferenceUtils.setString("idbook", book.id);
@@ -182,7 +183,7 @@ Widget _createBody(BuildContext context) {
                     SizedBox(
                       height: 140,
                       child: Text(
-                        book.name,
+                        utf8.decode(book.name.codeUnits),
                         style: BlookStyle.textCustom(
                             BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                         textAlign: TextAlign.start,

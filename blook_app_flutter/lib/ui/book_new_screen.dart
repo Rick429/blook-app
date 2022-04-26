@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:blook_app_flutter/blocs/book_new_bloc/book_new_bloc.dart';
@@ -50,7 +51,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
     genreRepository = GenreRepositoryImpl();
     PreferenceUtils.init();
     PreferenceUtils.setString("cover", "");
-    _genresbloc = GenresBloc(genreRepository)..add(FetchAllGenres());
+    _genresbloc = GenresBloc(genreRepository)..add(const FetchAllGenres());
     super.initState();
   }
 
@@ -80,7 +81,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
             body: RefreshIndicator(
                 onRefresh: () async {},
                 child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     child: _createBody(context)))));
   }
 
@@ -107,13 +108,12 @@ class _BookNewScreenState extends State<BookNewScreen> {
           bloc: _genresbloc,
           builder: (context, state) {
             if (state is GenresInitial) {
-              return Container(
-                  child: const Center(child: CircularProgressIndicator()));
+              return const Center(child: CircularProgressIndicator());
             } else if (state is GenresFetchError) {
               return ErrorPage(
                 message: state.message,
                 retry: () {
-                  context.watch<GenresBloc>().add(FetchAllGenres());
+                  context.watch<GenresBloc>().add(const FetchAllGenres());
                 },
               );
             } else if (state is GenresFetched) {
@@ -138,7 +138,8 @@ class _BookNewScreenState extends State<BookNewScreen> {
                 color: BlookStyle.greyBoxColor,
                 borderRadius: BorderRadius.circular(20.0),
               ),
-              items: genresList.map((e) => MultiSelectItem(e, e.name)).toList(),
+              title: const Text("Géneros"),
+              items: genresList.map((e) => MultiSelectItem(e, utf8.decode(e.name.codeUnits))).toList(),
               listType: MultiSelectListType.CHIP,
               onConfirm: (values) {
                 _selectedgenres = values;

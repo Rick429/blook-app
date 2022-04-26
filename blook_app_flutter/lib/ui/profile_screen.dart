@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:blook_app_flutter/blocs/profile_bloc/profile_bloc.dart';
 import 'package:blook_app_flutter/models/user_dto.dart';
@@ -140,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Center(
           child: Center(
-            child: Text(userLogged.nick,
+            child: Text(utf8.decode(userLogged.nick.codeUnits),
                 style: BlookStyle.textCustom(
                     BlookStyle.whiteColor, BlookStyle.textSizeThree)),
           ),
@@ -164,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(userLogged.name,
+                child: Text(utf8.decode(userLogged.name.codeUnits),
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo)),
               )
@@ -190,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(userLogged.lastname,
+                child: Text(utf8.decode(userLogged.lastname.codeUnits),
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo)),
               ),
@@ -216,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(userLogged.email,
+                child: Text(utf8.decode(userLogged.email.codeUnits),
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo)),
               )
@@ -268,7 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Container(
                 width: 130,
                 height: 130,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         fit: BoxFit.fill,
