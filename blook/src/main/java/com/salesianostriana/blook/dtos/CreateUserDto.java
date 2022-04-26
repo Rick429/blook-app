@@ -6,6 +6,7 @@ import com.salesianostriana.blook.validation.anotations.UniqueUsername;
 import lombok.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,7 +27,9 @@ public class CreateUserDto {
     @Email
     @UniqueEmail(message = "{user.unique.email}")
     private String email;
+    @Size(min = 8)
     private String password;
+    @Size(min = 8)
     private String password2;
 
 }

@@ -9,6 +9,7 @@ import com.salesianostriana.blook.repositories.ChapterRepository;
 import com.salesianostriana.blook.repositories.UserEntityRepository;
 import com.salesianostriana.blook.services.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -23,16 +24,17 @@ public class InitData {
     private final StorageService storageService;
     private final UserEntityRepository userEntityRepository;
     private final ChapterRepository chapterRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void run() throws IOException {
 
         UserEntity u = UserEntity.builder()
                 .name("admin")
+                .avatar("")
                 .lastname("admin")
                 .email("admin@gmail.com")
-                .password("admin")
-                .password2("admin")
+                .password(passwordEncoder.encode("admin"))
                 .nick("admin")
                 .role(UserRole.ADMIN)
                 .build();
