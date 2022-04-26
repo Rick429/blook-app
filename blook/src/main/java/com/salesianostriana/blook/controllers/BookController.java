@@ -1,9 +1,6 @@
 package com.salesianostriana.blook.controllers;
 
-import com.salesianostriana.blook.dtos.BookDtoConverter;
-import com.salesianostriana.blook.dtos.CreateBookDto;
-import com.salesianostriana.blook.dtos.GetBookDto;
-import com.salesianostriana.blook.dtos.GetGenreDto;
+import com.salesianostriana.blook.dtos.*;
 import com.salesianostriana.blook.enums.UserRole;
 import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.UserEntity;
@@ -215,6 +212,25 @@ public class BookController {
     public ResponseEntity<Page<GetBookDto>> findAllBooksOrderByName (@PageableDefault(size = 10, page = 0) Pageable pageable,
                                                              HttpServletRequest request) {
         Page<GetBookDto> lista = bookService.findAllBooksOrderByName(pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
+
+    @Operation(summary = "Buscar libro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Devuelve una lista con los libros que coincidan en el nombre",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @PostMapping("/search/all")
+    public ResponseEntity<Page<GetBookDto>> findByName (@RequestPart("search") SearchDto searchDto,
+                                                        @PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                        HttpServletRequest request) {
+        Page<GetBookDto> lista = bookService.findByName(searchDto.getName(), pageable);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }

@@ -31,7 +31,7 @@
 								{
 									"key": "user",
 									"type": "file",
-									"src": "/C:/Users/Rick/Documents/Repositorios/blook-app/blook/postman/createUser.json"
+									"src": "/C:/Users/Rick/Pictures/blook/postman/createUser.json"
 								}
 							]
 						},
@@ -68,7 +68,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"usuario@gmail.com\",\r\n    \"password\":\"usuario\"\r\n}",
+							"raw": "{\r\n    \"email\":\"admin@gmail.com\",\r\n    \"password\":\"admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -138,7 +138,7 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/Intel I5/Documents/Repositorios/blook-app/blook/postman/fry.jpg"
+									"src": "/C:/Users/Rick/Downloads/dexdhca-956ea6b1-15f1-4fcc-aa45-77c91b088363.png"
 								}
 							]
 						},
@@ -195,6 +195,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "6.- Listar usuarios",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/user/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"all"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -234,12 +263,12 @@
 								{
 									"key": "book",
 									"type": "file",
-									"src": "/C:/Users/Rick/Documents/Repositorios/blook-app/blook/postman/createBook.json"
+									"src": "/C:/Users/Rick/Pictures/blook/postman/createBook.json"
 								},
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/Rick/Documents/Repositorios/blook-app/blook/postman/fry.jpg"
+									"src": "/C:/Users/Rick/Pictures/blook/postman/fry.jpg"
 								}
 							]
 						},
@@ -404,7 +433,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/all/user/{nick}",
+							"raw": "localhost:8080/book/all/user/user",
 							"host": [
 								"localhost"
 							],
@@ -413,7 +442,169 @@
 								"book",
 								"all",
 								"user",
-								"{nick}"
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.- agregar a favorito",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/book/favorite/{{idBook}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book",
+								"favorite",
+								"{{idBook}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8.- Mis libros favoritos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/book/all/favorite/usuario",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book",
+								"all",
+								"favorite",
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9.- Top 10 libros nuevos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/book/all/new",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book",
+								"all",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10.- Libros ordenados por nombre",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/book/all/order",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book",
+								"all",
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11.- buscar libro",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search",
+									"type": "file",
+									"src": "/C:/Users/Rick/Pictures/blook/searchDto.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/book/search/all/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book",
+								"search",
+								"all",
+								""
 							]
 						}
 					},
@@ -457,12 +648,12 @@
 								{
 									"key": "chapter",
 									"type": "file",
-									"src": "/C:/Users/Rick/Documents/Repositorios/blook-app/blook/postman/createChapterDto.json"
+									"src": "/C:/Users/Rick/Pictures/blook/postman/createChapterDto.json"
 								},
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/Rick/Documents/Repositorios/blook-app/blook/postman/fry.jpg"
+									"src": "/C:/Users/Rick/Pictures/blook/postman/fry.jpg"
 								}
 							]
 						},
@@ -610,7 +801,7 @@
 								{
 									"key": "genre",
 									"type": "file",
-									"src": "/C:/Users/Intel I5/Documents/Repositorios/blook-app/blook/postman/createGenre.json"
+									"src": "/C:/Users/Rick/Pictures/blook-app/blook/postman/createGenre.json"
 								}
 							]
 						},
@@ -780,7 +971,7 @@
 								{
 									"key": "comment",
 									"type": "file",
-									"src": "/C:/Users/Rick/Documents/Repositorios/blook-app/blook/postman/createComment.json"
+									"src": "/C:/Users/Rick/Pictures/blook/postman/createComment.json"
 								}
 							]
 						},
@@ -884,6 +1075,36 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "5.- Listar comentarios por id del libro",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/comment/all/{{idBook}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"comment",
+								"all",
+								"{{idBook}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -893,6 +1114,16 @@
 				{
 					"name": "1.- Crear reporte",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -901,19 +1132,19 @@
 								{
 									"key": "report",
 									"type": "file",
-									"src": "/C:/Users/Rick/Documents/Repositorios/blook-app/blook/postman/createReport.json"
+									"src": "/C:/Users/Rick/Pictures/blook/postman/createReport.json"
 								}
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/report/{id}",
+							"raw": "localhost:8080/report/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"report",
-								"{id}"
+								"{{idBook}}"
 							]
 						}
 					},
@@ -922,6 +1153,16 @@
 				{
 					"name": "2.- Listar reportes",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {

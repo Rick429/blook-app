@@ -177,4 +177,15 @@ public class BookService {
         }
     }
 
+    public Page<GetBookDto> findByName (String name, Pageable pageable) {
+        Page<Book> lista = bookRepository.findByNameIgnoreCaseContains(name, pageable);
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(Book.class);
+        } else {
+            return lista.map(bookDtoConverter::bookToGetBookDto);
+
+        }
+    }
+
 }

@@ -18,4 +18,6 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     Page<Book> findTop10OrderByReleaseDateDesc(Pageable pageable);
 
     Page<Book> findAllByOrderByNameAsc(Pageable pageable);
+
+    Page<Book> findByNameIgnoreCaseContains(String name, Pageable pageable);
 }
