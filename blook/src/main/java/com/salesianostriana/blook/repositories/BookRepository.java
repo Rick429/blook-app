@@ -17,5 +17,5 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     @Query("SELECT b FROM Book b ORDER BY b.releaseDate DESC")
     Page<Book> findTop10OrderByReleaseDateDesc(Pageable pageable);
 
-    Page<Book> findAllByOrderByNameDesc(Pageable pageable);
+    Page<Book> findAllByOrderByNameAsc(Pageable pageable);
 }

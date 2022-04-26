@@ -36,6 +36,7 @@ public class Book implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
     private String name;
+    @Column(length = 1000)
     private String description;
     @CreatedDate
     private LocalDate releaseDate;
