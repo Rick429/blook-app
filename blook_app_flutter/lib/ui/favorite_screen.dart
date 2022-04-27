@@ -19,6 +19,7 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen> {
   late BookRepository bookRepository;
   late MyFavoriteBooksBloc _myfavoritebooksbloc;
+  late String title = "";
 
   @override
   void initState() {
@@ -112,24 +113,30 @@ Widget _createBody(BuildContext context) {
                   color: BlookStyle.quaternaryColor,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        "Ordenado por: nombre",
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Icon(
-                        Icons.filter_list,
-                        color: BlookStyle.whiteColor,),
-                      )
-                  ],
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    "Ordenado por: $title",
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                  ),
                 ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: IconButton(
+                    onPressed: () {
+                      showModal(context, myfavoritebooks);
+                    },
+                    icon: Icon(
+                      Icons.filter_list,
+                      color: BlookStyle.whiteColor,
+                    ),
+                  ),
+                )
+              ],
+            ),
               ),
                     Container(
             margin: const EdgeInsets.only(bottom: 100),
@@ -194,5 +201,53 @@ Widget _createBody(BuildContext context) {
               ),
        ),
     ],);
+  }
+
+  showModal(BuildContext context, List<Book> books) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            decoration: BoxDecoration(color: BlookStyle.quaternaryColor),
+            height: 200,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: BlookStyle.primaryColor,
+                    elevation: 15.0,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      title="nombre de la A-Z";
+                      books.sort((a, b) => b.name.compareTo(a.name));
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text("Ordenar de A-Z",
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: BlookStyle.primaryColor,
+                    elevation: 15.0,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      title="nombre de la Z-A";
+                      books.sort((a, b) => a.name.compareTo(b.name));
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text("Ordenar de Z-A",
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

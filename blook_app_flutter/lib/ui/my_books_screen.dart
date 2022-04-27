@@ -19,6 +19,7 @@ class MyBooksScreen extends StatefulWidget {
 class _MyBooksScreenState extends State<MyBooksScreen> {
   late BookRepository bookRepository;
   late MyBooksBloc _mybooksbloc;
+  late String title = "";
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: Text(
-                          "Ordenado por: nombre",
+                          "Ordenado por:",
                           style: BlookStyle.textCustom(
                               BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                         ),
@@ -119,16 +120,21 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
-                    "Ordenado por: nombre",
+                    "Ordenado por: $title",
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                   ),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(
-                    Icons.filter_list,
-                    color: BlookStyle.whiteColor,
+                  child: IconButton(
+                    onPressed: () {
+                      showModal(context, mybooks);
+                    },
+                    icon: Icon(
+                      Icons.filter_list,
+                      color: BlookStyle.whiteColor,
+                    ),
                   ),
                 )
               ],
@@ -243,5 +249,53 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
         ),
       ],
     );
+  }
+
+  showModal(BuildContext context, List<Book> books) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            decoration: BoxDecoration(color: BlookStyle.quaternaryColor),
+            height: 200,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: BlookStyle.primaryColor,
+                    elevation: 15.0,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      books.sort((a, b) => b.name.compareTo(a.name));
+                      title="nombre de la A-Z";
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text("Ordenar de A-Z",
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: BlookStyle.primaryColor,
+                    elevation: 15.0,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      title="nombre de la Z-A";
+                      books.sort((a, b) => a.name.compareTo(b.name));
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text("Ordenar de Z-A",
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
