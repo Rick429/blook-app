@@ -45,7 +45,7 @@ class _PdfViewerState extends State<PdfViewer> {
       body: Center(
         child: _isLoading
             ? Center(child: CircularProgressIndicator())
-            : /* Container(
+            : Container(
                 decoration: BoxDecoration(),
                 child: PDF(
                   fitPolicy: FitPolicy.BOTH,
@@ -59,16 +59,16 @@ class _PdfViewerState extends State<PdfViewer> {
                         'Bearer ${PreferenceUtils.getString('token')}'
                   },
                 ),
-              ), */
+              ),
              /*  PDFViewer(
                 document: pdfDocument,) */
-            SfPdfViewer.network(
+            /* SfPdfViewer.network(
                 document,
                 headers: {
                   'Authorization':
                       'Bearer ${PreferenceUtils.getString('token')}'
                 },
-              ),
+              ), */
       ),
     );
   }

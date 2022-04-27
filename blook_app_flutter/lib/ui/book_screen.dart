@@ -222,6 +222,34 @@ class _BookScreenState extends State<BookScreen> {
     }
   }
 
+  Widget _createChapter(Book book) {
+    if(book.autor==PreferenceUtils.getString("nick")){
+      return GestureDetector(
+                  onTap: () {
+                    PreferenceUtils.setString("idBook", book.id);
+                    Navigator.pushNamed(context, '/chapternew');
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 30,
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                        color: BlookStyle.primaryColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      "+",
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+    } else {
+      return Container();
+    }
+  }
+
   Widget buildOne(context, Book book) {
     var lista;
     return SizedBox(
@@ -345,27 +373,7 @@ class _BookScreenState extends State<BookScreen> {
                     BlookStyle.textSizeThree,
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    PreferenceUtils.setString("idBook", book.id);
-                    Navigator.pushNamed(context, '/chapternew');
-                  },
-                  child: Container(
-                    width: 50,
-                    height: 30,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                        color: BlookStyle.primaryColor,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      "+",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
+                _createChapter(book),
               ],
             ),
           ),

@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }, listener: (context, state) {
           if (state is RegisterSuccessState) {
             PreferenceUtils.setString(Constant.token, state.loginResponse.token);
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const MenuScreen()),
             );

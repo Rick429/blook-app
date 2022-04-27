@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
             }, listener: (context, state) {
               if (state is LoginSuccessState) {
                 
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const MenuScreen()),
                 );
