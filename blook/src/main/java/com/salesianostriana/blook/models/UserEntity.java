@@ -48,10 +48,10 @@ public class UserEntity implements UserDetails {
     private String avatar;
     private UserRole role;
     @Builder.Default
-    @OneToMany(mappedBy = "autorLibroPublicado")
+    @OneToMany(mappedBy = "autorLibroPublicado" , orphanRemoval = true)
     private List<Book> misLibros = new ArrayList<>();
     @Builder.Default
-    @OneToMany(mappedBy = "userLibroFavorito")
+    @OneToMany(mappedBy = "userLibroFavorito", orphanRemoval = true)
     private List<Book> misFavoritos = new ArrayList<>();
     @Builder.Default
     @OneToMany(mappedBy = "comentador", orphanRemoval = true)

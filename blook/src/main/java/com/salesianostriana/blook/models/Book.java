@@ -42,7 +42,7 @@ public class Book implements Serializable {
     private LocalDate releaseDate;
     private String cover;
     @Builder.Default
-    @OneToMany(mappedBy = "libro")
+    @OneToMany(mappedBy = "libro", orphanRemoval = true)
     private List<Chapter> chapters = new ArrayList<>();
 
     @ManyToOne
