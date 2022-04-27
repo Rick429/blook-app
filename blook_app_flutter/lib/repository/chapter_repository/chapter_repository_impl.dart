@@ -39,4 +39,12 @@ class ChapterRepositoryImpl extends ChapterRepository {
       throw Exception(error.mensaje);
     }
   }
+
+  @override
+  void deleteChapter(String id){
+     _client.delete(Uri.parse('${Constant.baseurl}chapter/$id'), headers: {
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+  }
+
 }

@@ -3,11 +3,15 @@ import 'dart:convert';
 import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
 import 'package:blook_app_flutter/blocs/book_favorite_bloc/book_favorite_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_book_bloc/delete_book_bloc.dart';
+import 'package:blook_app_flutter/blocs/delete_chapter_bloc/delete_chapter_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
+import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
+import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository_impl.dart';
 import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/ui/pdf_viewer.dart';
+import 'package:blook_app_flutter/utils/chapter_widget.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/error_page.dart';
@@ -24,11 +28,13 @@ class BookScreen extends StatefulWidget {
 class _BookScreenState extends State<BookScreen> {
   late BookRepository bookRepository;
   late BookBloc _oneBookBloc;
+  late ChapterRepository chapterRepository;
 
   @override
   void initState() {
     PreferenceUtils.init();
     bookRepository = BookRepositoryImpl();
+    chapterRepository = ChapterRepositoryImpl();
     _oneBookBloc = BookBloc(bookRepository)..add(const FetchOneBook());
     super.initState();
   }
@@ -39,7 +45,8 @@ class _BookScreenState extends State<BookScreen> {
         providers: [
           BlocProvider(create: (context) => _oneBookBloc),
           BlocProvider(create: (context) => BookFavoriteBloc(bookRepository)),
-          BlocProvider(create: (context) => DeleteBookBloc(bookRepository))
+          BlocProvider(create: (context) => DeleteBookBloc(bookRepository)),
+          BlocProvider(create: (context) => DeleteChapterBloc(chapterRepository)),
         ],
         child: Scaffold(
             backgroundColor: BlookStyle.blackColor,
@@ -51,7 +58,13 @@ class _BookScreenState extends State<BookScreen> {
                 onRefresh: () async {},
                 child: SingleChildScrollView(
                     physics: NeverScrollableScrollPhysics(),
-                    child: _createBody(context)))));
+                    child: _createBody(context),
+                    ),
+                  ),
+                ));
+              
+
+        
   }
 
   Widget _createBody(BuildContext context) {
@@ -116,6 +129,27 @@ class _BookScreenState extends State<BookScreen> {
             return state is DeleteBookInitial;
           }, builder: (ctx, state) {
             if (state is DeleteBookInitial) {
+              return Container();
+            } else {
+              return Container();
+            }
+          }),
+          BlocConsumer<DeleteChapterBloc, DeleteChapterState>(
+              listenWhen: (context, state) {
+            return state is DeleteChapterSuccessState || state is DeleteChapterErrorState;
+          }, listener: (context, state) {
+            if (state is DeleteChapterSuccessState) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MenuScreen()),
+              );
+            } else if (state is DeleteChapterErrorState) {
+              _showSnackbar(context, state.message);
+            }
+          }, buildWhen: (context, state) {
+            return state is DeleteChapterInitial;
+          }, builder: (ctx, state) {
+            if (state is DeleteChapterInitial) {
               return Container();
             } else {
               return Container();
@@ -429,7 +463,7 @@ class _BookScreenState extends State<BookScreen> {
               itemCount: book.chapters.length,
               itemBuilder: (context, index) {
                 lista = book.chapters;
-                return _chapterItem(lista.elementAt(index), index);
+                return _chapterItem(lista.elementAt(index), index, book.autor);
               },
             ),
           ),
@@ -438,7 +472,7 @@ class _BookScreenState extends State<BookScreen> {
     );
   }
 
-  Widget _chapterItem(Chapter chapter, index) {
+  Widget _chapterItem(Chapter chapter, index, String bookAutor) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
       child: ElevatedButton(
@@ -453,20 +487,7 @@ class _BookScreenState extends State<BookScreen> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => PdfViewer(document: chapter.file)));
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Capitulo ${index + 1}: " + utf8.decode(chapter.name.codeUnits),
-              style: BlookStyle.textCustom(
-                  BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-            ),
-            const Icon(
-              Icons.arrow_forward_ios_sharp,
-              color: BlookStyle.whiteColor,
-            )
-          ],
-        ),
+        child: ChapterWidget(bookAutor: bookAutor, idChapter: chapter.id, index: index, chapterName: chapter.name,)
       ),
     );
   }

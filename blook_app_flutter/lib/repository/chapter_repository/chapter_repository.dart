@@ -6,4 +6,5 @@ abstract class ChapterRepository {
 
   Future<Chapter> createChapter(CreateChapterDto createChapterDto, String filename, String idbook);
   
+  void deleteChapter(String id);
 }
