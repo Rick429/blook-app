@@ -81,7 +81,7 @@ public class ChapterService {
         } else {
             c.get().removeChapterFromBook(c.get().getLibro());
             storageService.deleteFile(c.get().getFile());
-            bookRepository.deleteById(id);
+            chapterRepository.deleteById(id);
         }
     }
 
