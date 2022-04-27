@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
 import 'package:blook_app_flutter/blocs/book_favorite_bloc/book_favorite_bloc.dart';
+import 'package:blook_app_flutter/blocs/delete_book_bloc/delete_book_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
@@ -37,7 +38,8 @@ class _BookScreenState extends State<BookScreen> {
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => _oneBookBloc),
-          BlocProvider(create: (context) => BookFavoriteBloc(bookRepository))
+          BlocProvider(create: (context) => BookFavoriteBloc(bookRepository)),
+          BlocProvider(create: (context) => DeleteBookBloc(bookRepository))
         ],
         child: Scaffold(
             backgroundColor: BlookStyle.blackColor,
@@ -97,6 +99,27 @@ class _BookScreenState extends State<BookScreen> {
             } else {
               return favorite(ctx);
             }
+          }),
+           BlocConsumer<DeleteBookBloc, DeleteBookState>(
+              listenWhen: (context, state) {
+            return state is DeleteSuccessState || state is DeleteErrorState;
+          }, listener: (context, state) {
+            if (state is DeleteSuccessState) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MenuScreen()),
+              );
+            } else if (state is DeleteErrorState) {
+              _showSnackbar(context, state.message);
+            }
+          }, buildWhen: (context, state) {
+            return state is DeleteBookInitial;
+          }, builder: (ctx, state) {
+            if (state is DeleteBookInitial) {
+              return Container();
+            } else {
+              return Container();
+            }
           })
         ],
       ),
@@ -118,13 +141,51 @@ class _BookScreenState extends State<BookScreen> {
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () {
-              BlocProvider.of<BookFavoriteBloc>(context).add(const AddBookFavorite());
+              BlocProvider.of<BookFavoriteBloc>(context)
+                  .add(const AddBookFavorite());
             },
             child: const Icon(Icons.favorite_border_outlined),
           ),
         ),
       ],
     );
+  }
+
+  Widget deleteBook(BuildContext context, Book book) {
+    if (book.autor == PreferenceUtils.getString("nick")) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children:  [
+          Padding(
+            padding: EdgeInsets.all(18.0),
+            child: Icon(
+              Icons.edit,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(18.0),
+            child: GestureDetector(
+              onTap: () {
+                 BlocProvider.of<DeleteBookBloc>(context)
+                              .add(DeleteOneBookEvent(book.id));
+              },
+              child: Icon(Icons.delete)),
+          )
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: const [
+          Padding(
+            padding: EdgeInsets.all(18.0),
+            child: Icon(
+              Icons.edit,
+            ),
+          )
+        ],
+      );
+    }
   }
 
   Widget buildOne(context, Book book) {
@@ -201,15 +262,8 @@ class _BookScreenState extends State<BookScreen> {
               SizedBox(
                 height: 260,
                 width: MediaQuery.of(context).size.width,
-                child: const Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Icon(
-                      Icons.edit,
-                    ),
-                  ),
-                ),
+                child: Align(
+                    alignment: Alignment.bottomRight, child: deleteBook(context, book)),
               ),
             ],
           ),

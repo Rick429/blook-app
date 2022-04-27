@@ -137,4 +137,12 @@ class BookRepositoryImpl extends BookRepository {
     }
   }
 
+  @override
+  void deleteBook(String id){
+     _client.delete(Uri.parse('${Constant.baseurl}book/$id'), headers: {
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    
+  }
+
 }

@@ -18,4 +18,6 @@ abstract class BookRepository {
 
   Future<List<Book>> findBook(SearchDto searchDto);
 
+  void deleteBook(String id);
+
 }
