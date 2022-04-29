@@ -13,6 +13,7 @@ public class BookDtoConverter {
 
     private final ChapterDtoConverter chapterDtoConverter;
     private final CommentDtoConverter commentDtoConverter;
+    private final GenreDtoConverter genreDtoConverter;
 
     public Book createBookDtoToBook(CreateBookDto createBookDto, String uri) {
         return Book.builder()
@@ -32,6 +33,7 @@ public class BookDtoConverter {
                 .autor(b.getAutorLibroPublicado().getNick())
                 .chapters(b.getChapters().stream().map(chapterDtoConverter::chapterToGetChapterDto).collect(Collectors.toList()))
                 .comments(b.getComentarios().stream().map(commentDtoConverter::commentToGetCommentDto).collect(Collectors.toList()))
+                .genres(b.getGenres().stream().map(genreDtoConverter::genreToGetGenreDto).collect(Collectors.toList()))
                 .build();
     }
 }

@@ -20,4 +20,5 @@ public class GetBookDto {
     private String autor;
     private List<GetChapterDto> chapters;
     private List<GetCommentDto> comments;
+    private List<GetGenreDto> genres;
 }
