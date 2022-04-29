@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:blook_app_flutter/blocs/books_bloc/books_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
+import 'package:blook_app_flutter/models/genre_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
@@ -10,6 +11,8 @@ import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:blook_app_flutter/widgets/home_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -56,89 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _createBody(BuildContext context) {
     return Column(children: [
-      Stack(
-        children: [
-          Image.asset(
-            "assets/images/portada.jpg",
-            height: 350,
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 230),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  "HARRY POTTER",
-                  style: BlookStyle.textCustom(
-                      BlookStyle.whiteColor, BlookStyle.textSizeSix),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 300),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                    margin: const EdgeInsets.all(4),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: BlookStyle.whiteColor),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                      "Fantasia",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree),
-                    )),
-                Container(
-                    margin: const EdgeInsets.all(4),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: BlookStyle.whiteColor),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                      "Fantasia",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree),
-                    )),
-                Container(
-                    margin: const EdgeInsets.all(4),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: BlookStyle.whiteColor),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                      "Fantasia",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree),
-                    )),
-              ],
-            ),
-          )
-        ],
-      ),
-      Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(5),
-            width: 130,
-            child: ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  "Leer",
-                  style: BlookStyle.textCustom(
-                      BlookStyle.whiteColor, BlookStyle.textSizeFour),
-                )),
-          ),
-          const Icon(
-            Icons.favorite,
-            color: BlookStyle.whiteColor,
-          )
-        ],
-      ),
+      
       BlocBuilder<BooksBloc, BooksState>(
         bloc: _topNewBooksBloc,
         builder: (context, state) {
@@ -148,12 +69,17 @@ class _HomeScreenState extends State<HomeScreen> {
             return ErrorPage(
               message: state.message,
               retry: () {
-                context.watch<BooksBloc>().add(FetchBooksWithType("new/"));
+                context.watch<BooksBloc>().add(const FetchBooksWithType("new/"));
               },
             );
           } else if (state is BooksFetched) {
-            return _createBookView(
-                "Añadidos Recientemente", context, state.books);
+            return Column(
+              children: [
+                principalBook(state.books.first),
+                _createBookView(
+                    "Añadidos Recientemente", context, state.books),
+              ],
+            );
           } else {
             return const Text('Not support');
           }
@@ -179,6 +105,95 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     ]);
+  }
+
+  Widget principalBook(Book book){
+    var lista;
+    return Column(children: [
+      Stack(
+        children: [
+          Image.network(
+                    book.cover,
+                    headers: {
+                      'Authorization':
+                          'Bearer ${PreferenceUtils.getString('token')}'
+                    },
+            height: 350,
+            width: MediaQuery.of(context).size.width,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            height: 300,
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.only(top: 160),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                     utf8.decode(book.name.codeUnits),
+                    style: BlookStyle.textPrincipal, overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+           Container(
+            width: MediaQuery.of(context).size.width,
+            height: 40,
+            margin: const EdgeInsets.only(top: 300),
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: book.genres.length,
+              itemBuilder: (context, index) {
+                lista = book.genres;
+                return oneGenre(context, lista.elementAt(index));
+              },
+            ),
+          ),
+          
+        ],
+      ),
+      Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(5),
+            width: 130,
+            child: ElevatedButton(
+                onPressed: () {
+                  PreferenceUtils.setString("idbook", book.id);
+                  Navigator.pushNamed(context, "/book");
+                },
+                child: Text(
+                  "Leer",
+                  style: BlookStyle.textCustom(
+                      BlookStyle.whiteColor, BlookStyle.textSizeFour),
+                )),
+          ),
+          const Icon(
+            Icons.favorite,
+            color: BlookStyle.whiteColor,
+          )
+        ],
+      ),
+    ],);
+  }
+
+  Widget oneGenre (context, Genre genre) {
+    return Container(
+      width: 80,
+                    margin: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.only(top: 6),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: BlookStyle.whiteColor),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Text(
+                      utf8.decode(genre.name.codeUnits),
+                      style: BlookStyle.textCustom(
+                          BlookStyle.whiteColor, BlookStyle.textSizeThree),textAlign: TextAlign.center,
+                    ));
   }
 
   Widget _createBookView(

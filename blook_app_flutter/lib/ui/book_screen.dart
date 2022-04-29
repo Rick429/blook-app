@@ -5,7 +5,9 @@ import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
 import 'package:blook_app_flutter/blocs/book_favorite_bloc/book_favorite_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_book_bloc/delete_book_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_chapter_bloc/delete_chapter_bloc.dart';
+import 'package:blook_app_flutter/blocs/remove_favorite_bloc/remove_favorite_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
+import 'package:blook_app_flutter/models/favorite_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
@@ -50,6 +52,7 @@ class _BookScreenState extends State<BookScreen> {
           BlocProvider(create: (context) => DeleteBookBloc(bookRepository)),
           BlocProvider(
               create: (context) => DeleteChapterBloc(chapterRepository)),
+          BlocProvider(create: (context) => RemoveFavoriteBloc(bookRepository))
         ],
         child: Scaffold(
           backgroundColor: BlookStyle.blackColor,
@@ -86,6 +89,8 @@ class _BookScreenState extends State<BookScreen> {
                   },
                 );
               } else if (state is OneBookFetched) {
+                PreferenceUtils.setBool(
+                    "favorite", state.favoriteResponse.favorito);
                 return buildOne(context, state.book);
               } else {
                 return const Text('Not support');
@@ -97,10 +102,10 @@ class _BookScreenState extends State<BookScreen> {
             return state is BookFavorite || state is BookFavoriteError;
           }, listener: (context, state) {
             if (state is BookFavorite) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MenuScreen()),
-              );
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => this.widget));
             } else if (state is BookFavoriteError) {
               _showSnackbar(context, state.message);
             }
@@ -155,7 +160,28 @@ class _BookScreenState extends State<BookScreen> {
             } else {
               return Container();
             }
-          })
+          }),
+          BlocConsumer<RemoveFavoriteBloc, RemoveFavoriteState>(
+              listenWhen: (context, state) {
+            return state is RemoveSuccessState || state is RemoveErrorState;
+          }, listener: (context, state) {
+            if (state is RemoveSuccessState) {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => this.widget));
+            } else if (state is RemoveErrorState) {
+              _showSnackbar(context, state.message);
+            }
+          }, buildWhen: (context, state) {
+            return state is RemoveFavoriteInitial;
+          }, builder: (ctx, state) {
+            if (state is RemoveFavoriteInitial) {
+              return Container();
+            } else {
+              return Container();
+            }
+          }),
         ],
       ),
     );
@@ -169,21 +195,49 @@ class _BookScreenState extends State<BookScreen> {
   }
 
   Widget favorite(context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () {
-              BlocProvider.of<BookFavoriteBloc>(context)
-                  .add(const AddBookFavorite());
-            },
-            child: const Icon(Icons.favorite_border_outlined),
-          ),
+    if (PreferenceUtils.getBool("favorite")) {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  BlocProvider.of<RemoveFavoriteBloc>(context).add(
+                      RemoveFavoriteBookEvent(
+                          PreferenceUtils.getString("idbook")!));
+                },
+                child: const Icon(
+                  Icons.favorite,
+                  color: BlookStyle.redColor,
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
-    );
+      );
+    } else {
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  BlocProvider.of<BookFavoriteBloc>(context)
+                      .add(const AddBookFavorite());
+                },
+                child: const Icon(Icons.favorite_border_outlined),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   AwesomeDialog _createDialog(context, String id) {
@@ -198,8 +252,10 @@ class _BookScreenState extends State<BookScreen> {
       dialogBackgroundColor: BlookStyle.quaternaryColor,
       btnOkColor: BlookStyle.primaryColor,
       btnCancelColor: BlookStyle.redColor,
-      titleTextStyle: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
-      descTextStyle: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
       btnOkOnPress: () {
         BlocProvider.of<DeleteBookBloc>(context).add(DeleteOneBookEvent(id));
       },
@@ -378,9 +434,13 @@ class _BookScreenState extends State<BookScreen> {
                   elevation: 15.0,
                 ),
                 onPressed: () {
-                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  InfoBookScrenn(book: book,)),);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InfoBookScrenn(
+                              book: book,
+                            )),
+                  );
                 },
                 child: Text("Ver información",
                     style: BlookStyle.textCustom(

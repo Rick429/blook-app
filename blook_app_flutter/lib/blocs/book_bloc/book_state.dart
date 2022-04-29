@@ -11,8 +11,9 @@ class BookInitial extends BookState {}
 
 class OneBookFetched extends BookState {
   final Book book;
+  final FavoriteResponse favoriteResponse;
 
-  const OneBookFetched(this.book);
+  const OneBookFetched(this.book, this.favoriteResponse);
 
   @override
   List<Object> get props => [book];

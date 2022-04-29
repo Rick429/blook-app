@@ -26,6 +26,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController password2Controller = TextEditingController();
   late AuthRepository authRepository;
+  bool _obscureText = true;
+   Icon iconpass = const Icon(Icons.remove_red_eye_outlined);
 
   @override
   void initState() {
@@ -83,6 +85,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
       content: Text(message),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+      if(_obscureText){
+        iconpass= const Icon(Icons.remove_red_eye_outlined);
+      } else {
+        iconpass = const Icon(Icons.remove_red_eye);
+      }
+    });
   }
 
   Widget buildF(BuildContext context) {
@@ -212,7 +225,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: passwordController,
-                    obscureText: true,
+                    obscureText: _obscureText,
                     textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
@@ -220,7 +233,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100.0),
                       ),
-                      suffixIcon: const Icon(Icons.remove_red_eye),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          _toggle();
+                        },
+                        child: iconpass),
                       suffixIconColor: Colors.white,
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
@@ -241,7 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: password2Controller,
-                    obscureText: true,
+                    obscureText: _obscureText,
                     textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
@@ -249,7 +266,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100.0),
                       ),
-                      suffixIcon: const Icon(Icons.remove_red_eye),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          _toggle();
+                        },
+                        child: iconpass),
                       suffixIconColor: Colors.white,
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),

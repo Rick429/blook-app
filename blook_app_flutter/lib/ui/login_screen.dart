@@ -21,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _obscureText = true;
+  Icon iconpass = const Icon(Icons.remove_red_eye_outlined);
 
   @override
   void initState() {
@@ -79,6 +81,17 @@ class _LoginScreenState extends State<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+      if(_obscureText){
+        iconpass= const Icon(Icons.remove_red_eye_outlined);
+      } else {
+        iconpass = const Icon(Icons.remove_red_eye);
+      }
+    });
+  }
+
   Widget buildForm(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
@@ -132,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                     controller: passwordController,
-                    obscureText: true,
+                    obscureText: _obscureText,
                     textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
@@ -142,6 +155,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
+                        suffixIcon: GestureDetector(
+                        onTap: () {
+                          _toggle();
+                        },
+                        child: iconpass),
+                      suffixIconColor: Colors.white,
                       prefixIcon: const Padding(
                         padding: EdgeInsets.only(left: 5),
                         child: Icon(Icons.lock_outlined),

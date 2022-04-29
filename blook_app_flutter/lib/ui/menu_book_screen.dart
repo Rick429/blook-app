@@ -43,14 +43,17 @@ class _MenuBookScreenState extends State<MenuBookScreen> {
           children: [
             GestureDetector(
               child: Container(
+              width: 150,
               margin: const EdgeInsets.all(8),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: BlookStyle.primaryColor,
                     elevation: 15.0,
                   ),
-                  onPressed: () {},
-                  child: Text("Seguir leyendo",
+                  onPressed: () {
+                    
+                  },
+                  child: Text("Leer",
                       style: BlookStyle.textCustom(
                           BlookStyle.whiteColor, BlookStyle.textSizeThree))),
             ),

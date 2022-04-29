@@ -3,6 +3,7 @@ import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
 import 'package:blook_app_flutter/models/error_response.dart';
+import 'package:blook_app_flutter/models/favorite_response.dart';
 import 'package:blook_app_flutter/models/search_dto.dart';
 import 'package:blook_app_flutter/models/user_dto.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
@@ -142,6 +143,27 @@ class BookRepositoryImpl extends BookRepository {
      _client.delete(Uri.parse('${Constant.baseurl}book/$id'), headers: {
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
     });
+  }
+
+   @override
+  void removeFavorite(String id){
+     _client.delete(Uri.parse('${Constant.baseurl}book/favorite/remove/$id'), headers: {
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+  }
+
+  @override
+  Future<FavoriteResponse> isFavorite(String id) async{
+     final response = await _client.get(Uri.parse('${Constant.baseurl}book/favorite/bool/$id'), headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    if (response.statusCode == 200) {
+      return FavoriteResponse.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Fail to load');
+    }
   }
 
 }

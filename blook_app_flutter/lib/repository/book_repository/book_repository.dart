@@ -1,5 +1,6 @@
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
+import 'package:blook_app_flutter/models/favorite_response.dart';
 import 'package:blook_app_flutter/models/search_dto.dart';
 
 abstract class BookRepository {
@@ -19,5 +20,9 @@ abstract class BookRepository {
   Future<List<Book>> findBook(SearchDto searchDto);
 
   void deleteBook(String id);
+
+  void removeFavorite (String id);
+
+  Future<FavoriteResponse> isFavorite(String id);
 
 }

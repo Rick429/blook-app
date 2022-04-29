@@ -1,4 +1,5 @@
 import 'package:blook_app_flutter/models/comment_response.dart';
+import 'package:blook_app_flutter/models/genre_response.dart';
 
 class BookResponse {
   BookResponse({
@@ -67,6 +68,7 @@ class Book {
     required this.autor,
     required this.chapters,
     required this.comments,
+    required this.genres,
   });
   late final String id;
   late final String name;
@@ -76,7 +78,8 @@ class Book {
   late final String autor;
   late final List<Chapter> chapters;
   late final List<Comment> comments;
-  
+  late final List<Genre> genres;
+
   Book.fromJson(Map<String, dynamic> json){
     id = json['id'];
     name = json['name'];
@@ -86,6 +89,7 @@ class Book {
     autor = json['autor'];
     chapters = List.from(json['chapters']).map((e)=>Chapter.fromJson(e)).toList();
     comments = List.from(json['comments']).map((e)=>Comment.fromJson(e)).toList();
+    genres = List.from(json['genres']).map((e)=>Genre.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -98,6 +102,7 @@ class Book {
     _data['autor'] = autor;
     _data['chapters'] = chapters.map((e)=>e.toJson()).toList();
     _data['comments'] = comments.map((e)=>e.toJson()).toList();
+    _data['genres'] = genres.map((e)=>e.toJson()).toList();
     return _data;
   }
 }

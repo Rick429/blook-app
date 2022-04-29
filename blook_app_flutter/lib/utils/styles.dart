@@ -40,4 +40,12 @@ class BlookStyle {
         fontWeight: FontWeight.w500,
         fontSize: fSize,
       );
+  
+  static TextStyle get textPrincipal => GoogleFonts.getFont(
+        'Mohave',
+        color: BlookStyle.whiteColor,
+        fontWeight: FontWeight.w500,
+        fontSize: BlookStyle.textSizeSix,
+        height: 1
+      );
 }
