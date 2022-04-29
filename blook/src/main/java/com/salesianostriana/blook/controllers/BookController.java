@@ -234,4 +234,40 @@ public class BookController {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
+
+    @Operation(summary = "Eliminar de favoritos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Elimina un libro a la lista de favoritos del usuario",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontro el libro",
+                    content = @Content),
+    })
+    @PostMapping("/favorite/remove/{id}")
+    public ResponseEntity<GetBookDto> removeFavoriteBook(@PathVariable UUID id,
+                                                      @AuthenticationPrincipal UserEntity user) {
+        bookService.removeFavoriteBook(id, user);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @Operation(summary = "Comprobar si un libro es favorito")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Si el libro esta en la lista de favoritos del usuario",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontro el libro",
+                    content = @Content),
+    })
+    @GetMapping("/favorite/bool/{id}")
+    public FavoriteDto isFavoriteBook(@PathVariable UUID id,@AuthenticationPrincipal UserEntity user) {
+         FavoriteDto f = FavoriteDto.builder()
+                 .favorito(bookService.isFavorite(id, user))
+                 .build();
+         return f;
+    }
 }

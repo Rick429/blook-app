@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.userdetails.User;
+
 import java.util.UUID;
 
 public interface BookRepository extends JpaRepository<Book, UUID> {
@@ -20,4 +22,6 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     Page<Book> findAllByOrderByNameAsc(Pageable pageable);
 
     Page<Book> findByNameIgnoreCaseContains(String name, Pageable pageable);
+
+    boolean existsByIdAndUserLibroFavorito(UUID id, UserEntity user);
 }

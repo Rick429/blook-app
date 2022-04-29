@@ -188,4 +188,28 @@ public class BookService {
         }
     }
 
+    public void removeFavoriteBook(UUID idbook, UserEntity user){
+        Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+        if(u.isEmpty()) {
+            throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
+        } else {
+            Optional<Book> b = bookRepository.findById(idbook);
+            if(b.isEmpty()) {
+                throw new OneEntityNotFound(idbook.toString(), Book.class);
+            } else {
+                b.get().removeBookFavoriteFromUser(u.get());
+                bookRepository.save(b.get());
+            }
+        }
+    }
+
+    public boolean isFavorite(UUID idbook, UserEntity user){
+        Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+        if(u.isEmpty()) {
+            throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
+        } else {
+            return  bookRepository.existsByIdAndUserLibroFavorito(idbook, u.get());
+        }
+    }
+
 }

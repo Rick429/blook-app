@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +40,7 @@ public class Book implements Serializable {
     @Column(length = 1000)
     private String description;
     @CreatedDate
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
     private String cover;
     @Builder.Default
     @OneToMany(mappedBy = "libro", orphanRemoval = true)

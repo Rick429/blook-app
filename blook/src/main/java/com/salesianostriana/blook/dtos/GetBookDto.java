@@ -2,6 +2,7 @@ package com.salesianostriana.blook.dtos;
 
 import lombok.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ public class GetBookDto {
     private UUID id;
     private String name;
     private String description;
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
     private String cover;
     private String autor;
     private List<GetChapterDto> chapters;
