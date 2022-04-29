@@ -210,42 +210,97 @@ Widget _createBody(BuildContext context) {
           return Container(
             decoration: BoxDecoration(color: BlookStyle.quaternaryColor),
             height: 200,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: BlookStyle.primaryColor,
-                    elevation: 15.0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                    SizedBox(
+                      width: 150,
+                      child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: BlookStyle.primaryColor,
+                        elevation: 15.0,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          title="más reciente";
+                          books.sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: Text("Más reciente",
+                          style: BlookStyle.textCustom(
+                              BlookStyle.whiteColor, BlookStyle.textSizeThree)),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      title="nombre de la A-Z";
-                      books.sort((a, b) => b.name.compareTo(a.name));
-                      Navigator.pop(context);
-                    });
-                  },
-                  child: Text("Ordenar de A-Z",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree)),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: BlookStyle.primaryColor,
-                    elevation: 15.0,
+                    ),
+                  SizedBox(
+                    width: 150,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: BlookStyle.primaryColor,
+                        elevation: 15.0,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          title="más antiguo";
+                          books.sort((a, b) => a.releaseDate.compareTo(b.releaseDate));
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: Text("Más antiguo",
+                          style: BlookStyle.textCustom(
+                              BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                    ),
+                  )
+                  ],),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        width: 150,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: BlookStyle.primaryColor,
+                            elevation: 15.0,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              books.sort((a, b) => b.name.compareTo(a.name));
+                              title="nombre de A-Z";
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: Text("Ordenar de A-Z",
+                              style: BlookStyle.textCustom(
+                                  BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 150,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: BlookStyle.primaryColor,
+                            elevation: 15.0,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              title="nombre de Z-A";
+                              books.sort((a, b) => a.name.compareTo(b.name));
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: Text("Ordenar de Z-A",
+                              style: BlookStyle.textCustom(
+                                  BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                        ),
+                      ),
+                    ],
                   ),
-                  onPressed: () {
-                    setState(() {
-                      title="nombre de la Z-A";
-                      books.sort((a, b) => a.name.compareTo(b.name));
-                      Navigator.pop(context);
-                    });
-                  },
-                  child: Text("Ordenar de Z-A",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree)),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         });

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_chapter_bloc/delete_chapter_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
@@ -45,7 +46,6 @@ class _ChapterWidgetState extends State<ChapterWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     if (PreferenceUtils.getString("nick") == autorLibro) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,16 +63,11 @@ class _ChapterWidgetState extends State<ChapterWidget> {
             Icons.arrow_forward_ios_sharp,
             color: BlookStyle.whiteColor,
           ),
-          GestureDetector(
-            onTap: () {
-              BlocProvider.of<DeleteChapterBloc>(context)
-                  .add(DeleteOneChapterEvent(idCapitulo));
-            },
-            child: const Icon(
-              Icons.delete,
-              color: BlookStyle.whiteColor,
-            ),
-          )
+          IconButton(
+              onPressed: () {
+                _createDialog(context, idCapitulo);
+              },
+              icon: Icon(Icons.delete))
         ],
       );
     } else {
@@ -91,5 +86,29 @@ class _ChapterWidgetState extends State<ChapterWidget> {
         ],
       );
     }
+  }
+
+  AwesomeDialog _createDialog(context, String id) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.INFO,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Eliminar',
+      desc: '¿Seguro que desea eliminar el capítulo?',
+      btnCancelText: "Cancelar",
+      btnOkText: "Eliminar",
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      btnCancelColor: BlookStyle.redColor,
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkOnPress: () {
+        BlocProvider.of<DeleteChapterBloc>(context)
+            .add(DeleteOneChapterEvent(idCapitulo));
+      },
+      btnCancelOnPress: () {},
+    )..show();
   }
 }

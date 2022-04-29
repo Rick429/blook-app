@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/chapter_new_bloc/chapter_new_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/create_chapter_dto.dart';
@@ -77,10 +78,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
           }, listener: (context, state) {
             if (state is CreateChapterSuccessState) {
               PreferenceUtils.setString(Constant.file, state.pickedFile);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MenuScreen()),
-              );
+              _createDialog(context);
             } else if (state is CreateChapterErrorState) {
               _showSnackbar(context, state.toString());
             }
@@ -96,6 +94,24 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
         ]),
       ),
     );
+  }
+
+  AwesomeDialog _createDialog(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      dialogType: DialogType.SUCCES,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Correcto',
+      desc: 'El libro se ha creado correctamente',
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkText: "Aceptar",
+      btnOkOnPress: () {},
+    )..show();
   }
 
   void _showSnackbar(BuildContext context, String message) {
@@ -191,13 +207,17 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                       if (_formKey.currentState!.validate()) {
                         final createChapterDto =
                             CreateChapterDto(name: nameController.text);
-
-                        BlocProvider.of<ChapterNewBloc>(context).add(
-                            CreateChapterEvent(
-                                PreferenceUtils.getString("image")!,
-                                createChapterDto,
-                                PreferenceUtils.getString("idbook")!));
-                        Navigator.pushNamed(context, '/');
+                        if (!PreferenceUtils.getString("image")!
+                            .endsWith('.pdf')) {
+                          _createDialogC(context);
+                        } else {
+                          BlocProvider.of<ChapterNewBloc>(context).add(
+                              CreateChapterEvent(
+                                  PreferenceUtils.getString("image")!,
+                                  createChapterDto,
+                                  PreferenceUtils.getString("idbook")!));
+                          Navigator.pushNamed(context, '/');
+                        }
                       }
                     },
                     child: Text("Publicar",
@@ -209,5 +229,23 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
         ),
       ]),
     );
+  }
+
+  AwesomeDialog _createDialogC(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.ERROR,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Error',
+      desc: 'Debe seleccionar un archivo en formato pdf',
+      btnOkText: "Aceptar",
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkOnPress: () {},
+    )..show();
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
 import 'package:blook_app_flutter/blocs/book_favorite_bloc/book_favorite_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_book_bloc/delete_book_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:blook_app_flutter/repository/book_repository/book_repository.dar
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository_impl.dart';
+import 'package:blook_app_flutter/ui/info_book_screen.dart';
 import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/ui/pdf_viewer.dart';
 import 'package:blook_app_flutter/utils/chapter_widget.dart';
@@ -46,25 +48,23 @@ class _BookScreenState extends State<BookScreen> {
           BlocProvider(create: (context) => _oneBookBloc),
           BlocProvider(create: (context) => BookFavoriteBloc(bookRepository)),
           BlocProvider(create: (context) => DeleteBookBloc(bookRepository)),
-          BlocProvider(create: (context) => DeleteChapterBloc(chapterRepository)),
+          BlocProvider(
+              create: (context) => DeleteChapterBloc(chapterRepository)),
         ],
         child: Scaffold(
-            backgroundColor: BlookStyle.blackColor,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: BlookStyle.blackColor,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            iconTheme: const IconThemeData(color: Colors.white),
+          ),
+          body: RefreshIndicator(
+            onRefresh: () async {},
+            child: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: _createBody(context),
             ),
-            body: RefreshIndicator(
-                onRefresh: () async {},
-                child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: _createBody(context),
-                    ),
-                  ),
-                ));
-              
-
-        
+          ),
+        ));
   }
 
   Widget _createBody(BuildContext context) {
@@ -113,7 +113,7 @@ class _BookScreenState extends State<BookScreen> {
               return favorite(ctx);
             }
           }),
-           BlocConsumer<DeleteBookBloc, DeleteBookState>(
+          BlocConsumer<DeleteBookBloc, DeleteBookState>(
               listenWhen: (context, state) {
             return state is DeleteSuccessState || state is DeleteErrorState;
           }, listener: (context, state) {
@@ -136,7 +136,8 @@ class _BookScreenState extends State<BookScreen> {
           }),
           BlocConsumer<DeleteChapterBloc, DeleteChapterState>(
               listenWhen: (context, state) {
-            return state is DeleteChapterSuccessState || state is DeleteChapterErrorState;
+            return state is DeleteChapterSuccessState ||
+                state is DeleteChapterErrorState;
           }, listener: (context, state) {
             if (state is DeleteChapterSuccessState) {
               Navigator.push(
@@ -185,26 +186,45 @@ class _BookScreenState extends State<BookScreen> {
     );
   }
 
+  AwesomeDialog _createDialog(context, String id) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.INFO,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Eliminar',
+      desc: '¿Seguro que desea eliminar el libro?',
+      btnCancelText: "Cancelar",
+      btnOkText: "Eliminar",
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      btnCancelColor: BlookStyle.redColor,
+      titleTextStyle: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkOnPress: () {
+        BlocProvider.of<DeleteBookBloc>(context).add(DeleteOneBookEvent(id));
+      },
+      btnCancelOnPress: () {},
+    )..show();
+  }
+
   Widget deleteBook(BuildContext context, Book book) {
     if (book.autor == PreferenceUtils.getString("nick")) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children:  [
-          Padding(
-            padding: EdgeInsets.all(18.0),
-            child: Icon(
-              Icons.edit,
-            ),
+        children: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.edit),
           ),
           Padding(
-            padding: EdgeInsets.all(18.0),
-            child: GestureDetector(
-              onTap: () {
-                 BlocProvider.of<DeleteBookBloc>(context)
-                              .add(DeleteOneBookEvent(book.id));
+            padding: const EdgeInsets.all(10.0),
+            child: IconButton(
+              onPressed: () {
+                _createDialog(context, book.id);
               },
-              child: Icon(Icons.delete)),
-          )
+              icon: const Icon(Icons.delete),
+            ),
+          ),
         ],
       );
     } else {
@@ -223,28 +243,28 @@ class _BookScreenState extends State<BookScreen> {
   }
 
   Widget _createChapter(Book book) {
-    if(book.autor==PreferenceUtils.getString("nick")){
+    if (book.autor == PreferenceUtils.getString("nick")) {
       return GestureDetector(
-                  onTap: () {
-                    PreferenceUtils.setString("idBook", book.id);
-                    Navigator.pushNamed(context, '/chapternew');
-                  },
-                  child: Container(
-                    width: 50,
-                    height: 30,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                        color: BlookStyle.primaryColor,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      "+",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
+        onTap: () {
+          PreferenceUtils.setString("idBook", book.id);
+          Navigator.pushNamed(context, '/chapternew');
+        },
+        child: Container(
+          width: 50,
+          height: 30,
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+              color: BlookStyle.primaryColor,
+              borderRadius: BorderRadius.circular(10)),
+          child: Text(
+            "+",
+            style: BlookStyle.textCustom(
+                BlookStyle.whiteColor, BlookStyle.textSizeThree),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
     } else {
       return Container();
     }
@@ -325,7 +345,8 @@ class _BookScreenState extends State<BookScreen> {
                 height: 260,
                 width: MediaQuery.of(context).size.width,
                 child: Align(
-                    alignment: Alignment.bottomRight, child: deleteBook(context, book)),
+                    alignment: Alignment.bottomRight,
+                    child: deleteBook(context, book)),
               ),
             ],
           ),
@@ -356,7 +377,11 @@ class _BookScreenState extends State<BookScreen> {
                   primary: BlookStyle.primaryColor,
                   elevation: 15.0,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                 Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  InfoBookScrenn(book: book,)),);
+                },
                 child: Text("Ver información",
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeThree))),
@@ -374,90 +399,6 @@ class _BookScreenState extends State<BookScreen> {
                   ),
                 ),
                 _createChapter(book),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            height: 30,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                Container(
-                  width: 70,
-                  height: 20,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: BlookStyle.quaternaryColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    "1-5",
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeOne),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Container(
-                  width: 70,
-                  height: 20,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: BlookStyle.quaternaryColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    "1-5",
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeOne),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Container(
-                  width: 70,
-                  height: 20,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: BlookStyle.quaternaryColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    "1-5",
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeOne),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Container(
-                  width: 70,
-                  height: 20,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: BlookStyle.quaternaryColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    "1-5",
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeOne),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Container(
-                  width: 70,
-                  height: 20,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: BlookStyle.quaternaryColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    "1-5",
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeOne),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
               ],
             ),
           ),
@@ -495,7 +436,12 @@ class _BookScreenState extends State<BookScreen> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => PdfViewer(document: chapter.file)));
         },
-        child: ChapterWidget(bookAutor: bookAutor, idChapter: chapter.id, index: index, chapterName: chapter.name,)
+        child: ChapterWidget(
+          bookAutor: bookAutor,
+          idChapter: chapter.id,
+          index: index,
+          chapterName: chapter.name,
+        ),
       ),
     );
   }
