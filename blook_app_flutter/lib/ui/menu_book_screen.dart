@@ -1,6 +1,7 @@
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/ui/book_screen.dart';
 import 'package:blook_app_flutter/ui/comments_screen.dart';
+import 'package:blook_app_flutter/ui/pdf_viewer.dart';
 import 'package:blook_app_flutter/ui/report_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
@@ -23,8 +24,9 @@ class _MenuBookScreenState extends State<MenuBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: BlookStyle.quaternaryColor,
-        body: pages[_currentIndex], bottomNavigationBar: _buildBottomBar());
+        backgroundColor: BlookStyle.quaternaryColor,
+        body: pages[_currentIndex],
+        bottomNavigationBar: _buildBottomBar());
   }
 
   Widget _buildBottomBar() {
@@ -43,20 +45,23 @@ class _MenuBookScreenState extends State<MenuBookScreen> {
           children: [
             GestureDetector(
               child: Container(
-              width: 150,
-              margin: const EdgeInsets.all(8),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: BlookStyle.primaryColor,
-                    elevation: 15.0,
-                  ),
-                  onPressed: () {
-                    
-                  },
-                  child: Text("Leer",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree))),
-            ),
+                width: 150,
+                margin: const EdgeInsets.all(8),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: BlookStyle.primaryColor,
+                      elevation: 15.0,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PdfViewer(
+                              document: PreferenceUtils.getString("document") ??
+                                  "")));
+                    },
+                    child: Text("Leer",
+                        style: BlookStyle.textCustom(
+                            BlookStyle.whiteColor, BlookStyle.textSizeThree))),
+              ),
               onTap: () {
                 setState(() {
                   _currentIndex = 0;

@@ -91,6 +91,11 @@ class _BookScreenState extends State<BookScreen> {
               } else if (state is OneBookFetched) {
                 PreferenceUtils.setBool(
                     "favorite", state.favoriteResponse.favorito);
+                  if(state.book.chapters.length>0){
+                    PreferenceUtils.setString("document", state.book.chapters.first.file);
+                  } else {
+                    PreferenceUtils.setString("document", "");
+                  }
                 return buildOne(context, state.book);
               } else {
                 return const Text('Not support');
