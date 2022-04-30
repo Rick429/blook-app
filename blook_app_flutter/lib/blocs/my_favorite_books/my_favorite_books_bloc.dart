@@ -15,8 +15,8 @@ class MyFavoriteBooksBloc extends Bloc<MyFavoriteBooksEvent, MyFavoriteBooksStat
 
   void _myFavoritBooksFetched(FetchAllMyFavoriteBooks event, Emitter<MyFavoriteBooksState> emit) async {
     try {
-      final mybooks = await bookRepository.fetchMyFavoriteBooks();
-      emit(MyFavoriteBooksFetched(mybooks));
+      final mybooks = await bookRepository.fetchMyFavoriteBooks(event.size);
+      emit(MyFavoriteBooksFetched(mybooks.content, mybooks.totalElements));
       return;
     } on Exception catch (e) {
       emit(MyFavoriteBooksFetchError(e.toString()));

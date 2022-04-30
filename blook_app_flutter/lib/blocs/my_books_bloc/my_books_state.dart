@@ -11,8 +11,9 @@ class MyBooksInitial extends MyBooksState {}
 
 class MyBooksFetched extends MyBooksState {
   final List<Book> mybooks;
+  final int pagesize; 
 
-  const MyBooksFetched(this.mybooks);
+  const MyBooksFetched(this.mybooks, this.pagesize);
 
   @override
   List<Object> get props => [mybooks];

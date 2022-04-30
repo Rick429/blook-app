@@ -25,7 +25,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   void initState() {
     PreferenceUtils.init();
     bookRepository = BookRepositoryImpl();
-     _myfavoritebooksbloc = MyFavoriteBooksBloc(bookRepository)..add(const FetchAllMyFavoriteBooks());
+     _myfavoritebooksbloc = MyFavoriteBooksBloc(bookRepository)..add(const FetchAllMyFavoriteBooks(10));
     super.initState();
   }
 
@@ -86,7 +86,7 @@ Widget _createBody(BuildContext context) {
               ),
               ],);
             } else if (state is MyFavoriteBooksFetched) {
-              return _booksList(context, state.mybooks);
+              return _booksList(context, state.mybooks, state.pagesize);
             } else {
               return const Text('Not support');
             }
@@ -96,7 +96,7 @@ Widget _createBody(BuildContext context) {
     );
   }
  
-  Widget _booksList(context, List<Book> myfavoritebooks) {
+  Widget _booksList(context, List<Book> myfavoritebooks, int pagesize) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -146,6 +146,9 @@ Widget _createBody(BuildContext context) {
             scrollDirection: Axis.vertical,
               itemCount: myfavoritebooks.length,
               itemBuilder: (context, index) {
+              if(index==myfavoritebooks.length-1&&myfavoritebooks.length<pagesize){
+                  context.watch<MyFavoriteBooksBloc>().add(FetchAllMyFavoriteBooks(index+10));
+                }
               return _bookItem(myfavoritebooks.elementAt(index));
               },
               ),

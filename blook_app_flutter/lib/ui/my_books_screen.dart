@@ -25,7 +25,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
   void initState() {
     PreferenceUtils.init();
     bookRepository = BookRepositoryImpl();
-    _mybooksbloc = MyBooksBloc(bookRepository)..add(const FetchAllMyBooks());
+    _mybooksbloc = MyBooksBloc(bookRepository)..add(const FetchAllMyBooks(10));
     super.initState();
   }
 
@@ -89,7 +89,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
               ],
             );
           } else if (state is MyBooksFetched) {
-            return _booksList(context, state.mybooks);
+            return _booksList(context, state.mybooks, state.pagesize);
           } else {
             return const Text('Not support');
           }
@@ -98,7 +98,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
     );
   }
 
-  Widget _booksList(context, List<Book> mybooks) {
+  Widget _booksList(context, List<Book> mybooks, int pagesize) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -148,6 +148,11 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
               scrollDirection: Axis.vertical,
               itemCount: mybooks.length,
               itemBuilder: (context, index) {
+                print(index);
+                print("size $pagesize");
+                if(index==mybooks.length-1&&mybooks.length<pagesize){
+                  context.watch<MyBooksBloc>().add(FetchAllMyBooks(index+10));
+                }
                 return _bookItem(mybooks.elementAt(index));
               },
             ),

@@ -8,9 +8,9 @@ abstract class MyBooksEvent extends Equatable {
 }
 
 class FetchAllMyBooks extends MyBooksEvent {
-
-  const FetchAllMyBooks();
+  final int size;
+  const FetchAllMyBooks(this.size);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [size];
 }

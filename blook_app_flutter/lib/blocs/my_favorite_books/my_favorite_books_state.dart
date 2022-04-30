@@ -11,11 +11,12 @@ class MyFavoriteBooksInitial extends MyFavoriteBooksState {}
 
 class MyFavoriteBooksFetched extends MyFavoriteBooksState {
   final List<Book> mybooks;
+  final int pagesize; 
 
-  const MyFavoriteBooksFetched(this.mybooks);
+  const MyFavoriteBooksFetched(this.mybooks, this.pagesize);
 
   @override
-  List<Object> get props => [mybooks];
+  List<Object> get props => [mybooks, pagesize];
 }
 
 class MyFavoriteBooksFetchError extends MyFavoriteBooksState {

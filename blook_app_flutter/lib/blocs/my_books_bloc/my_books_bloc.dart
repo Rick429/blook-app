@@ -15,8 +15,8 @@ class MyBooksBloc extends Bloc<MyBooksEvent, MyBooksState> {
 
    void _mybooksFetched(FetchAllMyBooks event, Emitter<MyBooksState> emit) async {
     try {
-      final mybooks = await bookRepository.fetchMyBooks();
-      emit(MyBooksFetched(mybooks));
+      final mybooks = await bookRepository.fetchMyBooks(event.size);
+      emit(MyBooksFetched(mybooks.content, mybooks.totalElements));
       return;
     } on Exception catch (e) {
       emit(MyBooksFetchError(e.toString()));

@@ -7,13 +7,13 @@ abstract class BookRepository {
 
   Future<Book> createBook(CreateBookDto createBookDto, String filename);
 
-  Future<List<Book>>fetchMyBooks();
+  Future<BookResponse>fetchMyBooks(int size);
 
   Future<Book> findBookById(String id);
   
   Future<Book> addFavoriteBook(String id);
 
-  Future<List<Book>>fetchMyFavoriteBooks();
+  Future<BookResponse>fetchMyFavoriteBooks(int size);
 
   Future<List<Book>> fetchBooks(String type);
 

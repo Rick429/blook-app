@@ -43,14 +43,14 @@ class BookRepositoryImpl extends BookRepository {
   }
 
   @override
-  Future<List<Book>>fetchMyBooks() async{
-     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/user/${PreferenceUtils.getString("nick")}?size=100'), headers: {
+  Future <BookResponse> fetchMyBooks(int size) async{
+     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/user/${PreferenceUtils.getString("nick")}?size=$size'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
     });
     if (response.statusCode == 200) {
-      return BookResponse.fromJson(json.decode(response.body)).content;
+      return BookResponse.fromJson(json.decode(response.body));
     } else {
       throw Exception('Fail to load books');
     }
@@ -85,14 +85,14 @@ class BookRepositoryImpl extends BookRepository {
   }
 
   @override
-  Future<List<Book>>fetchMyFavoriteBooks() async{
-     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/favorite/${PreferenceUtils.getString("nick")}?size=100'), headers: {
+  Future<BookResponse>fetchMyFavoriteBooks(int size) async{
+     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/favorite/${PreferenceUtils.getString("nick")}?size=$size'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
     });
     if (response.statusCode == 200) {
-      return BookResponse.fromJson(json.decode(response.body)).content;
+      return BookResponse.fromJson(json.decode(response.body));
     } else {
       throw Exception('Fail to load books');
     }
@@ -100,7 +100,7 @@ class BookRepositoryImpl extends BookRepository {
 
   @override
   Future<List<Book>>fetchBooks(String type) async{
-     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/$type?size=100'), headers: {
+     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/$type'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
