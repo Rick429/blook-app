@@ -43,8 +43,10 @@ class BookRepositoryImpl extends BookRepository {
   }
 
   @override
-  Future <BookResponse> fetchMyBooks(int size) async{
-     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/user/${PreferenceUtils.getString("nick")}?size=$size'), headers: {
+  Future <BookResponse> fetchMyBooks(int size, String sortedList) async{
+     final response = await _client.get(Uri.
+     parse('${Constant.baseurl}book/all/user/${PreferenceUtils.getString("nick")}?size=$size&sort=$sortedList'),
+      headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'

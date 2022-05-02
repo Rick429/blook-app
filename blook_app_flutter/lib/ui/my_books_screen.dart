@@ -20,12 +20,14 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
   late BookRepository bookRepository;
   late MyBooksBloc _mybooksbloc;
   late String title = "";
+  late String sortopt ="name,desc";
 
   @override
   void initState() {
     PreferenceUtils.init();
+    PreferenceUtils.setString("s", sortopt);
     bookRepository = BookRepositoryImpl();
-    _mybooksbloc = MyBooksBloc(bookRepository)..add(const FetchAllMyBooks(10));
+    _mybooksbloc = MyBooksBloc(bookRepository)..add( FetchAllMyBooks(10, PreferenceUtils.getString("s")!));
     super.initState();
   }
 
@@ -150,8 +152,13 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
               itemBuilder: (context, index) {
                 print(index);
                 print("size $pagesize");
+                    if(sortopt!="") {
+  context.watch<MyBooksBloc>().add(FetchAllMyBooks(10, sortopt));
+
+    sortopt="";
+ }
                 if(index==mybooks.length-1&&mybooks.length<pagesize){
-                  context.watch<MyBooksBloc>().add(FetchAllMyBooks(index+10));
+                  context.watch<MyBooksBloc>().add(FetchAllMyBooks(index+10, sortopt));
                 }
                 return _bookItem(mybooks.elementAt(index));
               },
@@ -282,9 +289,12 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                       onPressed: () {
                         setState(() {
                           title="más reciente";
-                          books.sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
+                          sortopt="releaseDate,desc";
+                          PreferenceUtils.setString("s", sortopt);
+                          
                           Navigator.pop(context);
                         });
+      
                       },
                       child: Text("Más reciente",
                           style: BlookStyle.textCustom(
@@ -301,9 +311,13 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                       onPressed: () {
                         setState(() {
                           title="más antiguo";
-                          books.sort((a, b) => a.releaseDate.compareTo(b.releaseDate));
+                          sortopt="releaseDate,asc";
+                           PreferenceUtils.setString("s", sortopt);
+                            books.sort((a, b) => a.releaseDate.compareTo(b.releaseDate));
                           Navigator.pop(context);
+                         
                         });
+    
                       },
                       child: Text("Más antiguo",
                           style: BlookStyle.textCustom(
@@ -323,10 +337,13 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                           ),
                           onPressed: () {
                             setState(() {
-                              books.sort((a, b) => b.name.compareTo(a.name));
                               title="nombre de A-Z";
+                              sortopt="name,desc";    
+                              PreferenceUtils.setString("s", sortopt);
+                               books.sort((a, b) => b.name.compareTo(a.name));        
                               Navigator.pop(context);
                             });
+                   
                           },
                           child: Text("Ordenar de A-Z",
                               style: BlookStyle.textCustom(
@@ -343,9 +360,11 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                           onPressed: () {
                             setState(() {
                               title="nombre de Z-A";
-                              books.sort((a, b) => a.name.compareTo(b.name));
+                              sortopt="name,asc";
+                              PreferenceUtils.setString("s", sortopt);
                               Navigator.pop(context);
                             });
+                            
                           },
                           child: Text("Ordenar de Z-A",
                               style: BlookStyle.textCustom(

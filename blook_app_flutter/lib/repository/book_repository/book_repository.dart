@@ -7,7 +7,7 @@ abstract class BookRepository {
 
   Future<Book> createBook(CreateBookDto createBookDto, String filename);
 
-  Future<BookResponse>fetchMyBooks(int size);
+  Future<BookResponse>fetchMyBooks(int size, String sortedList);
 
   Future<Book> findBookById(String id);
   

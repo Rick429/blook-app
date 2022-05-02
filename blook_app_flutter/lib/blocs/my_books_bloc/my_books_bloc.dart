@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
@@ -15,7 +17,7 @@ class MyBooksBloc extends Bloc<MyBooksEvent, MyBooksState> {
 
    void _mybooksFetched(FetchAllMyBooks event, Emitter<MyBooksState> emit) async {
     try {
-      final mybooks = await bookRepository.fetchMyBooks(event.size);
+      final mybooks = await bookRepository.fetchMyBooks(event.size, event.sortedList);
       emit(MyBooksFetched(mybooks.content, mybooks.totalElements));
       return;
     } on Exception catch (e) {

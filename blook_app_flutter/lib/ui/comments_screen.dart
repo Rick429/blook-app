@@ -40,15 +40,11 @@ class _CommentsScrenState extends State<CommentsScren> {
             appBar: AppBar(
               backgroundColor: Colors.black,
               iconTheme: const IconThemeData(color: Colors.white),
-              title: Center(
-                child: Container(
-                  margin: const EdgeInsets.only(right: 60),
-                  child: Text(
+              centerTitle: true,
+              title: Text(
                     "COMENTARIOS",
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeFive),
-                  ),
-                ),
               ),
             ),
             backgroundColor: BlookStyle.blackColor,
