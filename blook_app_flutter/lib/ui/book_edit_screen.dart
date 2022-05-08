@@ -275,7 +275,8 @@ class _BookEditScreenState extends State<BookEditScreen> {
 
   Widget coverUrl(String cover) {
 
-    if(PreferenceUtils.getString("coveredit")==""){
+    if(PreferenceUtils.getString("cover")==""){
+      PreferenceUtils.setString("coveredit", "");
       return GestureDetector(
                   onTap: () async {                
                     final XFile? pickedFile =

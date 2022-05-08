@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
@@ -11,6 +13,10 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:path_provider/path_provider.dart';
+
+typedef void OnDownloadProgressCallback(int receivedBytes, int totalBytes);
+typedef void OnUploadProgressCallback(int sentBytes, int totalBytes);
 class BookRepositoryImpl extends BookRepository {
   final Client _client = Client();
 
@@ -177,13 +183,22 @@ class BookRepositoryImpl extends BookRepository {
         contentType: MediaType('application', 'json'), filename: "book",
         )
         );
-   
-    request.files.add(await http.MultipartFile.fromPath('file',filename));
-
+   if(filename.contains("http")){
+       final image = await  _client.get(Uri.parse(filename), headers: {
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+  /* Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path; */
+    var fil = filename.split("/")[4];
+  /* File file = new File(appDocPath + "/" + fil); */
+  /* var fel = appDocPath + "/" + fil; */
+     request.files.add(await http.MultipartFile.fromBytes('file', image.bodyBytes, contentType: MediaType('application', 'octet-stream'), filename: fil));
+   } else {
+     request.files.add(await http.MultipartFile.fromPath('file',filename));
+   }
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
       'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
-     
     };
      request.headers.addAll(headers);
     var res = await request.send();
@@ -197,4 +212,7 @@ class BookRepositoryImpl extends BookRepository {
     }
   }
 
+
 }
+
+  
