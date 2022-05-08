@@ -68,6 +68,8 @@ public class BookService {
         if(b1.isEmpty()){
             throw new OneEntityNotFound(id.toString(), Book.class);
         } else {
+            Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+
             if(b1.get().getAutorLibroPublicado().getId().equals(user.getId())||
                     user.getRole().equals(UserRole.ADMIN)){
                 String uri = storageService.store(file);
@@ -78,6 +80,14 @@ public class BookService {
                     storageService.deleteFile(b1.get().getCover());
                 }
                 b1.get().setCover(uri);
+                List<Genre> list= new ArrayList<>();
+                for (Genre g:c.getGeneros()) {
+                    if(!b1.get().getGenres().contains(g)){
+                        list.add(genreRepository.findById(g.getId()).get());
+                    }
+                }
+                b1.get().getGenres().addAll(list);
+                b1.get().addBookToUser(u.get());
                 return bookRepository.save(b1.get());
             } else {
                 throw new ForbiddenException("No tiene permisos para realizar esta acción");
