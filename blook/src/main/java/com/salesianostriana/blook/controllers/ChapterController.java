@@ -61,7 +61,7 @@ public class ChapterController {
         return chapterDtoConverter.chapterToGetChapterDto(chapterService.findById(id));
     }
 
-    @Operation(summary = "Editar un capitulo")
+    @Operation(summary = "Editar nombre de un capitulo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Se edita el capitulo correctamente",
@@ -76,10 +76,29 @@ public class ChapterController {
     })
     @PutMapping("/{id}")
     public GetChapterDto editChapter(@Valid @RequestPart("chapter")CreateChapterDto c,
-                               @RequestPart("file") MultipartFile file,
                                @AuthenticationPrincipal UserEntity user,
                                @PathVariable UUID id) {
-        return chapterDtoConverter.chapterToGetChapterDto(chapterService.editChapter(c, user, file, id));
+        return chapterDtoConverter.chapterToGetChapterDto(chapterService.editChapter(c, user, id));
+    }
+
+    @Operation(summary = "Editar archivo de un capitulo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se edita el capitulo correctamente",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Chapter.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontró el capitulo",
+                    content = @Content),
+    })
+    @PutMapping("/file/{id}")
+    public GetChapterDto editChapterFile(@RequestPart("file") MultipartFile file,
+                                     @AuthenticationPrincipal UserEntity user,
+                                     @PathVariable UUID id) {
+        return chapterDtoConverter.chapterToGetChapterDto(chapterService.editChapterFile(user, file, id));
     }
 
     @Operation(summary = "Eliminar un capitulo")

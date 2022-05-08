@@ -82,11 +82,9 @@ public class BookService {
                 b1.get().setCover(uri);
                 List<Genre> list= new ArrayList<>();
                 for (Genre g:c.getGeneros()) {
-                    if(!b1.get().getGenres().contains(g)){
-                        list.add(genreRepository.findById(g.getId()).get());
-                    }
+                    list.add(genreRepository.findById(g.getId()).get());
                 }
-                b1.get().getGenres().addAll(list);
+                b1.get().setGenres(list);
                 b1.get().addBookToUser(u.get());
                 return bookRepository.save(b1.get());
             } else {

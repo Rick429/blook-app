@@ -50,7 +50,24 @@ public class ChapterService {
                 .orElseThrow(() -> new OneEntityNotFound(id.toString(), Chapter.class));
     }
 
-    public Chapter editChapter(CreateChapterDto c, UserEntity user, MultipartFile file, UUID id) {
+    public Chapter editChapter(CreateChapterDto c, UserEntity user, UUID id) {
+
+        Optional<Chapter> c1 = chapterRepository.findById(id);
+
+        if(c1.isEmpty()){
+            throw new OneEntityNotFound(id.toString(), Chapter.class);
+        } else {
+            if(c1.get().getLibro().getAutorLibroPublicado().getId().equals(user.getId())||
+                    user.getRole().equals(UserRole.ADMIN)){
+                c1.get().setName(c.getName());
+                return chapterRepository.save(c1.get());
+            } else {
+                throw new ForbiddenException("No tiene permisos para realizar esta acción");
+            }
+        }
+    }
+
+    public Chapter editChapterFile(UserEntity user, MultipartFile file, UUID id) {
 
         Optional<Chapter> c1 = chapterRepository.findById(id);
 
@@ -61,7 +78,6 @@ public class ChapterService {
                     user.getRole().equals(UserRole.ADMIN)){
                 String uri = storageService.store(file);
                 uri = storageService.completeUri(uri);
-                c1.get().setName(c.getName());
                 if(!c1.get().getFile().isEmpty()) {
                     storageService.deleteFile(c1.get().getFile());
                 }
