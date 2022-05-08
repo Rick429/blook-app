@@ -282,7 +282,7 @@ class _BookScreenState extends State<BookScreen> {
             onPressed: () {
               PreferenceUtils.setString("idBook", book.id);
                Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => BookEditScreen()));
+              builder: (context) => BookEditScreen(bookEdit: book,)));
             },
             icon: const Icon(Icons.edit),
           ),

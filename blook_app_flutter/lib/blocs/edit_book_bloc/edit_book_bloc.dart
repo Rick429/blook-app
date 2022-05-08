@@ -19,9 +19,7 @@ class EditBookBloc extends Bloc<EditBookEvent, EditBookState> {
     try {
       final book = await bookRepository.editBook(
           event.editBookDto, event.source.toString(), event.id);
-                       PreferenceUtils.setString("name", "");
-                PreferenceUtils.setString("description", "");
-                PreferenceUtils.setString("coveredit", "");
+      PreferenceUtils.setString("coveredit", "");
       emit(EditBookSuccessState(event.source, book));
     } catch (e) {
       emit(const EditBookErrorState('Error al editar el libro'));

@@ -26,24 +26,28 @@ typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
 class BookEditScreen extends StatefulWidget {
-  const BookEditScreen({Key? key}) : super(key: key);
+  final Book bookEdit;
+  const BookEditScreen({Key? key, required this.bookEdit}) : super(key: key);
 
   @override
-  State<BookEditScreen> createState() => _BookEditScreenState();
+  State<BookEditScreen> createState() => _BookEditScreenState(bookEdit);
 }
 
 class _BookEditScreenState extends State<BookEditScreen> {
+  late final Book libroEditado;
+  _BookEditScreenState(this.libroEditado);
+
   List<XFile>? _imageFileList;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController(text: PreferenceUtils.getString("name"));
-  TextEditingController descriptionController = TextEditingController(text: PreferenceUtils.getString("description"));
+
+  late TextEditingController nameController;
+  late TextEditingController descriptionController;
   TextEditingController genreController = TextEditingController();
   late BookRepository bookRepository;
   late GenreRepository genreRepository;
   final ImagePicker _picker = ImagePicker();
   late GenresBloc _genresbloc;
   late List<Object?> _selectedgenres;
-  late BookEditBloc _oneBookBloc;
 
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
@@ -51,11 +55,12 @@ class _BookEditScreenState extends State<BookEditScreen> {
 
   @override
   void initState() {
+    nameController = TextEditingController(text: utf8.decode(libroEditado.name.codeUnits));
+    descriptionController = TextEditingController(text: utf8.decode(libroEditado.description.codeUnits));
     bookRepository = BookRepositoryImpl();
     genreRepository = GenreRepositoryImpl();
     PreferenceUtils.init();
-    PreferenceUtils.setString("cover", "");
-    _oneBookBloc = BookEditBloc(bookRepository, genreRepository)..add(const FetchOneEditBook());
+    PreferenceUtils.setString("coveredit", "");
     _genresbloc = GenresBloc(genreRepository)..add(const FetchAllGenres());
     super.initState();
   }
@@ -64,7 +69,6 @@ class _BookEditScreenState extends State<BookEditScreen> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => _oneBookBloc),
           BlocProvider(create: (context) => EditBookBloc(bookRepository)),
           BlocProvider(create: (context) => _genresbloc)
         ],
@@ -87,141 +91,130 @@ class _BookEditScreenState extends State<BookEditScreen> {
             body: RefreshIndicator(
                 onRefresh: () async {},
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
+                    scrollDirection: Axis.vertical,
                     physics: const NeverScrollableScrollPhysics(),
                     child: _createBody(context)))));
   }
 
   Widget _createBody(BuildContext context) {
     return Column(children: [
-        BlocBuilder<BookEditBloc, BookEditState>(
-            bloc: _oneBookBloc,
-            builder: (context, state) {
-              if (state is BookInitial) {
-                return Container(
-                    child: const Center(child: CircularProgressIndicator()));
-              } else if (state is OneBookEditFetchError) {
-                return ErrorPage(
-                  message: state.message,
-                  retry: () {
-                    context.watch<BookBloc>().add(FetchOneBook());
-                  },
-                );
-              } else if (state is OneBookEditFetched) {
-                PreferenceUtils.setString("name", state.book.name);
-                PreferenceUtils.setString("description", state.book.description);
-                return _genresList(context, state.book, state.genresList, state.generosSeleccionados);
-              } else {
-                return const Text('Not support');
-              }
-            },
-          ),
-        BlocConsumer<EditBookBloc, EditBookState>(
-            listenWhen: (context, state) {
-              return state is EditBookSuccessState;
-            },
-            listener: (context, state) {},
-            buildWhen: (context, state) {
-              return state is EditBookInitial || state is EditBookSuccessState;
-            },
-            builder: (context, state) {
-              if (state is EditBookSuccessState) {
-
-                return Container();
-              }
+      BlocBuilder<GenresBloc, GenresState>(
+        bloc: _genresbloc,
+        builder: (context, state) {
+          if (state is GenresInitial) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is GenresFetchError) {
+            return ErrorPage(
+              message: state.message,
+              retry: () {
+                context.watch<GenresBloc>().add(const FetchAllGenres());
+              },
+            );
+          } else if (state is GenresFetched) {
+            return _genresList(context, state.genres);
+          } else {
+            return const Text('Not support');
+          }
+        },
+      ),
+      BlocConsumer<EditBookBloc, EditBookState>(
+          listenWhen: (context, state) {
+            return state is EditBookSuccessState;
+          },
+          listener: (context, state) {},
+          buildWhen: (context, state) {
+            return state is EditBookInitial || state is EditBookSuccessState;
+          },
+          builder: (context, state) {
+            if (state is EditBookSuccessState) {
               return Container();
-            }),
-        
-        
-      ]
-    );
+            }
+            return Container();
+          }),
+    ]);
   }
 
-
-
-  Widget _genresList(context, Book book, List<Genre> genresList, List<Genre> generosSelect) {    
-
-    List<Genre> genresLists=[];
-    for(Genre e in generosSelect){
-      for(Genre e2 in genresList){
-        if(e.id==e2.id){
-           genresLists.add(e2);
+  Widget _genresList(context, List<Genre> genresList) {
+    List<Genre> genresLists = [];
+    for (Genre e in libroEditado.genres) {
+      for (Genre e2 in genresList) {
+        if (e.id == e2.id) {
+          genresLists.add(e2);
         }
-      } 
+      }
     }
-  _selectedgenres=genresLists;
+    _selectedgenres = genresLists;
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
         children: [
           SizedBox(
-        child: Column(
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  coverUrl(book.cover),
-                  Container(
-                    height: 50,
-                    margin: const EdgeInsets.all(10),
-                    child: TextFormField(
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                      controller: nameController,
-                      textAlignVertical: TextAlignVertical.bottom,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: BlookStyle.greyBoxColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+            child: Column(
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      coverUrl(libroEditado.cover),
+                      Container(
+                        height: 50,
+                        margin: const EdgeInsets.all(10),
+                        child: TextFormField(
+                          style: BlookStyle.textCustom(
+                              BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                          controller: nameController,
+                          textAlignVertical: TextAlignVertical.bottom,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: BlookStyle.greyBoxColor,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            hintStyle: BlookStyle.textCustom(
+                                BlookStyle.formColor, BlookStyle.textSizeTwo),
+                            hintText: 'Nombre del libro',
+                          ),
+                          onSaved: (String? value) {},
+                          validator: (String? value) {
+                            return (value == null)
+                                ? 'Introduzca el nombre del libro'
+                                : null;
+                          },
                         ),
-                        hintStyle: BlookStyle.textCustom(
-                            BlookStyle.formColor, BlookStyle.textSizeTwo),
-                        hintText: 'Nombre del libro',
                       ),
-                      onSaved: (String? value) {},
-                      validator: (String? value) {
-                        return (value == null)
-                            ? 'Introduzca el nombre del libro'
-                            : null;
-                      },
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(10),
-                    child: TextFormField(
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                      controller: descriptionController,
-                      textAlignVertical: TextAlignVertical.bottom,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: BlookStyle.greyBoxColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        child: TextFormField(
+                          style: BlookStyle.textCustom(
+                              BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                          controller: descriptionController,
+                          textAlignVertical: TextAlignVertical.bottom,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: BlookStyle.greyBoxColor,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            hintStyle: BlookStyle.textCustom(
+                                BlookStyle.formColor, BlookStyle.textSizeTwo),
+                            hintText: 'Descripción del libro',
+                          ),
+                          maxLines: 4,
+                          minLines: 4,
+                          onSaved: (String? value) {},
+                          validator: (String? value) {
+                            return (value == null)
+                                ? 'Introduzca la descripción del libro'
+                                : null;
+                          },
                         ),
-                        hintStyle: BlookStyle.textCustom(
-                            BlookStyle.formColor, BlookStyle.textSizeTwo),
-                        hintText: 'Descripción del libro',
-                        
                       ),
-                      maxLines: 4,
-                      minLines: 4,
-                      onSaved: (String? value) {},
-                      validator: (String? value) {
-                        return (value == null)
-                            ? 'Introduzca la descripción del libro'
-                            : null;
-                      },
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
           Container(
               margin: const EdgeInsets.all(10),
               height: 150,
@@ -231,18 +224,16 @@ class _BookEditScreenState extends State<BookEditScreen> {
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 title: const Text("Géneros"),
-                items: genresList.map((e) => MultiSelectItem(e, utf8.decode(e.name.codeUnits))).toList(),
-                
+                items: genresList
+                    .map((e) =>
+                        MultiSelectItem(e, utf8.decode(e.name.codeUnits)))
+                    .toList(),
                 listType: MultiSelectListType.CHIP,
-                 initialValue:genresLists, 
-
+                initialValue: genresLists,
                 onConfirm: (values) {
-                  
-                 
                   _selectedgenres = values;
                 },
               )),
-              
           Container(
             width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.fromLTRB(10, 10, 10, 20),
@@ -259,9 +250,13 @@ class _BookEditScreenState extends State<BookEditScreen> {
                         generos: _selectedgenres);
 
                     BlocProvider.of<EditBookBloc>(context).add(EditOneBookEvent(
-                        PreferenceUtils.getString("coveredit")==""?book.cover:PreferenceUtils.getString("coveredit")!, createBookDto, book.id));
-                    PreferenceUtils.setString("idbook", book.id);
-                    Navigator.pushReplacementNamed(context, "/book");
+                        PreferenceUtils.getString("coveredit") == ""
+                            ? libroEditado.cover
+                            : PreferenceUtils.getString("coveredit")!,
+                        createBookDto,
+                        libroEditado.id));
+                    PreferenceUtils.setString("idbook", libroEditado.id);
+                    Navigator.pushReplacementNamed(context, "/");
                   }
                 },
                 child: Text("Siguiente",
@@ -274,40 +269,37 @@ class _BookEditScreenState extends State<BookEditScreen> {
   }
 
   Widget coverUrl(String cover) {
-
-    if(PreferenceUtils.getString("cover")==""){
-      PreferenceUtils.setString("coveredit", "");
+    if (PreferenceUtils.getString("coveredit") == "") {
       return GestureDetector(
-                  onTap: () async {                
-                    final XFile? pickedFile =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    setState(() {
-                      PreferenceUtils.setString("coveredit", pickedFile!.path);
-                    });
-                  },
-                  child: Image.network( cover,
-                    headers: {
-                      'Authorization':
-                          'Bearer ${PreferenceUtils.getString('token')}'
-                    },
-                    height: 200,
-                    fit: BoxFit.cover,),
-                );
+        onTap: () async {
+          final XFile? pickedFile =
+              await _picker.pickImage(source: ImageSource.gallery);
+          setState(() {
+            PreferenceUtils.setString("coveredit", pickedFile!.path);
+          });
+        },
+        child: Image.network(
+          cover,
+          headers: {
+            'Authorization': 'Bearer ${PreferenceUtils.getString('token')}'
+          },
+          height: 200,
+          fit: BoxFit.cover,
+        ),
+      );
     } else {
       return GestureDetector(
-                  onTap: () async {                
-                    final XFile? pickedFile =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    setState(() {
-                      PreferenceUtils.setString("coveredit", pickedFile!.path);
-                    });
-                  },
-                  child: Image.file(File(PreferenceUtils.getString("coveredit")!), height: 200,)
-                );
+          onTap: () async {
+            final XFile? pickedFile =
+                await _picker.pickImage(source: ImageSource.gallery);
+            setState(() {
+              PreferenceUtils.setString("coveredit", pickedFile!.path);
+            });
+          },
+          child: Image.file(
+            File(PreferenceUtils.getString("coveredit")!),
+            height: 200,
+          ));
     }
-      
-   
   }
-
-
 }
