@@ -201,7 +201,6 @@ class _BookNewScreenState extends State<BookNewScreen> {
 
   Widget buildForm(BuildContext context, state) {
     return SizedBox(
-      height: 345,
       child: Column(
         children: [
           Form(
@@ -236,7 +235,6 @@ class _BookNewScreenState extends State<BookNewScreen> {
                   ),
                 ),
                 Container(
-                  height: 50,
                   margin: const EdgeInsets.all(10),
                   child: TextFormField(
                     style: BlookStyle.textCustom(
@@ -253,6 +251,8 @@ class _BookNewScreenState extends State<BookNewScreen> {
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
                       hintText: 'Descripción del libro',
                     ),
+                    maxLines: 4,
+                    minLines: 4,
                     onSaved: (String? value) {},
                     validator: (String? value) {
                       return (value == null)

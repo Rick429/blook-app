@@ -12,6 +12,7 @@ import 'package:blook_app_flutter/repository/book_repository/book_repository.dar
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository_impl.dart';
+import 'package:blook_app_flutter/ui/book_edit_screen.dart';
 import 'package:blook_app_flutter/ui/info_book_screen.dart';
 import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/ui/pdf_viewer.dart';
@@ -36,7 +37,11 @@ class _BookScreenState extends State<BookScreen> {
 
   @override
   void initState() {
+    
     PreferenceUtils.init();
+    /* PreferenceUtils.setString("name", "");
+                PreferenceUtils.setString("description", "");
+                PreferenceUtils.setString("coveredit", ""); */
     bookRepository = BookRepositoryImpl();
     chapterRepository = ChapterRepositoryImpl();
     _oneBookBloc = BookBloc(bookRepository)..add(const FetchOneBook());
@@ -274,7 +279,11 @@ class _BookScreenState extends State<BookScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              PreferenceUtils.setString("idBook", book.id);
+               Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => BookEditScreen()));
+            },
             icon: const Icon(Icons.edit),
           ),
           Padding(

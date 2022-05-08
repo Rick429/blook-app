@@ -168,4 +168,33 @@ class BookRepositoryImpl extends BookRepository {
     }
   }
 
+  @override
+  Future<Book> editBook(CreateBookDto editBookDto, String filename, String id) async{
+    var request = http.MultipartRequest(
+      'PUT', Uri.parse('${Constant.baseurl}book/$id'),);
+
+      request.files.add(http.MultipartFile.fromString('book', jsonEncode(editBookDto.toJson()),
+        contentType: MediaType('application', 'json'), filename: "book",
+        )
+        );
+   
+    request.files.add(await http.MultipartFile.fromPath('file',filename));
+
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+     
+    };
+     request.headers.addAll(headers);
+    var res = await request.send();
+    final respStr = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      Book editBook = Book.fromJson(json.decode(respStr));
+      return editBook;
+    } else {
+      final error = ErrorResponse.fromJson(json.decode(respStr));
+      throw Exception(error.mensaje);
+    }
+  }
+
 }
