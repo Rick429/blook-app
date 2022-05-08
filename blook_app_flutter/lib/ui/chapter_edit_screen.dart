@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/chapter_new_bloc/chapter_new_bloc.dart';
+import 'package:blook_app_flutter/blocs/edit_chapter_bloc/edit_chapter_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/create_chapter_dto.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
@@ -15,17 +16,22 @@ import 'package:image_picker/image_picker.dart';
 typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
-class ChapterNewScreen extends StatefulWidget {
-  const ChapterNewScreen({Key? key}) : super(key: key);
+class ChapterEditScreen extends StatefulWidget {
+  final String nameChapter;
+  final String idChapter;
+  const ChapterEditScreen({Key? key, required this.nameChapter, required this.idChapter,}) : super(key: key);
 
   @override
-  State<ChapterNewScreen> createState() => _ChapterNewScreenState();
+  State<ChapterEditScreen> createState() => _ChapterEditScreenState(nameChapter, idChapter);
 }
 
-class _ChapterNewScreenState extends State<ChapterNewScreen> {
+class _ChapterEditScreenState extends State<ChapterEditScreen> {
+  final String nombreCapitulo;
+  final String idCapitulo;
+  _ChapterEditScreenState(this.nombreCapitulo, this.idCapitulo);
   List<XFile>? _imageFileList;
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
+  late TextEditingController nameController;
   late ChapterRepository chapterRepository;
 
   set _imageFile(XFile? value) {
@@ -36,6 +42,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
   void initState() {
     chapterRepository = ChapterRepositoryImpl();
     PreferenceUtils.setString('image', '...');
+    nameController = TextEditingController(text: nombreCapitulo);
     super.initState();
   }
 
@@ -43,7 +50,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) {
-          return ChapterNewBloc(chapterRepository);
+          return EditChapterBloc(chapterRepository);
         },
         child: Scaffold(
             appBar: AppBar(
@@ -51,7 +58,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
               iconTheme: const IconThemeData(color: Colors.white),
               centerTitle: true,
               title: Text(
-                    "AÑADIR CAPÍTULO",
+                    "EDITAR CAPÍTULO",
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeFive),
               ),
@@ -67,21 +74,21 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
       child: Padding(
         padding: const EdgeInsets.only(top: 70.0),
         child: Column(children: [
-          BlocConsumer<ChapterNewBloc, ChapterNewState>(
+          BlocConsumer<EditChapterBloc, EditChapterState>(
               listenWhen: (context, state) {
-            return state is CreateChapterSuccessState ||
-                state is CreateChapterErrorState;
+            return state is EditChapterSuccessState ||
+                state is EditChapterErrorState;
           }, listener: (context, state) {
-            if (state is CreateChapterSuccessState) {
-              PreferenceUtils.setString(Constant.file, state.pickedFile);
+            if (state is EditChapterSuccessState) {
+          
               _createDialog(context);
-            } else if (state is CreateChapterErrorState) {
+            } else if (state is EditChapterErrorState) {
               _showSnackbar(context, state.toString());
             }
           }, buildWhen: (context, state) {
-            return state is ChapterNewInitial;
+            return state is EditChapterInitial;
           }, builder: (ctx, state) {
-            if (state is ChapterNewInitial) {
+            if (state is EditChapterInitial) {
               return buildF(ctx);
             } else {
               return buildF(ctx);
@@ -92,6 +99,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
     );
   }
 
+
   AwesomeDialog _createDialog(context) {
     return AwesomeDialog(
       context: context,
@@ -100,7 +108,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
       dialogType: DialogType.SUCCES,
       animType: AnimType.BOTTOMSLIDE,
       title: 'Correcto',
-      desc: 'El libro se ha creado correctamente',
+      desc: 'El libro se ha editado correctamente',
       titleTextStyle:
           BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
       descTextStyle: BlookStyle.textCustom(
@@ -164,7 +172,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                     final FilePickerResult? pickedFile =
                         await _picker.pickFiles(
                       type: FileType.custom,
-                      allowedExtensions: ['jpg', 'pdf', 'doc'],
+                      allowedExtensions: [/* 'jpg',  */'pdf'/* , 'doc' */],
                     );
                     setState(() {
                       PreferenceUtils.setString(
@@ -204,19 +212,19 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                         final createChapterDto =
                             CreateChapterDto(name: nameController.text);
                         if (!PreferenceUtils.getString("image")!
-                            .endsWith('.pdf')) {
+                            .endsWith('.pdf')&&PreferenceUtils.getString("image")!='...') {
                           _createDialogC(context);
                         } else {
-                          BlocProvider.of<ChapterNewBloc>(context).add(
-                              CreateChapterEvent(
+                          BlocProvider.of<EditChapterBloc>(context).add(
+                              EditOneChapterEvent(
                                   PreferenceUtils.getString("image")!,
                                   createChapterDto,
-                                  PreferenceUtils.getString("idbook")!));
+                                  idCapitulo));
                           Navigator.pushNamed(context, '/');
                         }
                       }
                     },
-                    child: Text("Publicar",
+                    child: Text("Guardar",
                         style: BlookStyle.textCustom(
                             BlookStyle.whiteColor, BlookStyle.textSizeThree))),
               )

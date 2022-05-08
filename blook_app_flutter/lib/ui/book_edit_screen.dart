@@ -55,8 +55,10 @@ class _BookEditScreenState extends State<BookEditScreen> {
 
   @override
   void initState() {
-    nameController = TextEditingController(text: utf8.decode(libroEditado.name.codeUnits));
-    descriptionController = TextEditingController(text: utf8.decode(libroEditado.description.codeUnits));
+    nameController =
+        TextEditingController(text: utf8.decode(libroEditado.name.codeUnits));
+    descriptionController = TextEditingController(
+        text: utf8.decode(libroEditado.description.codeUnits));
     bookRepository = BookRepositoryImpl();
     genreRepository = GenreRepositoryImpl();
     PreferenceUtils.init();
@@ -121,7 +123,16 @@ class _BookEditScreenState extends State<BookEditScreen> {
           listenWhen: (context, state) {
             return state is EditBookSuccessState;
           },
-          listener: (context, state) {},
+           listener: (context, state) {
+            if (state is EditBookSuccessState) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MenuScreen()),
+              );
+            } else if (state is EditBookErrorState) {
+              _showSnackbar(context, state.message);
+            }
+          },
           buildWhen: (context, state) {
             return state is EditBookInitial || state is EditBookSuccessState;
           },
@@ -132,6 +143,13 @@ class _BookEditScreenState extends State<BookEditScreen> {
             return Container();
           }),
     ]);
+  }
+
+  void _showSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Widget _genresList(context, List<Genre> genresList) {
@@ -256,10 +274,9 @@ class _BookEditScreenState extends State<BookEditScreen> {
                         createBookDto,
                         libroEditado.id));
                     PreferenceUtils.setString("idbook", libroEditado.id);
-                    Navigator.pushReplacementNamed(context, "/");
                   }
                 },
-                child: Text("Siguiente",
+                child: Text("Guardar",
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeThree))),
           )

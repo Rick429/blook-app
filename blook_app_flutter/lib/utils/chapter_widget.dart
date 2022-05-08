@@ -6,6 +6,7 @@ import 'package:blook_app_flutter/blocs/delete_chapter_bloc/delete_chapter_bloc.
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository_impl.dart';
+import 'package:blook_app_flutter/ui/chapter_edit_screen.dart';
 import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
@@ -51,7 +52,7 @@ class _ChapterWidgetState extends State<ChapterWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            width: 250,
+            width: 220,
             child: Text(
               "Capitulo ${indice + 1}: " +
                   utf8.decode(capituloNombre.codeUnits),
@@ -63,6 +64,11 @@ class _ChapterWidgetState extends State<ChapterWidget> {
             Icons.arrow_forward_ios_sharp,
             color: BlookStyle.whiteColor,
           ),
+          IconButton(onPressed: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => ChapterEditScreen(nameChapter: capituloNombre, idChapter: idCapitulo,)));
+          }, icon: Icon(Icons.edit),
+            color: BlookStyle.whiteColor,),
           IconButton(
               onPressed: () {
                 _createDialog(context, idCapitulo);
@@ -78,7 +84,7 @@ class _ChapterWidgetState extends State<ChapterWidget> {
             "Capitulo ${indice + 1}: " + utf8.decode(capituloNombre.codeUnits),
             style: BlookStyle.textCustom(
                 BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-          ),
+          ),       
           const Icon(
             Icons.arrow_forward_ios_sharp,
             color: BlookStyle.whiteColor,

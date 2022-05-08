@@ -155,7 +155,7 @@ class BookRepositoryImpl extends BookRepository {
 
    @override
   void removeFavorite(String id){
-     _client.delete(Uri.parse('${Constant.baseurl}book/favorite/remove/$id'), headers: {
+    var req = _client.post(Uri.parse('${Constant.baseurl}book/favorite/remove/$id'), headers: {
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
     });
   }

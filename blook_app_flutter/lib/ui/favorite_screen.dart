@@ -191,12 +191,15 @@ Widget _createBody(BuildContext context) {
                           )),
                     ),
                     SizedBox(
-                      height: 140,
+                      height: 190,
+                      width: 200,
                       child: Text(
                         utf8.decode(book.name.codeUnits),
                         style: BlookStyle.textCustom(
                             BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                         textAlign: TextAlign.start,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     )
                   ],

@@ -14,6 +14,7 @@ import 'package:blook_app_flutter/repository/chapter_repository/chapter_reposito
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository_impl.dart';
 import 'package:blook_app_flutter/ui/book_edit_screen.dart';
 import 'package:blook_app_flutter/ui/info_book_screen.dart';
+import 'package:blook_app_flutter/ui/menu_book_screen.dart';
 import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/ui/pdf_viewer.dart';
 import 'package:blook_app_flutter/utils/chapter_widget.dart';
@@ -37,7 +38,6 @@ class _BookScreenState extends State<BookScreen> {
 
   @override
   void initState() {
-    
     PreferenceUtils.init();
     /* PreferenceUtils.setString("name", "");
                 PreferenceUtils.setString("description", "");
@@ -46,6 +46,11 @@ class _BookScreenState extends State<BookScreen> {
     chapterRepository = ChapterRepositoryImpl();
     _oneBookBloc = BookBloc(bookRepository)..add(const FetchOneBook());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -96,11 +101,12 @@ class _BookScreenState extends State<BookScreen> {
               } else if (state is OneBookFetched) {
                 PreferenceUtils.setBool(
                     "favorite", state.favoriteResponse.favorito);
-                  if(state.book.chapters.length>0){
-                    PreferenceUtils.setString("document", state.book.chapters.first.file);
-                  } else {
-                    PreferenceUtils.setString("document", "");
-                  }
+                if (state.book.chapters.length > 0) {
+                  PreferenceUtils.setString(
+                      "document", state.book.chapters.first.file);
+                } else {
+                  PreferenceUtils.setString("document", "");
+                }
                 return buildOne(context, state.book);
               } else {
                 return const Text('Not support');
@@ -113,9 +119,9 @@ class _BookScreenState extends State<BookScreen> {
           }, listener: (context, state) {
             if (state is BookFavorite) {
               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => this.widget));
+                context,
+                PageRouteBuilder(pageBuilder: (_, __, ___) => MenuBookScreen()),
+              );
             } else if (state is BookFavoriteError) {
               _showSnackbar(context, state.message);
             }
@@ -177,9 +183,9 @@ class _BookScreenState extends State<BookScreen> {
           }, listener: (context, state) {
             if (state is RemoveSuccessState) {
               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => this.widget));
+                context,
+                PageRouteBuilder(pageBuilder: (_, __, ___) => MenuBookScreen()),
+              );
             } else if (state is RemoveErrorState) {
               _showSnackbar(context, state.message);
             }
@@ -281,8 +287,10 @@ class _BookScreenState extends State<BookScreen> {
           IconButton(
             onPressed: () {
               PreferenceUtils.setString("idBook", book.id);
-               Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => BookEditScreen(bookEdit: book,)));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => BookEditScreen(
+                        bookEdit: book,
+                      )));
             },
             icon: const Icon(Icons.edit),
           ),
@@ -430,7 +438,7 @@ class _BookScreenState extends State<BookScreen> {
               ),
             ),
           ),
-          Padding(
+          Container(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               utf8.decode(book.description.codeUnits),
@@ -438,6 +446,8 @@ class _BookScreenState extends State<BookScreen> {
                 BlookStyle.whiteColor,
                 BlookStyle.textSizeTwo,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 5,
             ),
           ),
           Container(

@@ -56,6 +56,11 @@ class _BookNewScreenState extends State<BookNewScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [

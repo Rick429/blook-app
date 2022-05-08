@@ -43,7 +43,10 @@ class _CommentMenuState extends State<CommentMenu> {
       return state is CommentSuccessState || state is CommentErrorState;
     }, listener: (context, state) {
       if (state is CommentSuccessState) {
-        Navigator.popAndPushNamed(context, "/comments");
+         Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
+              );
       } else if (state is CommentErrorState) {
         _showSnackbar(context, state.message);
       }

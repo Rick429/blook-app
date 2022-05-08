@@ -212,26 +212,10 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                         style: BlookStyle.textCustom(
                             BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                         textAlign: TextAlign.start,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                const Icon(
-                                  Icons.remove_red_eye,
-                                  color: BlookStyle.whiteColor,
-                                ),
-                                Text(
-                                  "3700",
-                                  style: BlookStyle.textCustom(
-                                      BlookStyle.whiteColor,
-                                      BlookStyle.textSizeTwo),
-                                )
-                              ],
-                            ),
-                          ),
+                      
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
@@ -252,9 +236,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                               ),
                             ),
                           ),
-                        ],
-                      )
-                    ],
+                        ],       
                   ),
                 )
               ],
