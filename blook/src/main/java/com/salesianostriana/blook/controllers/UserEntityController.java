@@ -2,6 +2,7 @@ package com.salesianostriana.blook.controllers;
 
 import com.salesianostriana.blook.dtos.EditUserDto;
 import com.salesianostriana.blook.dtos.GetUserDto;
+import com.salesianostriana.blook.dtos.PasswordDto;
 import com.salesianostriana.blook.dtos.UserDtoConverter;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.services.UserEntityService;
@@ -88,5 +89,24 @@ public class UserEntityController {
         Page<GetUserDto> lista = userEntityService.findAllUsers(pageable);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
+
+    @Operation(summary = "Cambiar contraseña")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se cambia la contraseña del usuario correctamente",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = UserEntity.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontró el usuario",
+                    content = @Content),
+    })
+    @PutMapping("/change/")
+    public GetUserDto changePassword(@Valid @RequestPart("user") PasswordDto p,
+                                     @AuthenticationPrincipal UserEntity user) {
+        return userDtoConverter.userEntityToGetUserDto(userEntityService.changePassword(p, user));
     }
 }

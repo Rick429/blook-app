@@ -24,6 +24,4 @@ public class EditUserDto {
     @Email
     @UniqueEmail(message = "{user.unique.email}")
     private String email;
-    private String password;
-    private String password2;
 }

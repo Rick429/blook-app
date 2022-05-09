@@ -72,23 +72,10 @@ public class UserEntityService implements UserDetailsService {
         if(u.isEmpty()){
             throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
         } else {
-            if(!editUserDto.getNick().isEmpty()) {
                 u.get().setNick(editUserDto.getNick());
-            }
-            if(!editUserDto.getName().isEmpty()){
                 u.get().setName(editUserDto.getName());
-            }
-            if(!editUserDto.getLastname().isEmpty()){
                 u.get().setLastname(editUserDto.getLastname());
-            }
-            if(!editUserDto.getEmail().isEmpty()){
                 u.get().setEmail(editUserDto.getEmail());
-            }
-            if(!editUserDto.getPassword().isEmpty()&&!editUserDto.getPassword2().isEmpty()){
-                u.get().setPassword(editUserDto.getPassword());
-                u.get().setPassword2(editUserDto.getPassword2());
-            }
-
             return userEntityRepository.save(u.get());
         }
     }
@@ -100,6 +87,24 @@ public class UserEntityService implements UserDetailsService {
             throw new ListEntityNotFoundException(UserEntity.class);
         } else {
             return lista.map(userDtoConverter::userEntityToGetUserDto);
+        }
+    }
+
+    public UserEntity changePassword(PasswordDto passwordDto, UserEntity user) {
+        Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+
+        if(u.isEmpty()){
+            throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
+        } else {
+            if(passwordEncoder.matches(passwordDto.getPassword(), user.getPassword())){
+                if(passwordDto.getPasswordNew().equals(passwordDto.getPasswordNew2())){
+                    u.get().setPassword(passwordEncoder.encode(passwordDto.getPasswordNew()));
+                }
+                return userEntityRepository.save(u.get());
+            }else {
+                throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
+            }
+
         }
     }
 }
