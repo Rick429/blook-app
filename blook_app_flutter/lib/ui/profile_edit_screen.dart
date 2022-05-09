@@ -195,10 +195,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       elevation: 15.0,
                     ),
                     onPressed: () {
+                      
                   final edit = EditUserDto( 
                     name: nameController.text, 
                     lastname: lastNameController.text,
-                    email: emailController.text);
+                    );
+                    if(widget.email!=emailController.text){
+                        edit.email= emailController.text;
+                      }
                       BlocProvider.of<EditUserBloc>(context).add(EditOneUserEvent(edit, widget.id
                           ),
                         );

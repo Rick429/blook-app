@@ -2,11 +2,11 @@ class EditUserDto {
   EditUserDto({
     required this.name,
     required this.lastname,
-    required this.email,
+    this.email,
   });
   late final String name;
   late final String lastname;
-  late final String email;
+  late String? email;
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
