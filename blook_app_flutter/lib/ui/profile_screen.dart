@@ -120,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
           IconButton(onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProfileEditScreen(nick: userLogged.nick, name: userLogged.name, lastName: userLogged.lastname, email: userLogged.email, id: userLogged.id)));
+                  builder: (context) => ProfileEditScreen(name: userLogged.name, lastName: userLogged.lastname, email: userLogged.email, id: userLogged.id)));
           }, icon: Icon(Icons.edit, color: BlookStyle.whiteColor,))
         ],),
         Container(
