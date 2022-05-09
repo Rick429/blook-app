@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
 import 'package:blook_app_flutter/blocs/book_favorite_bloc/book_favorite_bloc.dart';
@@ -7,7 +6,6 @@ import 'package:blook_app_flutter/blocs/delete_book_bloc/delete_book_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_chapter_bloc/delete_chapter_bloc.dart';
 import 'package:blook_app_flutter/blocs/remove_favorite_bloc/remove_favorite_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
-import 'package:blook_app_flutter/models/favorite_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
@@ -73,7 +71,7 @@ class _BookScreenState extends State<BookScreen> {
           body: RefreshIndicator(
             onRefresh: () async {},
             child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               child: _createBody(context),
             ),
           ),
@@ -89,19 +87,18 @@ class _BookScreenState extends State<BookScreen> {
             bloc: _oneBookBloc,
             builder: (context, state) {
               if (state is BookInitial) {
-                return Container(
-                    child: const Center(child: CircularProgressIndicator()));
+                return const Center(child: CircularProgressIndicator());
               } else if (state is OneBookFetchError) {
                 return ErrorPage(
                   message: state.message,
                   retry: () {
-                    context.watch<BookBloc>().add(FetchOneBook());
+                    context.watch<BookBloc>().add(const FetchOneBook());
                   },
                 );
               } else if (state is OneBookFetched) {
                 PreferenceUtils.setBool(
                     "favorite", state.favoriteResponse.favorito);
-                if (state.book.chapters.length > 0) {
+                if (state.book.chapters.isNotEmpty) {
                   PreferenceUtils.setString(
                       "document", state.book.chapters.first.file);
                 } else {
@@ -120,7 +117,7 @@ class _BookScreenState extends State<BookScreen> {
             if (state is BookFavorite) {
               Navigator.pushReplacement(
                 context,
-                PageRouteBuilder(pageBuilder: (_, __, ___) => MenuBookScreen()),
+                PageRouteBuilder(pageBuilder: (_, __, ___) => const MenuBookScreen()),
               );
             } else if (state is BookFavoriteError) {
               _showSnackbar(context, state.message);
@@ -184,7 +181,7 @@ class _BookScreenState extends State<BookScreen> {
             if (state is RemoveSuccessState) {
               Navigator.pushReplacement(
                 context,
-                PageRouteBuilder(pageBuilder: (_, __, ___) => MenuBookScreen()),
+                PageRouteBuilder(pageBuilder: (_, __, ___) => const MenuBookScreen()),
               );
             } else if (state is RemoveErrorState) {
               _showSnackbar(context, state.message);
@@ -289,7 +286,7 @@ class _BookScreenState extends State<BookScreen> {
               PreferenceUtils.setString("idBook", book.id);
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => BookEditScreen(
-                        bookEdit: book,
+                        libroEditado: book,
                       )));
             },
             icon: const Icon(Icons.edit),
@@ -462,7 +459,7 @@ class _BookScreenState extends State<BookScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => InfoBookScrenn(
-                              book: book,
+                              libro: book,
                             )),
                   );
                 },
@@ -521,10 +518,10 @@ class _BookScreenState extends State<BookScreen> {
               builder: (context) => PdfViewer(document: chapter.file)));
         },
         child: ChapterWidget(
-          bookAutor: bookAutor,
-          idChapter: chapter.id,
-          index: index,
-          chapterName: chapter.name,
+          autorLibro: bookAutor,
+          idCapitulo: chapter.id,
+          indice: index,
+          capituloNombre: chapter.name,
         ),
       ),
     );

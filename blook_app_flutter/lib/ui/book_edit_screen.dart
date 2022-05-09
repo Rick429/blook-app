@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:blook_app_flutter/blocs/book_bloc/book_bloc.dart';
-import 'package:blook_app_flutter/blocs/book_edit_bloc/book_edit_bloc.dart';
-import 'package:blook_app_flutter/blocs/book_new_bloc/book_new_bloc.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/edit_book_bloc/edit_book_bloc.dart';
 import 'package:blook_app_flutter/blocs/genres_bloc/genres_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
@@ -26,17 +23,14 @@ typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
 class BookEditScreen extends StatefulWidget {
-  final Book bookEdit;
-  const BookEditScreen({Key? key, required this.bookEdit}) : super(key: key);
+  final Book libroEditado;
+  const BookEditScreen({Key? key, required this.libroEditado}) : super(key: key);
 
   @override
-  State<BookEditScreen> createState() => _BookEditScreenState(bookEdit);
+  State<BookEditScreen> createState() => _BookEditScreenState();
 }
 
 class _BookEditScreenState extends State<BookEditScreen> {
-  late final Book libroEditado;
-  _BookEditScreenState(this.libroEditado);
-
   List<XFile>? _imageFileList;
   final _formKey = GlobalKey<FormState>();
 
@@ -56,9 +50,9 @@ class _BookEditScreenState extends State<BookEditScreen> {
   @override
   void initState() {
     nameController =
-        TextEditingController(text: utf8.decode(libroEditado.name.codeUnits));
+        TextEditingController(text: utf8.decode(widget.libroEditado.name.codeUnits));
     descriptionController = TextEditingController(
-        text: utf8.decode(libroEditado.description.codeUnits));
+        text: utf8.decode(widget.libroEditado.description.codeUnits));
     bookRepository = BookRepositoryImpl();
     genreRepository = GenreRepositoryImpl();
     PreferenceUtils.init();
@@ -128,7 +122,9 @@ class _BookEditScreenState extends State<BookEditScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const MenuScreen()),
+                
               );
+              _createDialog(context);
             } else if (state is EditBookErrorState) {
               _showSnackbar(context, state.message);
             }
@@ -145,6 +141,24 @@ class _BookEditScreenState extends State<BookEditScreen> {
     ]);
   }
 
+  AwesomeDialog _createDialog(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      dialogType: DialogType.SUCCES,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Correcto',
+      desc: 'El libro se ha editado correctamente',
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkText: "Aceptar",
+      btnOkOnPress: () {},
+    )..show();
+  }
+
   void _showSnackbar(BuildContext context, String message) {
     final snackBar = SnackBar(
       content: Text(message),
@@ -154,7 +168,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
 
   Widget _genresList(context, List<Genre> genresList) {
     List<Genre> genresLists = [];
-    for (Genre e in libroEditado.genres) {
+    for (Genre e in widget.libroEditado.genres) {
       for (Genre e2 in genresList) {
         if (e.id == e2.id) {
           genresLists.add(e2);
@@ -173,7 +187,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      coverUrl(libroEditado.cover),
+                      coverUrl(widget.libroEditado.cover),
                       Container(
                         height: 50,
                         margin: const EdgeInsets.all(10),
@@ -269,11 +283,11 @@ class _BookEditScreenState extends State<BookEditScreen> {
 
                     BlocProvider.of<EditBookBloc>(context).add(EditOneBookEvent(
                         PreferenceUtils.getString("coveredit") == ""
-                            ? libroEditado.cover
+                            ? widget.libroEditado.cover
                             : PreferenceUtils.getString("coveredit")!,
                         createBookDto,
-                        libroEditado.id));
-                    PreferenceUtils.setString("idbook", libroEditado.id);
+                        widget.libroEditado.id));
+                    PreferenceUtils.setString("idbook", widget.libroEditado.id);
                   }
                 },
                 child: Text("Guardar",

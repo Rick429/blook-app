@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/change_password_bloc/change_password_bloc.dart';
 import 'package:blook_app_flutter/models/password_dto.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository.dart';
@@ -65,6 +66,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 context,
                 MaterialPageRoute(builder: (context) => const MenuScreen()),
               );
+              _createDialog(context);
             } else if (state is ChangePasswordErrorState) {
               _showSnackbar(context, state.message);
             }
@@ -79,6 +81,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             return buildF(context);
           });
     
+  }
+
+  AwesomeDialog _createDialog(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      dialogType: DialogType.SUCCES,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Correcto',
+      desc: 'La contraseña se ha guardado correctamente',
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkText: "Aceptar",
+      btnOkOnPress: () {},
+    )..show();
   }
 
   void _showSnackbar(BuildContext context, String message) {

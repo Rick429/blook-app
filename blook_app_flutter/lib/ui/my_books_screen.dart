@@ -46,64 +46,62 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
   }
 
   Widget _createBody(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: BlocBuilder<MyBooksBloc, MyBooksState>(
-        bloc: _mybooksbloc,
-        builder: (context, state) {
-          if (state is MyBooksInitial) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is MyBooksFetchError) {
-            return Column(
-              children: [
-                Center(
-                  child: Text("MIS LIBROS",
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeFive)),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: BlookStyle.quaternaryColor,
+    return SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: BlocBuilder<MyBooksBloc, MyBooksState>(
+          bloc: _mybooksbloc,
+          builder: (context, state) {
+            if (state is MyBooksInitial) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is MyBooksFetchError) {
+              return Column(
+                children: [
+                  Center(
+                    child: Text("MIS LIBROS",
+                        style: BlookStyle.textCustom(
+                            BlookStyle.whiteColor, BlookStyle.textSizeFive)),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(
-                          "Ordenado por:",
-                          style: BlookStyle.textCustom(
-                              BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                  Container(
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: BlookStyle.quaternaryColor,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(
+                            "Ordenado por:",
+                            style: BlookStyle.textCustom(
+                                BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                          ),
                         ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Icon(
-                          Icons.filter_list,
-                          color: BlookStyle.whiteColor,
-                        ),
-                      )
-                    ],
+                        const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(
+                            Icons.filter_list,
+                            color: BlookStyle.whiteColor,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          } else if (state is MyBooksFetched) {
-            return _booksList(context, state.mybooks, state.pagesize);
-          } else {
-            return const Text('Not support');
-          }
-        },
-      ),
+                ],
+              );
+            } else if (state is MyBooksFetched) {
+              return _booksList(context, state.mybooks, state.pagesize);
+            } else {
+              return const Text('Not support');
+            }
+          },
+        ),
     );
   }
 
   Widget _booksList(context, List<Book> mybooks, int pagesize) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
+    return Column(
         children: [
           Center(
             child: Text("MIS LIBROS",
@@ -128,12 +126,12 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: IconButton(
                     onPressed: () {
                       showModal(context, mybooks);
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.filter_list,
                       color: BlookStyle.whiteColor,
                     ),
@@ -144,8 +142,9 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
           ),
           Container(
             margin: const EdgeInsets.only(bottom: 100),
-            height: 500,
+            height: 490,
             child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: mybooks.length,
@@ -165,7 +164,6 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
             ),
           ),
         ],
-      ),
     );
   }
 

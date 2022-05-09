@@ -11,8 +11,6 @@ import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:blook_app_flutter/widgets/home_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -31,9 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
     bookRepository = BookRepositoryImpl();
     PreferenceUtils.init();
     _topNewBooksBloc = BooksBloc(bookRepository)
-      ..add(FetchBooksWithType("new/"));
+      ..add(const FetchBooksWithType("new/"));
     _orderBooksBloc = BooksBloc(bookRepository)
-      ..add(FetchBooksWithType("order/"));
+      ..add(const FetchBooksWithType("order/"));
     super.initState();
   }
 
@@ -64,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _createBody(BuildContext context) {
     return Column(children: [
-      
       BlocBuilder<BooksBloc, BooksState>(
         bloc: _topNewBooksBloc,
         builder: (context, state) {
@@ -74,15 +71,16 @@ class _HomeScreenState extends State<HomeScreen> {
             return ErrorPage(
               message: state.message,
               retry: () {
-                context.watch<BooksBloc>().add(const FetchBooksWithType("new/"));
+                context
+                    .watch<BooksBloc>()
+                    .add(const FetchBooksWithType("new/"));
               },
             );
           } else if (state is BooksFetched) {
             return Column(
               children: [
                 principalBook(state.books.first),
-                _createBookView(
-                    "Añadidos Recientemente", context, state.books),
+                _createBookView("Añadidos Recientemente", context, state.books),
               ],
             );
           } else {
@@ -112,61 +110,61 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
   }
 
-  Widget principalBook(Book book){
+  Widget principalBook(Book book) {
     var lista;
-    return Column(children: [
-      Stack(
-        children: [
-          Image.network(
-                    book.cover,
-                    headers: {
-                      'Authorization':
-                          'Bearer ${PreferenceUtils.getString('token')}'
-                    },
-            height: 350,
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover,
-          ),
-          Container(
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(top: 160),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                     utf8.decode(book.name.codeUnits),
-                    style: BlookStyle.textPrincipal, overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-           Container(
-            width: MediaQuery.of(context).size.width,
-            height: 40,
-            margin: const EdgeInsets.only(top: 300),
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: book.genres.length,
-              itemBuilder: (context, index) {
-                lista = book.genres;
-                return oneGenre(context, lista.elementAt(index));
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Image.network(
+              book.cover,
+              headers: {
+                'Authorization': 'Bearer ${PreferenceUtils.getString('token')}'
               },
+              height: 350,
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.cover,
             ),
-          ),
-          
-        ],
-      ),
-      Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(5),
-            width: 130,
-            child: ElevatedButton(
+            Container(
+              height: 300,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.only(top: 160),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      utf8.decode(book.name.codeUnits),
+                      style: BlookStyle.textPrincipal,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              margin: const EdgeInsets.only(top: 300),
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: book.genres.length,
+                itemBuilder: (context, index) {
+                  lista = book.genres;
+                  return oneGenre(context, lista.elementAt(index));
+                },
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(5),
+              width: 130,
+              child: ElevatedButton(
                 onPressed: () {
                   PreferenceUtils.setString("idbook", book.id);
                   Navigator.pushNamed(context, "/book");
@@ -175,36 +173,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   "Leer",
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeFour),
-                )),
-          ),
-          const Icon(
-            Icons.favorite,
-            color: BlookStyle.whiteColor,
-          )
-        ],
-      ),
-    ],);
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
-  Widget oneGenre (context, Genre genre) {
+  Widget oneGenre(context, Genre genre) {
     return Container(
-      width: 80,
-                    margin: const EdgeInsets.all(2),
-                    padding: const EdgeInsets.only(top: 6),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: BlookStyle.whiteColor),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                      utf8.decode(genre.name.codeUnits),
-                      style: BlookStyle.textCustom(
-                          BlookStyle.whiteColor, BlookStyle.textSizeThree),textAlign: TextAlign.center,
-                    ));
+        width: 80,
+        margin: const EdgeInsets.all(2),
+        padding: const EdgeInsets.only(top: 6),
+        decoration: BoxDecoration(
+            border: Border.all(color: BlookStyle.whiteColor),
+            borderRadius: BorderRadius.circular(5)),
+        child: Text(
+          utf8.decode(genre.name.codeUnits),
+          style: BlookStyle.textCustom(
+              BlookStyle.whiteColor, BlookStyle.textSizeThree),
+          textAlign: TextAlign.center,
+        ));
   }
 
   Widget _createBookView(
       String titulo, BuildContext context, List<Book> books) {
     return Column(children: [
-      
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -240,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         PreferenceUtils.setString("idbook", book.id);
-                Navigator.pushNamed(context, "/book");
+        Navigator.pushNamed(context, "/book");
       },
       child: SizedBox(
         child: Column(
@@ -263,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               width: 130,
               child: Text(utf8.decode(book.name.codeUnits),
-      overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.ellipsis,
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeTwo)),
             )

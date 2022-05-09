@@ -1,11 +1,10 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:blook_app_flutter/blocs/chapter_new_bloc/chapter_new_bloc.dart';
 import 'package:blook_app_flutter/blocs/edit_chapter_bloc/edit_chapter_bloc.dart';
-import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/create_chapter_dto.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository_impl.dart';
-import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:file_picker/file_picker.dart';
@@ -17,18 +16,15 @@ typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
 class ChapterEditScreen extends StatefulWidget {
-  final String nameChapter;
-  final String idChapter;
-  const ChapterEditScreen({Key? key, required this.nameChapter, required this.idChapter,}) : super(key: key);
+  final String nombreCapitulo;
+  final String idCapitulo;
+  const ChapterEditScreen({Key? key, required this.nombreCapitulo, required this.idCapitulo,}) : super(key: key);
 
   @override
-  State<ChapterEditScreen> createState() => _ChapterEditScreenState(nameChapter, idChapter);
+  State<ChapterEditScreen> createState() => _ChapterEditScreenState();
 }
 
 class _ChapterEditScreenState extends State<ChapterEditScreen> {
-  final String nombreCapitulo;
-  final String idCapitulo;
-  _ChapterEditScreenState(this.nombreCapitulo, this.idCapitulo);
   List<XFile>? _imageFileList;
   final _formKey = GlobalKey<FormState>();
   late TextEditingController nameController;
@@ -42,7 +38,7 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
   void initState() {
     chapterRepository = ChapterRepositoryImpl();
     PreferenceUtils.setString('image', '...');
-    nameController = TextEditingController(text: nombreCapitulo);
+    nameController = TextEditingController(text:utf8.decode(widget.nombreCapitulo.codeUnits));
     super.initState();
   }
 
@@ -219,7 +215,7 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
                               EditOneChapterEvent(
                                   PreferenceUtils.getString("image")!,
                                   createChapterDto,
-                                  idCapitulo));
+                                  widget.idCapitulo));
                           Navigator.pushNamed(context, '/');
                         }
                       }

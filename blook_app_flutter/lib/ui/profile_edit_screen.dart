@@ -1,7 +1,6 @@
-import 'package:blook_app_flutter/blocs/change_password_bloc/change_password_bloc.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/edit_user_bloc/edit_user_bloc.dart';
 import 'package:blook_app_flutter/models/edit_user_dto.dart';
-import 'package:blook_app_flutter/models/password_dto.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository_impl.dart';
 import 'package:blook_app_flutter/ui/menu_screen.dart';
@@ -74,6 +73,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 context,
                 MaterialPageRoute(builder: (context) => const MenuScreen()),
               );
+              _createDialog(context);
             } else if (state is EditUserErrorState) {
               _showSnackbar(context, state.message);
             }
@@ -88,6 +88,24 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             return buildF(context);
           });
     
+  }
+
+  AwesomeDialog _createDialog(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      dialogType: DialogType.SUCCES,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Correcto',
+      desc: 'Los datos se han guardado correctamente',
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkText: "Aceptar",
+      btnOkOnPress: () {},
+    )..show();
   }
 
   void _showSnackbar(BuildContext context, String message) {

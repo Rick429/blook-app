@@ -46,60 +46,59 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
 Widget _createBody(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child:  BlocBuilder<MyFavoriteBooksBloc, MyFavoriteBooksState>(
-          bloc: _myfavoritebooksbloc,
-          builder: (context, state) {
-            if (state is MyFavoriteBooksInitial) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is MyFavoriteBooksFetchError) {
-              return Column(children: [
-                   Center(
-              child: Text("FAVORITOS",
-                  style: BlookStyle.textCustom(
-                      BlookStyle.whiteColor, BlookStyle.textSizeFive)),
-            ),
-            Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: BlookStyle.quaternaryColor,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: BlocBuilder<MyFavoriteBooksBloc, MyFavoriteBooksState>(
+            bloc: _myfavoritebooksbloc,
+            builder: (context, state) {
+              if (state is MyFavoriteBooksInitial) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is MyFavoriteBooksFetchError) {
+                return Column(children: [
+                     Center(
+                child: Text("FAVORITOS",
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeFive)),
               ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        "Ordenado por: nombre",
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Icon(Icons.filter_list, color: BlookStyle.whiteColor,),
-                    )
-                  ],
+              Container(
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: BlookStyle.quaternaryColor,
                 ),
-              ),
-              ],);
-            } else if (state is MyFavoriteBooksFetched) {
-              return _booksList(context, state.mybooks, state.pagesize);
-            } else {
-              return const Text('Not support');
-            }
-          },
-        ),
-      
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          "Ordenado por: nombre",
+                          style: BlookStyle.textCustom(
+                              BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                        ),
+                      ),
+                       Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.filter_list, color: BlookStyle.whiteColor,)),
+                      )
+                    ],
+                  ),
+                ),
+                ],);
+              } else if (state is MyFavoriteBooksFetched) {
+                return _booksList(context, state.mybooks, state.pagesize);
+              } else {
+                return const Text('Not support');
+              }
+            },
+      ),
     );
   }
  
   Widget _booksList(context, List<Book> myfavoritebooks, int pagesize) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
+    return Column(
             children: [
               Center(
                 child: Text("FAVORITOS",
@@ -116,7 +115,7 @@ Widget _createBody(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     "Ordenado por: $title",
                     style: BlookStyle.textCustom(
@@ -124,12 +123,12 @@ Widget _createBody(BuildContext context) {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: IconButton(
                     onPressed: () {
                       showModal(context, myfavoritebooks);
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.filter_list,
                       color: BlookStyle.whiteColor,
                     ),
@@ -142,6 +141,7 @@ Widget _createBody(BuildContext context) {
             margin: const EdgeInsets.only(bottom: 100),
             height: 500,
             child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
               itemCount: myfavoritebooks.length,
@@ -155,8 +155,6 @@ Widget _createBody(BuildContext context) {
             ),
             
             ],
-          
-        ),
     );
   }
 

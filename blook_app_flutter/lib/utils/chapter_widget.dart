@@ -14,30 +14,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChapterWidget extends StatefulWidget {
-  final String idChapter;
-  final int index;
-  final String bookAutor;
-  final String chapterName;
-  const ChapterWidget(
-      {Key? key,
-      required this.idChapter,
-      required this.index,
-      required this.bookAutor,
-      required this.chapterName})
-      : super(key: key);
-
-  @override
-  State<ChapterWidget> createState() =>
-      _ChapterWidgetState(idChapter, index, bookAutor, chapterName);
-}
-
-class _ChapterWidgetState extends State<ChapterWidget> {
   final String idCapitulo;
   final int indice;
   final String autorLibro;
   final String capituloNombre;
-  _ChapterWidgetState(
-      this.idCapitulo, this.indice, this.autorLibro, this.capituloNombre);
+  const ChapterWidget(
+      {Key? key,
+      required this.idCapitulo,
+      required this.indice,
+      required this.autorLibro,
+      required this.capituloNombre})
+      : super(key: key);
+
+  @override
+  State<ChapterWidget> createState() =>_ChapterWidgetState();
+}
+
+class _ChapterWidgetState extends State<ChapterWidget> {
 
   @override
   void initState() {
@@ -47,15 +40,15 @@ class _ChapterWidgetState extends State<ChapterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (PreferenceUtils.getString("nick") == autorLibro) {
+    if (PreferenceUtils.getString("nick") == widget.autorLibro) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
             width: 220,
             child: Text(
-              "Capitulo ${indice + 1}: " +
-                  utf8.decode(capituloNombre.codeUnits),
+              "Capitulo ${widget.indice + 1}: " +
+                  utf8.decode(widget.capituloNombre.codeUnits),
               style: BlookStyle.textCustom(
                   BlookStyle.whiteColor, BlookStyle.textSizeTwo),
             ),
@@ -66,12 +59,12 @@ class _ChapterWidgetState extends State<ChapterWidget> {
           ),
           IconButton(onPressed: () {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => ChapterEditScreen(nameChapter: capituloNombre, idChapter: idCapitulo,)));
-          }, icon: Icon(Icons.edit),
+              builder: (context) => ChapterEditScreen(nombreCapitulo: widget.capituloNombre, idCapitulo: widget.idCapitulo,)));
+          }, icon: const Icon(Icons.edit),
             color: BlookStyle.whiteColor,),
           IconButton(
               onPressed: () {
-                _createDialog(context, idCapitulo);
+                _createDialog(context, widget.idCapitulo);
               },
               icon: Icon(Icons.delete))
         ],
@@ -81,7 +74,7 @@ class _ChapterWidgetState extends State<ChapterWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Capitulo ${indice + 1}: " + utf8.decode(capituloNombre.codeUnits),
+            "Capitulo ${widget.indice + 1}: " + utf8.decode(widget.capituloNombre.codeUnits),
             style: BlookStyle.textCustom(
                 BlookStyle.whiteColor, BlookStyle.textSizeTwo),
           ),       
@@ -112,7 +105,7 @@ class _ChapterWidgetState extends State<ChapterWidget> {
           BlookStyle.whiteColor, BlookStyle.textSizeThree),
       btnOkOnPress: () {
         BlocProvider.of<DeleteChapterBloc>(context)
-            .add(DeleteOneChapterEvent(idCapitulo));
+            .add(DeleteOneChapterEvent(widget.idCapitulo));
       },
       btnCancelOnPress: () {},
     )..show();

@@ -8,16 +8,15 @@ import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 
 class InfoBookScrenn extends StatefulWidget {
-  final Book book;
-  const InfoBookScrenn({required this.book, Key? key}) : super(key: key);
+  final Book libro;
+  const InfoBookScrenn({required this.libro, Key? key}) : super(key: key);
 
   @override
-  State<InfoBookScrenn> createState() => _InfoBookScrennState(book);
+  State<InfoBookScrenn> createState() => _InfoBookScrennState();
 }
 
 class _InfoBookScrennState extends State<InfoBookScrenn> {
-  final Book libro;
-  _InfoBookScrennState(this.libro);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +34,7 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -49,7 +48,7 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
                     ),
                   ),
                   Text(
-                    utf8.decode(libro.name.codeUnits),
+                    utf8.decode(widget.libro.name.codeUnits),
                     style: BlookStyle.textCustom(
                       BlookStyle.whiteColor,
                       BlookStyle.textSizeTwo,
@@ -67,7 +66,7 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
                     ),
                   ),
                   Text(
-                    utf8.decode(libro.autor.codeUnits),
+                    utf8.decode(widget.libro.autor.codeUnits),
                     style: BlookStyle.textCustom(
                       BlookStyle.whiteColor,
                       BlookStyle.textSizeTwo,
@@ -85,7 +84,7 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
                     ),
                   ),
                   Text(
-                    '${Jiffy(libro.releaseDate).yMMMd}',
+                    Jiffy(widget.libro.releaseDate).yMMMd,
                     style: BlookStyle.textCustom(
                       BlookStyle.whiteColor,
                       BlookStyle.textSizeTwo,
@@ -97,7 +96,7 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 15),
+                    margin: const EdgeInsets.only(top: 15),
                     child: Text(
                       'GÉNEROS ',
                       style: BlookStyle.textCustom(
@@ -112,10 +111,10 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
                 width: MediaQuery.of(context).size.width,
                 height: 40,
                 margin: const EdgeInsets.symmetric(vertical: 5),
-                child: GenreList(context, libro.genres),
+                child: genreList(context, widget.libro.genres),
               ),
               Container(
-                margin: EdgeInsets.only(top: 15),
+                margin: const EdgeInsets.only(top: 15),
                 child: Text(
                   "SINOPSIS",
                   style: BlookStyle.textCustom(
@@ -125,9 +124,9 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
+                margin: const EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  utf8.decode(libro.description.codeUnits),
+                  utf8.decode(widget.libro.description.codeUnits),
                   style: BlookStyle.textCustom(
                     BlookStyle.whiteColor,
                     BlookStyle.textSizeTwo,
@@ -141,7 +140,7 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
     );
   }
 
-  Widget GenreList(context, List<Genre> listagenres) {
+  Widget genreList(context, List<Genre> listagenres) {
     if (listagenres.isEmpty) {
       return Text(
         "Sin definir",
@@ -154,9 +153,9 @@ class _InfoBookScrennState extends State<InfoBookScrenn> {
       return ListView.builder(
         shrinkWrap: false,
         scrollDirection: Axis.horizontal,
-        itemCount: libro.genres.length,
+        itemCount: widget.libro.genres.length,
         itemBuilder: (context, index) {
-          listagenres = libro.genres;
+          listagenres = widget.libro.genres;
           return oneGenre(context, listagenres.elementAt(index));
         },
       );
