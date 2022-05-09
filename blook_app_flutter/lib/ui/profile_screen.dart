@@ -4,6 +4,8 @@ import 'package:blook_app_flutter/blocs/profile_bloc/profile_bloc.dart';
 import 'package:blook_app_flutter/models/user_dto.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository_impl.dart';
+import 'package:blook_app_flutter/ui/profile_edit_screen.dart';
+import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:blook_app_flutter/blocs/image_pick_bloc/image_pick_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
@@ -89,42 +91,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return Container(
                   child: const Center(child: CircularProgressIndicator()));
             } else if (state is UserLoggedFetchError) {
-              return Column(
-                children: [
-                  Center(
-                    child: Text("FAVORITOS",
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeFive)),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: BlookStyle.quaternaryColor,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            "Ordenado por: nombre",
-                            style: BlookStyle.textCustom(
-                                BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Icon(
-                            Icons.filter_list,
-                            color: BlookStyle.whiteColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              );
+              return ErrorPage(message: state.message, retry: () {
+                   context.watch<ProfileBloc>().add(const FetchUserLogged());
+              });
             } else if (state is UserLoggedFetched) {
               return _userItem(state.userLogged);
             } else {
@@ -146,6 +115,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     BlookStyle.whiteColor, BlookStyle.textSizeThree)),
           ),
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+          IconButton(onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProfileEditScreen(nick: userLogged.nick, name: userLogged.name, lastName: userLogged.lastname, email: userLogged.email, id: userLogged.id)));
+          }, icon: Icon(Icons.edit, color: BlookStyle.whiteColor,))
+        ],),
         Container(
           height: 40,
           margin: const EdgeInsets.all(8),

@@ -1,4 +1,6 @@
 import 'package:blook_app_flutter/blocs/change_password_bloc/change_password_bloc.dart';
+import 'package:blook_app_flutter/blocs/edit_user_bloc/edit_user_bloc.dart';
+import 'package:blook_app_flutter/models/edit_user_dto.dart';
 import 'package:blook_app_flutter/models/password_dto.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository_impl.dart';
@@ -7,23 +9,30 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChangePasswordScreen extends StatefulWidget {
-  const ChangePasswordScreen({Key? key}) : super(key: key);
+class ProfileEditScreen extends StatefulWidget {
+  final String name;
+  final String lastName;
+  final String email;
+  final String id;
+  const ProfileEditScreen({Key? key, required this.name, required this.lastName, required this.email, required this.id}) : super(key: key);
 
   @override
-  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+  State<ProfileEditScreen> createState() => _ProfileEditScreenState();
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController password2Controller = TextEditingController();
-  TextEditingController password3Controller = TextEditingController();
+  late TextEditingController nameController;
+  late TextEditingController lastNameController;
+  late TextEditingController emailController;
   late UserRepository userRepository;
 
   @override
   void initState() {
-   userRepository = UserRepositoryImpl();
+    nameController = TextEditingController(text: widget.name);
+    lastNameController = TextEditingController(text: widget.lastName);
+    emailController = TextEditingController(text: widget.email);
+    userRepository = UserRepositoryImpl();
     super.initState();
   }
 
@@ -31,13 +40,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => ChangePasswordBloc(userRepository)),
+          BlocProvider(create: (context) => EditUserBloc(userRepository)),
         ],
         child: Scaffold(
       backgroundColor: BlookStyle.blackColor,
       appBar: AppBar(
         title:  Text(
-                    "CAMBIAR CONTRASEÑA",
+                    "EDITAR PERFIL",
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeFive),
                   ),
@@ -55,25 +64,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget _createBody(BuildContext context) {
     return 
-      BlocConsumer<ChangePasswordBloc, ChangePasswordState>(
+      BlocConsumer<EditUserBloc, EditUserState>(
           listenWhen: (context, state) {
-            return state is ChangePasswordSuccessState;
+            return state is EditUserSuccessState;
           },
            listener: (context, state) {
-            if (state is ChangePasswordSuccessState) {
+            if (state is EditUserSuccessState) {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const MenuScreen()),
               );
-            } else if (state is ChangePasswordErrorState) {
+            } else if (state is EditUserErrorState) {
               _showSnackbar(context, state.message);
             }
           },
           buildWhen: (context, state) {
-            return state is ChangePasswordInitial || state is ChangePasswordSuccessState;
+            return state is EditUserInitial || state is EditUserSuccessState;
           },
           builder: (context, state) {
-            if (state is ChangePasswordSuccessState) {
+            if (state is EditUserSuccessState) {
               return buildF(context);
             }
             return buildF(context);
@@ -94,7 +103,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       scrollDirection: Axis.vertical,
       child: SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: 500,
+          height: 600,
           child: Form(
             key: _formKey,
             child: Column(
@@ -105,7 +114,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                    controller: passwordController,
+                    controller: nameController,
                     textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
@@ -115,12 +124,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
-                      hintText: 'Contraseña actual:',
+                      hintText: 'Nombre:',
                     ),
                     onSaved: (String? value) {},
                     validator: (String? value) {
                       return (value == null)
-                          ? 'Introduzca su contraseña actual'
+                          ? 'Introduzca un nombre'
                           : null;
                     },
                   ),
@@ -131,7 +140,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                    controller: password2Controller,
+                    controller: lastNameController,
                     textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
@@ -141,12 +150,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
-                      hintText: 'Nueva contraseña:',
+                      hintText: 'Apellidos:',
                     ),
                     onSaved: (String? value) {},
                     validator: (String? value) {
                       return (value == null)
-                          ? 'Introduzca su nueva contraseña'
+                          ? 'Introduzca sus apellidos'
                           : null;
                     },
                   ),
@@ -157,7 +166,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: TextFormField(
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                    controller: password3Controller,
+                    controller: emailController,
                     textAlignVertical: TextAlignVertical.bottom,
                     decoration: InputDecoration(
                       filled: true,
@@ -167,12 +176,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
-                      hintText: 'Confirmar contraseña nueva:',
+                      hintText: 'Email:',
                     ),
                     onSaved: (String? value) {},
                     validator: (String? value) {
                       return (value == null)
-                          ? 'Repita su contraseña nueva'
+                          ? 'Introduzca su email'
                           : null;
                     },
                   ),
@@ -186,12 +195,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       elevation: 15.0,
                     ),
                     onPressed: () {
-                  final passwordDto = PasswordDto(
-                    password: passwordController.text, 
-                    passwordNew: password2Controller.text, 
-                    passwordNew2: password3Controller.text);
-                      BlocProvider.of<ChangePasswordBloc>(context).add(ChangePassEvent(passwordDto
-                          ));
+                  final edit = EditUserDto( 
+                    name: nameController.text, 
+                    lastname: lastNameController.text,
+                    email: emailController.text);
+                      BlocProvider.of<EditUserBloc>(context).add(EditOneUserEvent(edit, widget.id
+                          ),
+                        );
                     },
                     child: Text("Guardar",
                         style: BlookStyle.textCustom(
