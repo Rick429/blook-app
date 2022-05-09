@@ -1,8 +1,6 @@
 package com.salesianostriana.blook.dtos;
 
-import com.salesianostriana.blook.validation.anotations.PasswordsMatch;
 import com.salesianostriana.blook.validation.anotations.UniqueEmail;
-import com.salesianostriana.blook.validation.anotations.UniqueUsername;
 import lombok.*;
 import javax.validation.constraints.Email;
 
@@ -12,13 +10,8 @@ import javax.validation.constraints.Email;
 @Setter
 @Builder
 
-@PasswordsMatch(passwordField = "password",
-        verifyPasswordField = "password2",
-        message = "{user.password.notmatch}")
 public class EditUserDto {
 
-    @UniqueUsername(message = "{user.unique.nick}")
-    private String nick;
     private String name;
     private String lastname;
     @Email

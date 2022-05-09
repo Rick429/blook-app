@@ -25,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,10 +67,11 @@ public class UserEntityController {
                     description = "No se encontró el usuario",
                     content = @Content),
     })
-    @PutMapping("/")
+    @PutMapping("/{id}")
     public GetUserDto editUser(@Valid @RequestPart("user") EditUserDto e,
-                                    @AuthenticationPrincipal UserEntity user) {
-        return userDtoConverter.userEntityToGetUserDto(userEntityService.editUser(e, user));
+                               @PathVariable UUID id,
+                               @AuthenticationPrincipal UserEntity user) {
+        return userDtoConverter.userEntityToGetUserDto(userEntityService.editUser(e, user, id));
     }
 
     @Operation(summary = "Listar todos los usuarios")

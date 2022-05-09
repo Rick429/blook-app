@@ -2,6 +2,7 @@ package com.salesianostriana.blook.services;
 
 import com.salesianostriana.blook.dtos.*;
 import com.salesianostriana.blook.enums.UserRole;
+import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
 import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
 import com.salesianostriana.blook.models.Genre;
@@ -67,16 +68,20 @@ public class UserEntityService implements UserDetailsService {
         }
     }
 
-    public UserEntity editUser(EditUserDto editUserDto, UserEntity user) {
-        Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+    public UserEntity editUser(EditUserDto editUserDto, UserEntity user, UUID id) {
+        Optional<UserEntity> u = userEntityRepository.findById(id);
         if(u.isEmpty()){
             throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
         } else {
-                u.get().setNick(editUserDto.getNick());
+            if(user.getId().equals(id) || user.getRole().equals(UserRole.ADMIN)) {
                 u.get().setName(editUserDto.getName());
                 u.get().setLastname(editUserDto.getLastname());
                 u.get().setEmail(editUserDto.getEmail());
-            return userEntityRepository.save(u.get());
+                return userEntityRepository.save(u.get());
+            } else {
+                throw new ForbiddenException("Permisos insuficientes");
+            }
+
         }
     }
 
