@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/error_response.dart';
+import 'package:blook_app_flutter/models/password_dto.dart';
 import 'package:blook_app_flutter/models/user_dto.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 
 class UserRepositoryImpl extends UserRepository {
@@ -46,6 +48,37 @@ class UserRepositoryImpl extends UserRepository {
       return User.fromJson(json.decode(response.body));
     } else {
       throw Exception('Fail to load user');
+    }
+  }
+
+  @override
+  Future<User> changePassword(PasswordDto passwordDto) async {
+   Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    };
+
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse('${Constant.baseurl}user/change/'),
+    );
+    request.files.add(http.MultipartFile.fromString(
+      'user',
+      jsonEncode(passwordDto.toJson()),
+      contentType: MediaType('application', 'json'),
+      filename: "user",
+    ));
+
+    request.headers.addAll(headers);
+    var res = await request.send();
+    final respStr = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      User user = User.fromJson(json.decode(respStr));
+      return user;
+    } else {
+      final error = ErrorResponse.fromJson(json.decode(respStr));
+      throw error;
     }
   }
 }

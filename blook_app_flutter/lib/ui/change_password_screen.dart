@@ -1,5 +1,11 @@
+import 'package:blook_app_flutter/blocs/change_password_bloc/change_password_bloc.dart';
+import 'package:blook_app_flutter/models/password_dto.dart';
+import 'package:blook_app_flutter/repository/user_repository/user_repository.dart';
+import 'package:blook_app_flutter/repository/user_repository/user_repository_impl.dart';
+import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);
@@ -13,16 +19,72 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController password2Controller = TextEditingController();
   TextEditingController password3Controller = TextEditingController();
+  late UserRepository userRepository;
 
   @override
+  void initState() {
+   userRepository = UserRepositoryImpl();
+    super.initState();
+  }
+
+   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => ChangePasswordBloc(userRepository)),
+        ],
+        child: Scaffold(
       backgroundColor: BlookStyle.blackColor,
       appBar: AppBar(
         backgroundColor: BlookStyle.blackColor,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: SizedBox(
+            body: RefreshIndicator(
+                onRefresh: () async {},
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: _createBody(context)))));
+  }
+
+  Widget _createBody(BuildContext context) {
+    return 
+      BlocConsumer<ChangePasswordBloc, ChangePasswordState>(
+          listenWhen: (context, state) {
+            return state is ChangePasswordSuccessState;
+          },
+           listener: (context, state) {
+            if (state is ChangePasswordSuccessState) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MenuScreen()),
+              );
+            } else if (state is ChangePasswordErrorState) {
+              _showSnackbar(context, state.message);
+            }
+          },
+          buildWhen: (context, state) {
+            return state is ChangePasswordInitial || state is ChangePasswordSuccessState;
+          },
+          builder: (context, state) {
+            if (state is ChangePasswordSuccessState) {
+              return buildF(context);
+            }
+            return buildF(context);
+          });
+    
+  }
+
+  void _showSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+
+  Widget buildF(BuildContext context) {
+    return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Form(
@@ -68,7 +130,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 child: TextFormField(
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                  controller: passwordController,
+                  controller: password2Controller,
                   textAlignVertical: TextAlignVertical.bottom,
                   decoration: InputDecoration(
                     filled: true,
@@ -94,7 +156,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 child: TextFormField(
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                  controller: passwordController,
+                  controller: password3Controller,
                   textAlignVertical: TextAlignVertical.bottom,
                   decoration: InputDecoration(
                     filled: true,
@@ -122,7 +184,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     primary: BlookStyle.primaryColor,
                     elevation: 15.0,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                final passwordDto = PasswordDto(
+                  password: passwordController.text, 
+                  passwordNew: password2Controller.text, 
+                  passwordNew2: password3Controller.text);
+                    BlocProvider.of<ChangePasswordBloc>(context).add(ChangePassEvent(passwordDto
+                        ));
+                  },
                   child: Text("Guardar",
                       style: BlookStyle.textCustom(
                           BlookStyle.whiteColor, BlookStyle.textSizeThree))),
@@ -130,7 +199,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ],
           ),
         ),
-      ),
     );
   }
 }
