@@ -76,12 +76,13 @@ public class UserEntityService implements UserDetailsService {
             if(user.getId().equals(id) || user.getRole().equals(UserRole.ADMIN)) {
                 u.get().setName(editUserDto.getName());
                 u.get().setLastname(editUserDto.getLastname());
-                u.get().setEmail(editUserDto.getEmail());
+                if(editUserDto.getEmail()!=null) {
+                    u.get().setEmail(editUserDto.getEmail());
+                }
                 return userEntityRepository.save(u.get());
             } else {
                 throw new ForbiddenException("Permisos insuficientes");
             }
-
         }
     }
 
