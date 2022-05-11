@@ -1,0 +1,61 @@
+<div class="contenedor">
+  <span class="logo"><img src="../../../assets/img/logo.svg" width="200px"></span>
+  <form [formGroup]="formulario" class="example-form">
+
+    <mat-card class="card">
+      <h1 class="titulo">Crear una cuenta</h1>
+      <mat-form-field appearance="outline" class="field-width">
+        <mat-label>Nombre de usuario</mat-label>
+        <input matInput placeholder="Introduzca su nombre de usuario" name="nick" formControlName="nick" required>
+      </mat-form-field>
+      <div *ngIf="formulario.controls['nick'].dirty || formulario.controls['nick'].touched" class="alert alert-danger">
+        <div class="validador" *ngIf="formulario.get('nick')?.hasError('required')">
+          El nombre de usuario es requerido
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="field-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Introduzca su nombre" name="name" formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="field-width">
+        <mat-label>Apellidos</mat-label>
+        <input matInput placeholder="Introduzca sus apellidos" name="lastname" formControlName="lastname">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="field-width">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Introduzca su email" name="email" formControlName="email" required>
+      </mat-form-field>
+      <div *ngIf="formulario.controls['email'].dirty || formulario.controls['email'].touched" class="alert alert-danger">
+        <div class="validador" *ngIf="formulario.get('email')?.hasError('required')">
+          El email es requerido
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="field-width">
+        <mat-label>Contraseña</mat-label>
+        <input type="password" matInput placeholder="Introduzca su contraseña" id="password" formControlName="password">
+      </mat-form-field>
+      <div *ngIf="formulario.controls['password'].dirty || formulario.controls['password'].touched" class="alert alert-danger">
+        <div class="validador" *ngIf="formulario.get('password')?.hasError('required')">
+          La contraseña es requerida
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="field-width">
+        <mat-label>Confirmar contraseña</mat-label>
+        <input type="password" matInput placeholder="Repita su contraseña" id="password2" formControlName="password2">
+      </mat-form-field>
+      <div *ngIf="formulario.controls['password2'].dirty || formulario.controls['password2'].touched" class="alert alert-danger">
+        <div class="validador" *ngIf="formulario.get('password2')?.hasError('required')">
+          La contraseña es requerida
+        </div>
+      </div>
+
+      <button mat-raised-button color="success" >Iniciar Sesión</button>
+    </mat-card>
+    <p class="sub">¿No tienes cuenta? Registrate</p>
+  </form>
+</div>

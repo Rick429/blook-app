@@ -1,0 +1,111 @@
+
+  .field-width{
+    width: 300px;
+  }
+
+  .card{
+    background-color: #212936;
+    padding: 3% 5%;
+    display: flex;
+    flex-wrap: wrap;
+    width: 250px;
+    height: auto;
+    justify-content: center;
+    margin: auto;
+    border-radius: 50px;
+  }
+  .contenedor {
+    width: 100% !important;
+    height: 100% !important;
+    background-color:#121826;
+    margin-bottom: 20%;
+  }
+
+  html{
+    height: 100%;
+    width: 100%;
+    background-color:#121826;
+  }
+
+  .logo {
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 30px;
+    width: 200px;
+  }
+
+
+  mat-form-field {
+    width: 100%;
+    height: 60px !important;
+  }
+
+  ::ng-deep .mat-form-field-outline-start {
+    border-radius: 28px 0 0 28px !important;
+    min-width: 28px !important;
+    border-color: 0 !important;
+    border-width: 0px !important;
+  }
+
+  ::ng-deep .mat-form-field-outline-end {
+    border-radius: 0 28px 28px 0 !important;
+    border-color: 0 !important;
+    border-width: 0px !important;
+  }
+
+  :host ::ng-deep .mat-form-field-outline-gap{
+    border-color: 0 !important;
+    border-width: 0px !important;
+}
+
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: #6C727F;
+    border-color: 0 !important;
+    border-width: 0px !important;
+    border-radius: 28px;
+    color: #C4C4C4;
+  }
+  ::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #C4C4C4 !important;
+   }
+   ::ng-deep .mat-form-field-label {
+    /*change color of label*/
+    color: #C4C4C4 !important;
+   }
+
+.titulo{
+  font-family: "Mohave";
+  color: #B1E457;
+  margin: 0px;
+}
+.subtitulo{
+  font-family: 'Mohave';
+  color: #6C727F;
+
+}
+
+.validador {
+  margin: 5px;
+  width: 230px;
+  height: 20px;
+  border-radius: 28px;
+  background-color: #AE2D5D;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.mat-success {
+  background-color: #B1E457;
+  color: #000000;
+  border-radius: 25px;
+  width: 250px;
+  height: 45px;
+  margin-top: 10%;
+}
+
+.sub {
+  text-align: center;
+  color: white;
+}
