@@ -32,7 +32,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comment")
+@RequestMapping("/blook/comment")
 public class CommentController {
 
     private final CommentService commentService;

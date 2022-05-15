@@ -27,7 +27,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/genre")
+@RequestMapping("/blook/genre")
 public class GenreController {
 
     private final GenreService genreService;

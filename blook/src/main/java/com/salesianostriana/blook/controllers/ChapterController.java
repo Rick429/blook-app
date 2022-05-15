@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/chapter")
+@RequestMapping("/blook/chapter")
 public class ChapterController {
 
     private final ChapterService chapterService;

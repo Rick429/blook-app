@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/report")
+@RequestMapping("/blook/report")
 public class ReportController {
 
     private final ReportService reportService;

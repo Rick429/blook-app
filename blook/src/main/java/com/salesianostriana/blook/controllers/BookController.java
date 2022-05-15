@@ -29,7 +29,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/book")
+@RequestMapping("/blook/book")
 public class BookController {
 
     private final BookService bookService;

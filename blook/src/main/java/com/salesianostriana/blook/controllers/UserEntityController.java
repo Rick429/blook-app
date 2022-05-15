@@ -29,7 +29,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/blook/user")
 public class UserEntityController {
 
     private final UserEntityService userEntityService;
