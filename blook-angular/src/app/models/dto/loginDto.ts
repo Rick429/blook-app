@@ -1,9 +1,9 @@
 export class LoginDto {
-  nick: string;
+  email: string;
   password: string;
 
   constructor() {
-      this.nick = '';
+      this.email = '';
       this.password = '';
   }
 }

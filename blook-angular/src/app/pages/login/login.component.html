@@ -7,10 +7,10 @@
       <mat-form-field appearance="outline" class="field-width">
         <mat-label>Email</mat-label>
         <mat-icon matPrefix>email_outline</mat-icon>
-        <input matInput placeholder="Introduzca su email" name="nick" formControlName="nick" required>
+        <input matInput placeholder="Introduzca su email" name="email" formControlName="email" required>
       </mat-form-field>
-      <div *ngIf="formulario.controls['nick'].dirty || formulario.controls['nick'].touched" class="alert alert-danger">
-        <div class="validador" *ngIf="formulario.get('nick')?.hasError('required')">
+      <div *ngIf="formulario.controls['email'].dirty || formulario.controls['email'].touched" class="alert alert-danger">
+        <div class="validador" *ngIf="formulario.get('email')?.hasError('required')">
           El email es requerido
         </div>
       </div>

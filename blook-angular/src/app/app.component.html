@@ -1,2 +1,5 @@
-<router-outlet></router-outlet>
-
+<app-toolbar></app-toolbar>
+<mat-drawer-container autosize style="min-height: 880px; background-color: #ffffff;" class="example-container" >
+  <mat-drawer mode="side" opened> <app-navbar></app-navbar></mat-drawer>
+  <mat-drawer-content><router-outlet></router-outlet></mat-drawer-content>
+</mat-drawer-container>
