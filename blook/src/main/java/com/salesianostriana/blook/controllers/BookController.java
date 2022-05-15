@@ -84,10 +84,9 @@ public class BookController {
     })
     @PutMapping("/{id}")
     public GetBookDto editBook(@Valid @RequestPart("book")CreateBookDto c,
-                                               @RequestPart("file") MultipartFile file,
-                                               @AuthenticationPrincipal UserEntity user,
-                                               @PathVariable UUID id) {
-        return bookDtoConverter.bookToGetBookDto(bookService.editBook(c, user, file, id));
+                               @AuthenticationPrincipal UserEntity user,
+                               @PathVariable UUID id) {
+        return bookDtoConverter.bookToGetBookDto(bookService.editBook(c, user, id));
     }
 
     @Operation(summary = "Eliminar un libro")
@@ -269,5 +268,25 @@ public class BookController {
                  .favorito(bookService.isFavorite(id, user))
                  .build();
          return f;
+    }
+
+    @Operation(summary = "Editar el cover de un libro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se edita el cover del libro correctamente",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Book.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontró el libro",
+                    content = @Content),
+    })
+    @PutMapping("/cover/{id}")
+    public GetBookDto editCoverBook(@RequestPart("file")MultipartFile file,
+                                    @AuthenticationPrincipal UserEntity user,
+                                    @PathVariable UUID id) {
+        return bookDtoConverter.bookToGetBookDto(bookService.editCoverBook(user,file, id));
     }
 }

@@ -61,7 +61,7 @@ public class BookService {
                 .orElseThrow(() -> new OneEntityNotFound(id.toString(), Book.class));
     }
 
-    public Book editBook(CreateBookDto c,UserEntity user,MultipartFile file, UUID id) {
+    public Book editBook(CreateBookDto c,UserEntity user, UUID id) {
 
         Optional<Book> b1 = bookRepository.findById(id);
 
@@ -72,14 +72,8 @@ public class BookService {
 
             if(b1.get().getAutorLibroPublicado().getId().equals(user.getId())||
                     user.getRole().equals(UserRole.ADMIN)){
-                String uri = storageService.store(file);
-                uri = storageService.completeUri(uri);
                 b1.get().setName(c.getName());
                 b1.get().setDescription(c.getDescription());
-                if(!b1.get().getCover().isEmpty()) {
-                    storageService.deleteFile(b1.get().getCover());
-                }
-                b1.get().setCover(uri);
                 List<Genre> list= new ArrayList<>();
                 for (Genre g:c.getGeneros()) {
                     list.add(genreRepository.findById(g.getId()).get());
@@ -217,6 +211,31 @@ public class BookService {
             throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
         } else {
             return  bookRepository.existsByIdAndUserLibroFavorito(idbook, u.get());
+        }
+    }
+
+    public Book editCoverBook(UserEntity user,MultipartFile file, UUID id) {
+
+        Optional<Book> b1 = bookRepository.findById(id);
+
+        if(b1.isEmpty()){
+            throw new OneEntityNotFound(id.toString(), Book.class);
+        } else {
+            Optional<UserEntity> u = userEntityRepository.findById(user.getId());
+
+            if(b1.get().getAutorLibroPublicado().getId().equals(user.getId())||
+                    user.getRole().equals(UserRole.ADMIN)){
+                String uri = storageService.store(file);
+                uri = storageService.completeUri(uri);
+
+                if(!b1.get().getCover().isEmpty()) {
+                    storageService.deleteFile(b1.get().getCover());
+                }
+                b1.get().setCover(uri);
+                return bookRepository.save(b1.get());
+            } else {
+                throw new ForbiddenException("No tiene permisos para realizar esta acción");
+            }
         }
     }
 
