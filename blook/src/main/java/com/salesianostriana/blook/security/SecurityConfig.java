@@ -49,9 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("*", "/auth/*").anonymous()
-                .antMatchers(HttpMethod.OPTIONS, "/post/*").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/*").anonymous()
-                .antMatchers(HttpMethod.OPTIONS, "/giveadmin/*").anonymous()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("*").permitAll()
                 .anyRequest().authenticated();
