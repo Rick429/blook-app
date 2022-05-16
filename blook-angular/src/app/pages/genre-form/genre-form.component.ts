@@ -52,9 +52,9 @@ export class GenreFormComponent implements OnInit {
   }
 
   eliminar() {
-   /*  this.bookService.delete(this.formulario.get('id_accion')?.value).subscribe(m => {
+    this.genreService.delete(this.data.genre.id).subscribe(m => {
       history.go(0);
-    }); */
+    });
   }
 
 

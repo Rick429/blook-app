@@ -26,7 +26,7 @@ export class GenreTableComponent implements OnInit {
     });
   }
 
-  editarLibro(genre:Genre){
+  editarGenero(genre:Genre){
     this.dialog.open(GenreFormComponent, {
 
      data: {genre: genre,
@@ -35,15 +35,7 @@ export class GenreTableComponent implements OnInit {
    });
  }
 
-  deletePost(id:number){
-    /* this.dialog.open(DialogDeletePostComponent, {
-     height: '150px',
-     width: '300px',
-     data: {id: id}
-   }); */
- }
-
- crearLibro() {
+ crearGenero() {
   this.dialog.open(GenreFormComponent, {
     data: {
       titulo: "Crear Género"},

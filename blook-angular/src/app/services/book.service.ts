@@ -24,9 +24,16 @@ export class BookService {
     return this.http.get<BookResponse>(`${this.bookBaseUrl}/all?size=400`, { headers: encabezados });
   }
 
-  create(book: Book){
-
-    return this.http.post<Book>(`${this.bookBaseUrl}/`, book);
+  create(book: Book, file:File){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    let formData = new FormData();
+    formData.append('book', new Blob([JSON.stringify(book)], {
+      type: 'application/json'
+    }));
+    formData.append("file", file);
+    return this.http.post<Book>(`${this.bookBaseUrl}/`, formData, { headers: encabezados });
   }
 
   findById(idBook: number){

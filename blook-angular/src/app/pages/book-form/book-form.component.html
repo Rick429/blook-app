@@ -28,9 +28,9 @@
     </mat-form-field> -->
     <input type="file" placeholder="cover" name="file" id="file" (change)="onFileChanged($event)" />
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline">
       <mat-label>Géneros</mat-label>
-      <mat-select formControlName="genres" multiple>
+      <mat-select [(ngModel)]="genreSelect"  name="genreSelect" [ngModelOptions]="{standalone: true}" multiple>
         <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre.name}}</mat-option>
       </mat-select>
     </mat-form-field>

@@ -43,7 +43,10 @@ export class GenreService {
     return this.http.put<Genre>(`${this.genreBaseUrl}/${idGenre}`, genero, { headers: encabezados });
   }
 
-  delete(idGenre: number){
-    return this.http.delete(`${this.genreBaseUrl}/${idGenre}`);
+  delete(idGenre: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.delete(`${this.genreBaseUrl}/${idGenre}`, { headers: encabezados });
   }
 }

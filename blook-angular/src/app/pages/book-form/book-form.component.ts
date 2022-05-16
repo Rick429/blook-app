@@ -7,6 +7,7 @@ import {saveAs} from 'file-saver';
 import { HttpClient } from '@angular/common/http';
 import { Genre } from 'src/app/models/interfaces/genre_response';
 import { GenreService } from 'src/app/services/genre.service';
+import { CreateBookDto } from 'src/app/models/dto/createBookDto';
 
 const TOKEN = 'token';
 
@@ -26,11 +27,13 @@ export class BookFormComponent implements OnInit {
     name: new FormControl(''),
     description: new FormControl(''),
     releaseDate: new FormControl(''),
-    genres: new FormControl()
+    genres: new FormControl(['']),
   });
   genresList: Genre[] = [];
+  genreSelect:Genre[] = [];
   titulo = this.data.titulo;
   file!: File;
+  createBookDto = new CreateBookDto;
   constructor(public dialogRef: MatDialogRef<BookFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BookDialogData,
     private bookService: BookService, private genreService: GenreService) {
@@ -40,7 +43,8 @@ export class BookFormComponent implements OnInit {
     this.formulario.patchValue(this.data.book);
     this.genreService.findAllGenres().subscribe(res => {
       this.genresList = res.content;
-    })
+    });
+    this.genreSelect=this.data.book.genres;
   }
 
   onFileChanged(event: any) {
@@ -52,10 +56,17 @@ export class BookFormComponent implements OnInit {
   }
 
   editarCrear(){
+    for (let index = 0; index < this.genreSelect.length; index++) {
+      console.log(this.genreSelect[index].name);
 
+    }
+    this.createBookDto.name= this.formulario.get('name')?.value;
+    this.createBookDto.description= this.formulario.get('description')?.value;
+    this.createBookDto.relase_date= this.formulario.get('releaseDate')?.value;
+    this.createBookDto.generos= this.genreSelect;
     if(this.formulario.get('id')?.value!=''){
       const formData = new FormData();
-      formData.append('book', new Blob([JSON.stringify(this.formulario.value)], {
+      formData.append('book', new Blob([JSON.stringify(this.createBookDto)], {
         type: 'application/json'
       }));
 
@@ -67,7 +78,7 @@ export class BookFormComponent implements OnInit {
       }
       history.go(0)
     } else {
-      this.bookService.create(this.formulario.value).subscribe(m => {
+      this.bookService.create(this.formulario.value, this.file).subscribe(m => {
         history.go(0);
       });
     }

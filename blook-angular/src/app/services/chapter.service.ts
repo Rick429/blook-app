@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Chapter } from '../models/interfaces/book_response';
+import { ChapterResponse } from '../models/interfaces/chapter_response';
 
 const TOKEN = 'token';
 
@@ -13,14 +14,14 @@ export class ChapterService {
 
   constructor(private http:HttpClient) { }
 
-  chapterBaseUrl = `${environment.API_BASE_URL}chapter`;
+  chapterBaseUrl = '/blook/chapter';
 
- /*  findAllChapters():Observable<>{
+  findAllChapters():Observable<ChapterResponse>{
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     })
-    return this.http.get<BookResponse>(`${this.chapterBaseUrl}/all?size=400`, { headers: encabezados });
+    return this.http.get<ChapterResponse>(`${this.chapterBaseUrl}/all?size=400`, { headers: encabezados });
   }
 
   create(chapter: Chapter){
@@ -37,5 +38,5 @@ export class ChapterService {
 
   delete(idChapter: number){
     return this.http.delete(`${this.chapterBaseUrl}/${idChapter}`);
-  } */
+  }
 }

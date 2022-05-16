@@ -7,7 +7,6 @@ import { Book } from 'src/app/models/interfaces/book_response';
 import { BookService } from 'src/app/services/book.service';
 import { BookFormComponent } from '../book-form/book-form.component';
 
-
 @Component({
   selector: 'app-book-table',
   templateUrl: './book-table.component.html',

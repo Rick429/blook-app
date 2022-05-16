@@ -9,8 +9,8 @@
             </div>
 
             <div class="add">
-              <a (click)="crearGenero()">
-                  <img src="../../../assets/img/add.svg" matTooltip="Crear género">
+              <a (click)="crearCapitulo()">
+                  <img src="../../../assets/img/add.svg" matTooltip="Crear Capitulo">
               </a>
           </div>
 
@@ -19,7 +19,6 @@
 
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
   <ng-container matColumnDef="id">
     <th colspan="2" mat-header-cell *matHeaderCellDef> ID </th>
     <td colspan="2" mat-cell *matCellDef="let element"> {{element.id}} </td>
@@ -30,15 +29,15 @@
     <td colspan="2" mat-cell *matCellDef="let element"> {{element.name}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="description" >
-    <th colspan="2" mat-header-cell *matHeaderCellDef> Descripción </th>
-    <td colspan="2" class="truncate" mat-cell *matCellDef="let element"> {{element.description}} </td>
+  <ng-container matColumnDef="file" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Archivo </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.file}} </td>
   </ng-container>
 
   <ng-container matColumnDef="acciones">
     <th colspan="2" mat-header-cell *matHeaderCellDef> Acciones </th>
     <td colspan="2" mat-cell *matCellDef="let element">
-      <button mat-button (click)="editarGenero(element)"><mat-icon>edit</mat-icon></button>
+      <button mat-button (click)="editarCapitulo(element)"><mat-icon>edit</mat-icon></button>
     </td>
 
   </ng-container>

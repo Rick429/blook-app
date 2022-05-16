@@ -1,24 +1,24 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ReportReponse } from '../models/interfaces/report_response';
+import { CommentResponse } from '../models/interfaces/comment_response';
 
 const TOKEN = 'token';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ReportService {
+export class CommentService {
 
   constructor(private http:HttpClient) { }
 
-  reportBaseUrl = '/blook/report';
+  commentBaseUrl = '/blook/comment';
 
-  findAllReports():Observable<ReportReponse>{
+  findAllComments():Observable<CommentResponse>{
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     })
-    return this.http.get<ReportReponse>(`${this.reportBaseUrl}/all?size=400`, { headers: encabezados });
+    return this.http.get<CommentResponse>(`${this.commentBaseUrl}/all?size=400`, { headers: encabezados });
   }
 }

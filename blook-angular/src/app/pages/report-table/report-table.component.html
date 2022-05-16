@@ -1,0 +1,65 @@
+<section class="main-container">
+  <h1 class="title-pages">Libros</h1>
+
+    <div class="h1-table-options">
+        <div class="aligned">
+            <div class="search-box">
+                <button class="btn-search"><img src="../../../assets/img/search.svg"></button>
+                <input type="text" class="input-search" placeholder="Buscar">
+            </div>
+
+            <div class="add">
+              <a (click)="crearReporte()">
+                  <img src="../../../assets/img/add.svg" matTooltip="Crear Reporte">
+              </a>
+          </div>
+
+        </div>
+    </div>
+
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th colspan="2" mat-header-cell *matHeaderCellDef> ID </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="user_id">
+    <th colspan="2" mat-header-cell *matHeaderCellDef> ID usuario </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.user_id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="book_comment_id" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> ID Libro/Comentario </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.book_comment_id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="report_comment" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Comentario </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.report_comment}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="type_report" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Tipo </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.type_report}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="created_date" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Fecha de reporte </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.created_date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Acciones </th>
+    <td colspan="2" mat-cell *matCellDef="let element">
+      <button mat-button (click)="editarReporte(element)"><mat-icon>edit</mat-icon></button>
+    </td>
+
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator class="mat-elevation-z8 mat-paginator" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+</section>

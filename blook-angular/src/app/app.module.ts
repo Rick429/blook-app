@@ -16,6 +16,14 @@ import {MatNativeDateModule} from '@angular/material/core';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { GenreTableComponent } from './pages/genre-table/genre-table.component';
 import { GenreFormComponent } from './pages/genre-form/genre-form.component';
+import { UserTableComponent } from './pages/user-table/user-table.component';
+import { UserFormComponent } from './pages/user-form/user-form.component';
+import { ChapterTableComponent } from './pages/chapter-table/chapter-table.component';
+import { ChapterFormComponent } from './pages/chapter-form/chapter-form.component';
+import { CommentFormComponent } from './pages/comment-form/comment-form.component';
+import { CommentTableComponent } from './pages/comment-table/comment-table.component';
+import { ReportTableComponent } from './pages/report-table/report-table.component';
+import { ReportFormComponent } from './pages/report-form/report-form.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +35,15 @@ import { GenreFormComponent } from './pages/genre-form/genre-form.component';
     BookFormComponent,
     NavbarComponent,
     GenreTableComponent,
-    GenreFormComponent
+    GenreFormComponent,
+    UserTableComponent,
+    UserFormComponent,
+    ChapterTableComponent,
+    ChapterFormComponent,
+    CommentFormComponent,
+    CommentTableComponent,
+    ReportTableComponent,
+    ReportFormComponent
   ],
   imports: [
     BrowserModule,
