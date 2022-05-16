@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("*", "/auth/*").anonymous()
+                .antMatchers( "/blook/auth/*").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/*").anonymous()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("*").permitAll()

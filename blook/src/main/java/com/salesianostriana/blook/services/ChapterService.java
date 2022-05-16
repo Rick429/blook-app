@@ -2,8 +2,11 @@ package com.salesianostriana.blook.services;
 
 import com.salesianostriana.blook.dtos.ChapterDtoConverter;
 import com.salesianostriana.blook.dtos.CreateChapterDto;
+import com.salesianostriana.blook.dtos.GetBookDto;
+import com.salesianostriana.blook.dtos.GetChapterDto;
 import com.salesianostriana.blook.enums.UserRole;
 import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
+import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
 import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.Chapter;
@@ -11,6 +14,8 @@ import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.BookRepository;
 import com.salesianostriana.blook.repositories.ChapterRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
@@ -98,6 +103,16 @@ public class ChapterService {
             c.get().removeChapterFromBook(c.get().getLibro());
             storageService.deleteFile(c.get().getFile());
             chapterRepository.deleteById(id);
+        }
+    }
+
+    public Page<GetChapterDto> findAllChapters (Pageable pageable) {
+        Page<Chapter> lista = chapterRepository.findAll(pageable);
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(Chapter.class);
+        } else {
+            return lista.map(chapterDtoConverter::chapterToGetChapterDto);
         }
     }
 

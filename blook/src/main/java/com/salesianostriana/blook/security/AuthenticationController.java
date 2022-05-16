@@ -44,7 +44,7 @@ public class AuthenticationController {
                     description = "Error en los datos",
                     content = @Content),
     })
-    @PostMapping("/auth/login")
+    @PostMapping("/blook/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -58,7 +58,7 @@ public class AuthenticationController {
                     content = {@Content(mediaType = "aplication/json",
                             schema = @Schema(implementation = UserEntity.class))}),
     })
-    @GetMapping("/me")
+    @GetMapping("/blook/me")
     public ResponseEntity<?> quienSoyYo(@AuthenticationPrincipal UserEntity user) {
         Optional<UserEntity> u = userEntityService.findFirstByNick(user.getNick());
         return ResponseEntity.ok(userDtoConverter.userEntityToGetUserDto(u.get()));
@@ -86,7 +86,7 @@ public class AuthenticationController {
                     description = "Error en los datos",
                     content = @Content),
     })
-    @PostMapping("/auth/register")
+    @PostMapping("/blook/auth/register")
     public ResponseEntity<?> nuevoUsuario(@Valid @RequestPart("user") CreateUserDto newUser) {
 
         UserEntity saved = userEntityService.save(newUser);
