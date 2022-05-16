@@ -5,6 +5,8 @@ import { Book } from 'src/app/models/interfaces/book_response';
 import { BookService } from 'src/app/services/book.service';
 import {saveAs} from 'file-saver';
 import { HttpClient } from '@angular/common/http';
+import { Genre } from 'src/app/models/interfaces/genre_response';
+import { GenreService } from 'src/app/services/genre.service';
 
 const TOKEN = 'token';
 
@@ -23,20 +25,22 @@ export class BookFormComponent implements OnInit {
     id: new FormControl(''),
     name: new FormControl(''),
     description: new FormControl(''),
-    releaseDate: new FormControl('')
-
+    releaseDate: new FormControl(''),
+    genres: new FormControl()
   });
-
+  genresList: Genre[] = [];
   titulo = this.data.titulo;
   file!: File;
   constructor(public dialogRef: MatDialogRef<BookFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BookDialogData,
-    private bookService: BookService, private http:HttpClient) {
+    private bookService: BookService, private genreService: GenreService) {
      }
 
   ngOnInit(): void {
-
     this.formulario.patchValue(this.data.book);
+    this.genreService.findAllGenres().subscribe(res => {
+      this.genresList = res.content;
+    })
   }
 
   onFileChanged(event: any) {
@@ -54,23 +58,14 @@ export class BookFormComponent implements OnInit {
       formData.append('book', new Blob([JSON.stringify(this.formulario.value)], {
         type: 'application/json'
       }));
-      console.log(this.file);
-
-
-
 
       this.bookService.update(formData, this.formulario.get('id')?.value).subscribe(res => {
-
-
       });
       if(this.file!=undefined){
-        console.log(this.file, this.file.name);
         this.bookService.updateCover(this.file, this.data.book.id).subscribe(res => {
-          console.log(res.cover);
-
         });
-
       }
+      history.go(0)
     } else {
       this.bookService.create(this.formulario.value).subscribe(m => {
         history.go(0);
@@ -78,12 +73,10 @@ export class BookFormComponent implements OnInit {
     }
     }
 
-
-
   eliminar() {
-   /*  this.bookService.delete(this.formulario.get('id_accion')?.value).subscribe(m => {
+    this.bookService.delete(this.data.book.id).subscribe(m => {
       history.go(0);
-    }); */
+    });
   }
 
 

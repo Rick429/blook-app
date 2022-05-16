@@ -25,6 +25,7 @@ export class BookService {
   }
 
   create(book: Book){
+
     return this.http.post<Book>(`${this.bookBaseUrl}/`, book);
   }
 
@@ -39,8 +40,11 @@ export class BookService {
     return this.http.put<Book>(`${this.bookBaseUrl}/${idBook}`, book, { headers: encabezados });
   }
 
-  delete(idBook: number){
-    return this.http.delete(`${this.bookBaseUrl}/${idBook}`);
+  delete(idBook: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.delete(`${this.bookBaseUrl}/${idBook}`, { headers: encabezados });
   }
 
   updateCover(file: File, idBook: String){

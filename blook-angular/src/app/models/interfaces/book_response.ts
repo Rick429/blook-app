@@ -1,3 +1,5 @@
+import { Genre } from "./genre_response";
+
 export interface BookResponse {
   content:          Book[];
   pageable:         Pageable;
@@ -21,7 +23,7 @@ export interface Book {
   autor:       string;
   chapters:    Chapter[];
   comments:    any[];
-  genres:      any[];
+  genres:      Genre[];
 }
 
 export interface Chapter {

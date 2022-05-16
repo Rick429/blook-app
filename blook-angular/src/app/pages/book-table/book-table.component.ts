@@ -37,14 +37,6 @@ export class BookTableComponent implements OnInit {
    });
  }
 
-  deletePost(id:number){
-    /* this.dialog.open(DialogDeletePostComponent, {
-     height: '150px',
-     width: '300px',
-     data: {id: id}
-   }); */
- }
-
  crearLibro() {
   this.dialog.open(BookFormComponent, {
     data: {

@@ -28,6 +28,13 @@
     </mat-form-field> -->
     <input type="file" placeholder="cover" name="file" id="file" (change)="onFileChanged($event)" />
 
+    <mat-form-field appearance="fill">
+      <mat-label>Géneros</mat-label>
+      <mat-select formControlName="genres" multiple>
+        <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <div class="linea" *ngIf="data!=null">
       <button (click)="eliminar()" class="buttondelete" mat-flat-button color="delete" >
         <a><img img src="../../../assets/img/delete.svg"></a>
