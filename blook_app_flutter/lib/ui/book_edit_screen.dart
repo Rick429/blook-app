@@ -282,9 +282,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
                         generos: _selectedgenres);
 
                     BlocProvider.of<EditBookBloc>(context).add(EditOneBookEvent(
-                        PreferenceUtils.getString("coveredit") == ""
-                            ? widget.libroEditado.cover
-                            : PreferenceUtils.getString("coveredit")!,
+                        PreferenceUtils.getString("coveredit")!,
                         createBookDto,
                         widget.libroEditado.id));
                     PreferenceUtils.setString("idbook", widget.libroEditado.id);

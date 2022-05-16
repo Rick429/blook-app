@@ -18,7 +18,10 @@ class EditBookBloc extends Bloc<EditBookEvent, EditBookState> {
   void _editBook(EditOneBookEvent event, Emitter<EditBookState> emit) async {
     try {
       final book = await bookRepository.editBook(
-          event.editBookDto, event.source.toString(), event.id);
+          event.editBookDto, event.id);
+      if(event.source.toString().isNotEmpty){
+      final book2 = await bookRepository.editCoverBook(event.source.toString(), event.id);
+      }
       PreferenceUtils.setString("coveredit", "");
       emit(EditBookSuccessState(event.source, book));
     } catch (e) {

@@ -25,6 +25,8 @@ abstract class BookRepository {
 
   Future<FavoriteResponse> isFavorite(String id);
 
-  Future<Book> editBook(CreateBookDto editBookDto, String filename, String id);
+  Future<Book> editBook(CreateBookDto editBookDto, String id);
+
+  Future<Book> editCoverBook(String filename, String id);
 
 }

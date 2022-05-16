@@ -1,19 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
 import 'package:blook_app_flutter/models/error_response.dart';
 import 'package:blook_app_flutter/models/favorite_response.dart';
 import 'package:blook_app_flutter/models/search_dto.dart';
-import 'package:blook_app_flutter/models/user_dto.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:path_provider/path_provider.dart';
 
 typedef void OnDownloadProgressCallback(int receivedBytes, int totalBytes);
 typedef void OnUploadProgressCallback(int sentBytes, int totalBytes);
@@ -175,7 +172,7 @@ class BookRepositoryImpl extends BookRepository {
   }
 
   @override
-  Future<Book> editBook(CreateBookDto editBookDto, String filename, String id) async{
+  Future<Book> editBook(CreateBookDto editBookDto, String id) async{
     var request = http.MultipartRequest(
       'PUT', Uri.parse('${Constant.baseurl}book/$id'),);
 
@@ -183,7 +180,7 @@ class BookRepositoryImpl extends BookRepository {
         contentType: MediaType('application', 'json'), filename: "book",
         )
         );
-   if(filename.contains("http")){
+/*    if(filename.contains("http")){
        final image = await  _client.get(Uri.parse(filename), headers: {
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
     });
@@ -195,7 +192,7 @@ class BookRepositoryImpl extends BookRepository {
      request.files.add(await http.MultipartFile.fromBytes('file', image.bodyBytes, contentType: MediaType('application', 'octet-stream'), filename: fil));
    } else {
      request.files.add(await http.MultipartFile.fromPath('file',filename));
-   }
+   } */
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
       'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
@@ -210,6 +207,29 @@ class BookRepositoryImpl extends BookRepository {
       final error = ErrorResponse.fromJson(json.decode(respStr));
       throw Exception(error.mensaje);
     }
+  }
+
+  @override
+  Future<Book> editCoverBook(String filename, String id) async {
+      var request = http.MultipartRequest(
+      'PUT', Uri.parse('${Constant.baseurl}book/cover/$id'),);
+
+      request.files.add(await http.MultipartFile.fromPath('file',filename));
+
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+    };
+     request.headers.addAll(headers);
+    var res = await request.send();
+    final respStr = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      Book editBook = Book.fromJson(json.decode(respStr));
+      return editBook;
+    } else {
+      final error = ErrorResponse.fromJson(json.decode(respStr));
+      throw Exception(error.mensaje);
+    } 
   }
 
 
