@@ -7,6 +7,8 @@ import com.salesianostriana.blook.models.Report;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.repositories.ReportRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,5 +42,14 @@ public class ReportService {
         }
     }
 
+    public Page<GetReportDto> findAllReports (Pageable pageable) {
+        Page<Report> lista = reportRepository.findAll(pageable);
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(Report.class);
+        } else {
+            return lista.map(reportDtoConverter::reportToGetReportDto);
+        }
+    }
 
 }

@@ -108,11 +108,40 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Operation(summary = "Listar todos los comentarios de un libro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se devuelve una lista con todos los comentarios del libro",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Comment.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
     @GetMapping("/all/{id}")
     public ResponseEntity<Page<GetCommentDto>> findAllCommentsByBookId (@PageableDefault(size = 10, page = 0) Pageable pageable,
-                                                                  HttpServletRequest request,
-                                                                  @PathVariable UUID id) {
+                                                                        HttpServletRequest request,
+                                                                        @PathVariable UUID id) {
         Page<GetCommentDto> lista = commentService.findAllCommentsByBookId(id, pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
+
+    @Operation(summary = "Listar todos los comentarios")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se devuelve una lista con todos los comentarios",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Comment.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @GetMapping("/all")
+    public ResponseEntity<Page<GetCommentDto>> findAllComments (@PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                                HttpServletRequest request,
+                                                                @AuthenticationPrincipal UserEntity user) {
+        Page<GetCommentDto> lista = commentService.findAllComments(user, pageable);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }

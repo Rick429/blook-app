@@ -99,4 +99,19 @@ public class CommentService {
             }
         }
     }
+
+    public Page<GetCommentDto> findAllComments (UserEntity user, Pageable pageable) {
+
+        if(!user.getRole().equals(UserRole.ADMIN)) {
+            throw new ForbiddenException("No tiene permisos para realizar esta acción");
+        } else {
+            Page<Comment> lista = commentRepository.findAll(pageable);
+
+            if(lista.isEmpty()) {
+                throw new ListEntityNotFoundException(Comment.class);
+            } else {
+                return lista.map(commentDtoConverter::commentToGetCommentDto);
+            }
+        }
+    }
 }
