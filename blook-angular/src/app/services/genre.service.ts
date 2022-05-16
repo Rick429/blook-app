@@ -19,12 +19,21 @@ export class GenreService {
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
-    })
+    });
     return this.http.get<GenreResponse>(`${this.genreBaseUrl}/all?size=400`, { headers: encabezados });
   }
 
   create(genre: Genre){
-    return this.http.post<Genre>(`${this.genreBaseUrl}/`, genre);
+    let encabezados= new HttpHeaders({
+    /*   'Content-Type': 'application/json', */
+      /* 'Accept':'application/json', */
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    let genero = new FormData();
+    genero.append('genre', new Blob([JSON.stringify(genre)], {
+      type: 'application/json'
+    }));
+    return this.http.post<Genre>(`${this.genreBaseUrl}/`, genero, { headers: encabezados });
   }
 
   findById(idGenre: number){
@@ -32,7 +41,7 @@ export class GenreService {
     return this.http.get<Genre>(`${this.genreBaseUrl}/${idGenre}`);
   }
 
-  update(genre: Genre, idGenre: number){
+  update(genre: Genre, idGenre: String){
     let encabezados= new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     });

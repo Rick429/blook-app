@@ -17,10 +17,8 @@ export interface UserDialogData {
 export class UserFormComponent implements OnInit {
   formulario = new FormGroup({
     id: new FormControl(''),
-    nick: new FormControl(''),
     name: new FormControl(''),
     lastname: new FormControl(''),
-    email: new FormControl(''),
     password: new FormControl(''),
     password2: new FormControl(''),
   });
@@ -46,24 +44,20 @@ export class UserFormComponent implements OnInit {
   }
 
   editarCrear(){
-    if(this.formulario.get('id')?.value!=''){
-/*       const formData = new FormData();
+
+      const formData = new FormData();
       formData.append('user', new Blob([JSON.stringify(this.formulario.value)], {
         type: 'application/json'
       }));
 
       this.userService.update(formData, this.formulario.get('id')?.value).subscribe(res => {
-      }); */
+      });
       if(this.file!=undefined){
         this.userService.updateAvatar(this.file, this.data.user.id).subscribe(res => {
         });
       }
   /*     history.go(0) */
-    } else {
-      this.userService.create(this.formulario.value, this.file).subscribe(m => {
-        history.go(0);
-      });
-    }
+
     }
 
   eliminar() {

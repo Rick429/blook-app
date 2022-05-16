@@ -35,10 +35,4 @@ export class UserTableComponent implements OnInit {
    });
  }
 
- crearUsuario() {
-  this.dialog.open(UserFormComponent, {
-    data: {
-      titulo: "Crear Usuario"},
-  });
- }
 }

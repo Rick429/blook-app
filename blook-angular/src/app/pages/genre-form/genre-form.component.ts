@@ -16,7 +16,6 @@ export interface GenreDialogData {
 })
 export class GenreFormComponent implements OnInit {
   formulario = new FormGroup({
-    id: new FormControl(''),
     name: new FormControl(''),
     description: new FormControl('')
   });
@@ -39,8 +38,8 @@ export class GenreFormComponent implements OnInit {
 
   editarCrear(){
 
-    if(this.formulario.get('id')?.value!=''){
-      this.genreService.update(this.formulario.value, this.formulario.get('id')?.value).subscribe(res => {
+    if(this.data.genre!=null){
+      this.genreService.update(this.formulario.value, this.data.genre.id).subscribe(res => {
         history.go(0);
       });
     } else {
