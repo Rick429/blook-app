@@ -24,6 +24,7 @@ import { CommentFormComponent } from './pages/comment-form/comment-form.componen
 import { CommentTableComponent } from './pages/comment-table/comment-table.component';
 import { ReportTableComponent } from './pages/report-table/report-table.component';
 import { ReportFormComponent } from './pages/report-form/report-form.component';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { ReportFormComponent } from './pages/report-form/report-form.component';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     EllipsisModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NoopAnimationsModule
   ],
   providers: [
     DatePipe

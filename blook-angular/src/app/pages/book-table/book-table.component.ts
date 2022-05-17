@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Book } from 'src/app/models/interfaces/book_response';
 import { BookService } from 'src/app/services/book.service';
 import { BookFormComponent } from '../book-form/book-form.component';
@@ -18,7 +19,8 @@ export class BookTableComponent implements OnInit {
   dataSource:any;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  constructor(private dialog:MatDialog, private bookService: BookService, public datepipe: DatePipe) { }
+  constructor(private dialog:MatDialog, private bookService: BookService, public datepipe: DatePipe
+    ,private router: Router) { }
   ngOnInit(): void {
     this.bookService.findAllBooks().subscribe(bookResult => {
       this.bookList = bookResult.content;

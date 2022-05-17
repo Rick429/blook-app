@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-
   open: boolean = true;
   select: string | undefined ;
   currentUrl!: string;
