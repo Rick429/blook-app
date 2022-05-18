@@ -25,6 +25,7 @@ import { CommentTableComponent } from './pages/comment-table/comment-table.compo
 import { ReportTableComponent } from './pages/report-table/report-table.component';
 import { ReportFormComponent } from './pages/report-form/report-form.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { BookDetailComponent } from './pages/book-detail/book-detail.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
     CommentFormComponent,
     CommentTableComponent,
     ReportTableComponent,
-    ReportFormComponent
+    ReportFormComponent,
+    BookDetailComponent
   ],
   imports: [
     BrowserModule,

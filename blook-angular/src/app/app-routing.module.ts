@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BookDetailComponent } from './pages/book-detail/book-detail.component';
 import { BookTableComponent } from './pages/book-table/book-table.component';
 import { ChapterTableComponent } from './pages/chapter-table/chapter-table.component';
 import { CommentTableComponent } from './pages/comment-table/comment-table.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path:'reports', component:ReportTableComponent, pathMatch: 'full'},
   {path:'login', component:LoginComponent, pathMatch: 'full'},
   {path:'register', component:RegisterComponent, pathMatch: 'full'},
+  {path:'book/detail/:idbook', component: BookDetailComponent, pathMatch: 'full' },
   {path:'', pathMatch: 'full', redirectTo:'login'}
 ];
 

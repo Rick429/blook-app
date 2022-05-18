@@ -1,0 +1,29 @@
+<mat-card >
+  <div class="example-card">
+    <mat-card-header>
+      <img mat-card-image src="{{book.cover}}" class="image" alt="Portada">
+    </mat-card-header>
+    <mat-card-content>
+      <mat-card-title>{{book.name}}</mat-card-title>
+      <mat-card-subtitle>{{book.autor}}</mat-card-subtitle>
+      <p>
+      {{book.description}}
+      </p>
+      <p>
+        Fecha de publicación: {{this.datepipe.transform(book.releaseDate, 'yyyy-MM-dd')}}
+      </p>
+    </mat-card-content>
+  </div>
+  <div class="bot">
+    <div class="sub">
+      <h2>Capítulos</h2>
+      <a (click)="crearCapitulo()">
+        <img src="../../../assets/img/add.svg" matTooltip="Crear Capítulo">
+      </a>
+    </div>
+    <div *ngFor="let chapter of book.chapters">
+      <div class="chapter">{{chapter.name}}</div>
+    </div>
+  </div>
+
+</mat-card>

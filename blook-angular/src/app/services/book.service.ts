@@ -16,12 +16,12 @@ export class BookService {
 
   bookBaseUrl = `/blook/book`;
 
-  findAllBooks():Observable<BookResponse>{
+  findAllBooks(page:String, size:String):Observable<BookResponse>{
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     })
-    return this.http.get<BookResponse>(`${this.bookBaseUrl}/all?size=400`, { headers: encabezados });
+    return this.http.get<BookResponse>(`${this.bookBaseUrl}/all?size=${size}&page=${page}`, { headers: encabezados });
   }
 
   create(book: Book, file:File){
@@ -37,7 +37,10 @@ export class BookService {
   }
 
   findById(idBook: number){
-    return this.http.get<Book>(`${this.bookBaseUrl}/${idBook}`);
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.get<Book>(`${this.bookBaseUrl}/${idBook}`, { headers: encabezados });
   }
 
   update(book: any, idBook: number){
@@ -64,5 +67,11 @@ export class BookService {
     return this.http.put<Book>(`${this.bookBaseUrl}/cover/${idBook}`, formData, { headers: encabezados });
   }
 
+  getCover(cover: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.get(`${cover}`, { headers: encabezados });
+  }
 
 }

@@ -58,6 +58,7 @@
     <th colspan="2" mat-header-cell *matHeaderCellDef> Acciones </th>
     <td colspan="2" mat-cell *matCellDef="let element">
       <button mat-button (click)="editarLibro(element)"><mat-icon>edit</mat-icon></button>
+      <button mat-button [routerLink]="['/book/detail/', element?.id]"><mat-icon>more</mat-icon></button>
     </td>
 
   </ng-container>
@@ -66,5 +67,5 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<mat-paginator class="mat-elevation-z8 mat-paginator" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+<mat-paginator class="mat-elevation-z8 mat-paginator" [pageSizeOptions]="[5, 10, 15]" [pageSize]="5" [length]="totalElements" (page)="nextPage($event)" showFirstLastButtons></mat-paginator>
 </section>
