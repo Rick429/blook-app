@@ -1,12 +1,12 @@
 <mat-nav-list class="app-menu">
   <ng-container *ngFor="let element of listAux" class="elemento">
       <ng-container *ngIf="element.name==select; else notSelected" >
-          <a mat-list-item (click)="seleccionar(element)" class="selected" >
+          <a mat-list-item routerLink="{{element.url }}" class="selected" >
               <img [src]="'assets/img/' + element.icon" ><span *ngIf="open" class="ml1 ">{{element.name}}</span>
           </a>
       </ng-container>
       <ng-template #notSelected>
-          <a mat-list-item (click)="seleccionar(element)" >
+          <a mat-list-item routerLink="{{element.url }}" >
               <img [src]="'assets/img/' + element.icon" ><span *ngIf="open" class="ml1 notSelected">{{element.name}}</span>
           </a>
       </ng-template>

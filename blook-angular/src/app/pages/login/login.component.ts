@@ -29,11 +29,10 @@ export class LoginComponent implements OnInit {
     this.loginDto.password=this.formulario.get('password')?.value;
     this.authService.login(this.loginDto).subscribe(loginResult => {
 
-      if(loginResult.token!=null) {
         localStorage.setItem(TOKEN, loginResult.token);
         localStorage.setItem(AVATAR, loginResult.avatar);
         this.router.navigate(['/books']);
-      }
+
 
     });
   }

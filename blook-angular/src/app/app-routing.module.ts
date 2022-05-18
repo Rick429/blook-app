@@ -11,14 +11,14 @@ import { UserTableComponent } from './pages/user-table/user-table.component';
 
 
 const routes: Routes = [
-  {path:'login', component:LoginComponent},
-  {path:'register', component:RegisterComponent},
-  {path:'books', component:BookTableComponent},
-  {path:'genres', component:GenreTableComponent},
-  {path:'users', component:UserTableComponent},
-  {path:'chapters', component:ChapterTableComponent},
-  {path:'comments', component:CommentTableComponent},
-  {path:'reports', component:ReportTableComponent},
+  {path:'books', component:BookTableComponent, pathMatch: 'full'},
+  {path:'genres', component:GenreTableComponent, pathMatch: 'full'},
+  {path:'users', component:UserTableComponent, pathMatch: 'full'},
+  {path:'chapters', component:ChapterTableComponent, pathMatch: 'full'},
+  {path:'comments', component:CommentTableComponent, pathMatch: 'full'},
+  {path:'reports', component:ReportTableComponent, pathMatch: 'full'},
+  {path:'login', component:LoginComponent, pathMatch: 'full'},
+  {path:'register', component:RegisterComponent, pathMatch: 'full'},
   {path:'', pathMatch: 'full', redirectTo:'login'}
 ];
 

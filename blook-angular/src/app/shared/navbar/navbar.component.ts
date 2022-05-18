@@ -44,11 +44,6 @@ export class NavbarComponent implements OnInit {
 
   listAux: any[] = [];
   constructor(private router: Router) {
-    if(window.location.href.includes("/#/")){
-      this.currentUrl = window.location.href.split("/#/")[1];
-      this.currentUrl = this.currentUrl.split("/")[0];
-      this.select = this.currentUrl;
-    }
     this.listAux.push(this.pantalla1);
     this.listAux.push(this.pantalla2);
     this.listAux.push(this.pantalla3);
@@ -64,7 +59,7 @@ export class NavbarComponent implements OnInit {
 
   seleccionar(element:any){
     this.select = element.name;
-    this.router.navigateByUrl(element.url)
+    this.router.navigateByUrl(element.url);
 
   }
 
