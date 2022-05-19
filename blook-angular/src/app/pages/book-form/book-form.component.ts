@@ -37,11 +37,12 @@ export class BookFormComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.formulario.patchValue(this.data.book);
     this.genreService.findAllGenres().subscribe(res => {
       this.genresList = res.content;
     });
     this.genreSelect=this.data.book.genres;
+    this.formulario.get('genres')?.setValue(this.genreSelect);
+    this.formulario.patchValue(this.data.book);
   }
 
   onFileChanged(event: any) {
@@ -72,7 +73,7 @@ export class BookFormComponent implements OnInit {
         this.bookService.updateCover(this.file, this.data.book.id).subscribe(res => {
         });
       }
-/*       history.go(0) */
+      history.go(0)
     } else {
       this.bookService.create(this.formulario.value, this.file).subscribe(m => {
         history.go(0);

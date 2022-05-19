@@ -30,7 +30,7 @@
   <ng-container matColumnDef="acciones">
     <th colspan="2" mat-header-cell *matHeaderCellDef> Acciones </th>
     <td colspan="2" mat-cell *matCellDef="let element">
-      <button mat-button (click)="editarCapitulo(element)"><mat-icon>edit</mat-icon></button>
+      <button mat-button (click)="editarCapitulo(element)" matTooltip="Crear capítulo"><mat-icon>edit</mat-icon></button>
     </td>
 
   </ng-container>
