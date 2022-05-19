@@ -35,18 +35,12 @@ export class BookTableComponent implements OnInit {
 
   editarLibro(book:Book){
     this.dialog.open(BookFormComponent, {
-
-     data: {book: book,
-      titulo: "Editar Libro"},
-
+     data: {book: book},
    });
  }
 
  crearLibro() {
   this.dialog.open(BookFormComponent, {
-    data: {
-      titulo: "Crear Libro"},
-
   });
  }
 

@@ -1,15 +1,17 @@
 <mat-card >
   <div class="example-card">
     <mat-card-header>
-      <img mat-card-image src="{{book.cover}}" class="image" alt="Portada">
+      <img mat-card-image src="{{image}}" class="image" alt="Portada">
     </mat-card-header>
     <mat-card-content>
-      <mat-card-title>{{book.name}}</mat-card-title>
-      <mat-card-subtitle>{{book.autor}}</mat-card-subtitle>
-      <p>
-      {{book.description}}
-      </p>
-      <p>
+      <div>
+        <mat-card-title>{{book.name}}</mat-card-title>
+        <mat-card-subtitle>{{book.autor}}</mat-card-subtitle>
+        <p>
+          {{book.description}}
+          </p>
+      </div>
+      <p class="date">
         Fecha de publicación: {{this.datepipe.transform(book.releaseDate, 'yyyy-MM-dd')}}
       </p>
     </mat-card-content>
@@ -21,9 +23,35 @@
         <img src="../../../assets/img/add.svg" matTooltip="Crear Capítulo">
       </a>
     </div>
-    <div *ngFor="let chapter of book.chapters">
-      <div class="chapter">{{chapter.name}}</div>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th colspan="2" mat-header-cell *matHeaderCellDef> ID </th>
+          <td colspan="2" mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th colspan="2" mat-header-cell *matHeaderCellDef> Titulo </th>
+          <td colspan="2" mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="file" >
+          <th colspan="2" mat-header-cell *matHeaderCellDef> Archivo </th>
+          <td colspan="2" mat-cell *matCellDef="let element"> {{element.file}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acciones">
+          <th colspan="2" mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td colspan="2" mat-cell *matCellDef="let element">
+            <button mat-button><mat-icon (click)="editarCapitulo(element)">edit</mat-icon></button>
+          </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator class="mat-elevation-z8 mat-paginator" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
     </div>
-  </div>
 
 </mat-card>

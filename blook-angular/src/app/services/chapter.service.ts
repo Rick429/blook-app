@@ -40,11 +40,27 @@ export class ChapterService {
     return this.http.get<Chapter>(`${this.chapterBaseUrl}/${idChapter}`);
   }
 
-  update(chapter: Chapter, idChapter: String){
-    return this.http.put<Chapter>(`${this.chapterBaseUrl}/${idChapter}`, chapter);
+  update(chapter: any, idChapter: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.put<Chapter>(`${this.chapterBaseUrl}/${idChapter}`, chapter, { headers: encabezados });
   }
 
-  delete(idChapter: number){
-    return this.http.delete(`${this.chapterBaseUrl}/${idChapter}`);
+  delete(idChapter: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.delete(`${this.chapterBaseUrl}/${idChapter}`, { headers: encabezados });
+  }
+
+  updateFile(file: File, idChapter: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+
+    let formData = new FormData();
+    formData.append("file", file);
+    return this.http.put<Chapter>(`${this.chapterBaseUrl}/file/${idChapter}`, formData, { headers: encabezados });
   }
 }

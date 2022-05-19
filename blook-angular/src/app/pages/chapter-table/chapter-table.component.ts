@@ -28,18 +28,12 @@ export class ChapterTableComponent implements OnInit {
 
   editarCapitulo(chapter:Chapter){
     this.dialog.open(ChapterFormComponent, {
-
-     data: {chapter: chapter,
-      titulo: "Editar Capitulo"},
-
+     data: {chapter: chapter},
    });
  }
 
  crearCapitulo() {
   this.dialog.open(ChapterFormComponent, {
-    data: {
-      titulo: "Crear capitulo"},
-
   });
  }
 

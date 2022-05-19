@@ -1,7 +1,8 @@
 <section >
   <form class="container" [formGroup]="formulario">
     <div class="op">
-    <h2 class="titulo">{{titulo}}</h2>
+    <h2 *ngIf="this.data!=null" class="titulo">Editar Libro</h2>
+    <h2 *ngIf="this.data==null" class="titulo">Crear Libro</h2>
     <a class="closebutton" (click)="cancelar()"><img src="../../../assets/img/close.svg"></a>
   </div>
     <mat-form-field appearance="outline">
@@ -14,18 +15,6 @@
       <input matInput placeholder="description" formControlName="description">
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Fecha de publicación</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="releaseDate">
-      <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-
- <!--    <mat-form-field appearance="outline">
-      <mat-label>Cover</mat-label>
-      <input matInput placeholder="cover" formControlName="cover">
-    </mat-form-field> -->
     <input type="file" placeholder="cover" name="file" id="file" (change)="onFileChanged($event)" />
 
     <mat-form-field appearance="outline">

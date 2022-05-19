@@ -1,18 +1,19 @@
 <section >
   <form class="container" [formGroup]="formulario">
     <div class="op">
-    <h2 class="titulo">{{titulo}}</h2>
-    <a class="closebutton" (click)="cancelar()"><img src="../../../assets/img/close.svg"></a>
-  </div>
+      <h2 *ngIf="this.data.chapter!=null" class="titulo">Editar capítulo</h2>
+      <h2 *ngIf="this.data.chapter==null" class="titulo">Crear capítulo</h2>
+      <a class="closebutton" (click)="cancelar()"><img src="../../../assets/img/close.svg"></a>
+    </div>
     <mat-form-field appearance="outline">
       <mat-label>Nombre</mat-label>
       <input matInput placeholder="name" formControlName="name">
     </mat-form-field>
-
+    <div>
     <input type="file" placeholder="cover" name="file" id="file" (change)="onFileChanged($event)" />
+    </div>
 
-
-    <div class="linea" *ngIf="data!=null">
+    <div class="linea" *ngIf="data.chapter!=null">
       <button (click)="eliminar()" class="buttondelete" mat-flat-button color="delete" >
         <a><img img src="../../../assets/img/delete.svg"></a>
         Eliminar

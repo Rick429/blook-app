@@ -11,6 +11,9 @@ mat-card{
 }
 mat-card-content{
   margin: 2%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 .bot{
   margin: 2%;
@@ -25,3 +28,4 @@ mat-card-content{
   display: flex;
   justify-content: space-between;
 }
+

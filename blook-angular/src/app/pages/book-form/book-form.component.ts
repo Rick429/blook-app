@@ -13,7 +13,6 @@ const TOKEN = 'token';
 
 export interface BookDialogData {
   book: Book;
-  titulo:String;
 }
 
 @Component({
@@ -26,12 +25,10 @@ export class BookFormComponent implements OnInit {
     id: new FormControl(''),
     name: new FormControl(''),
     description: new FormControl(''),
-    releaseDate: new FormControl(''),
     genres: new FormControl(['']),
   });
   genresList: Genre[] = [];
   genreSelect:Genre[] = [];
-  titulo = this.data.titulo;
   file!: File;
   createBookDto = new CreateBookDto;
   constructor(public dialogRef: MatDialogRef<BookFormComponent>,
@@ -62,7 +59,6 @@ export class BookFormComponent implements OnInit {
     }
     this.createBookDto.name= this.formulario.get('name')?.value;
     this.createBookDto.description= this.formulario.get('description')?.value;
-    this.createBookDto.relase_date= this.formulario.get('releaseDate')?.value;
     this.createBookDto.generos= this.genreSelect;
     if(this.formulario.get('id')?.value!=''){
       const formData = new FormData();
