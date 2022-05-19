@@ -92,7 +92,7 @@ public class FileSystemStorageService implements StorageService {
 
         }
 
-        return newFilename;
+        return newFilename.replace(" ", "");
     }
 
     @Override
