@@ -32,7 +32,7 @@ public class GenreService {
 
     public Genre save(CreateGenreDto createGenreDto, UserEntity user){
 
-        if(user.getRole().equals(UserRole.USER)){
+        if(user.getRole().equals(UserRole.ADMIN)){
             return genreRepository.save(genreDtoConverter.createGenreDtoToGenre(createGenreDto));
         } else {
             throw new ForbiddenException("No tiene perminos para realizar esta acción");
