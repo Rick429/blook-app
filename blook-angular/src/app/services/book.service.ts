@@ -14,13 +14,13 @@ export class BookService {
 
   constructor(private http:HttpClient) { }
 
-  bookBaseUrl = `/blook/book`;
+  bookBaseUrl = `${environment.API_BASE_URL}blook/book`;
 
   findAllBooks(page:String, size:String):Observable<BookResponse>{
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
-    })
+    });
     return this.http.get<BookResponse>(`${this.bookBaseUrl}/all?size=${size}&page=${page}`, { headers: encabezados });
   }
 

@@ -14,7 +14,7 @@ export class ChapterService {
 
   constructor(private http:HttpClient) { }
 
-  chapterBaseUrl = '/blook/chapter';
+  chapterBaseUrl =  `${environment.API_BASE_URL}blook/chapter`;
 
   findAllChapters():Observable<ChapterResponse>{
     let encabezados= new HttpHeaders({

@@ -13,7 +13,7 @@ export class GenreService {
 
   constructor(private http:HttpClient) { }
 
-  genreBaseUrl = '/blook/genre';
+  genreBaseUrl =  `${environment.API_BASE_URL}blook/genre`;
 
   findAllGenres():Observable<GenreResponse>{
     let encabezados= new HttpHeaders({

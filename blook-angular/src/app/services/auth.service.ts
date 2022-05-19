@@ -19,7 +19,7 @@ const DEFAULT_HEADERS = {
 })
 export class AuthService {
 
-  authBaseUrl = '/blook/auth';
+  authBaseUrl = `${environment.API_BASE_URL}blook/auth`;
 
   constructor(private http:HttpClient, private router: Router) { }
 

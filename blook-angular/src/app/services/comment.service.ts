@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { CommentResponse } from '../models/interfaces/comment_response';
 
 const TOKEN = 'token';
@@ -12,7 +13,7 @@ export class CommentService {
 
   constructor(private http:HttpClient) { }
 
-  commentBaseUrl = '/blook/comment';
+  commentBaseUrl =  `${environment.API_BASE_URL}blook/comment`;
 
   findAllComments():Observable<CommentResponse>{
     let encabezados= new HttpHeaders({

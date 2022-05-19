@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ReportReponse } from '../models/interfaces/report_response';
 
 const TOKEN = 'token';
@@ -12,7 +13,7 @@ export class ReportService {
 
   constructor(private http:HttpClient) { }
 
-  reportBaseUrl = '/blook/report';
+  reportBaseUrl =  `${environment.API_BASE_URL}blook/report`;
 
   findAllReports():Observable<ReportReponse>{
     let encabezados= new HttpHeaders({

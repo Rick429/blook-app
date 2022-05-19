@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { User, UserResponse } from '../models/interfaces/user_response';
 
 const TOKEN = 'token';
@@ -12,7 +13,7 @@ export class UserService {
 
   constructor(private http:HttpClient) { }
 
-  userBaseUrl = `/blook/user`;
+  userBaseUrl =  `${environment.API_BASE_URL}blook/user`;
 
   findAllUsers():Observable<UserResponse>{
     let encabezados= new HttpHeaders({
