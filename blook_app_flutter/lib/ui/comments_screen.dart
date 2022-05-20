@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/comments_bloc/comments_bloc.dart';
+import 'package:blook_app_flutter/blocs/delete_comment_bloc/delete_comment_bloc.dart';
 import 'package:blook_app_flutter/blocs/edit_comment_dto/edit_comment_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/create_comment_dto.dart';
@@ -46,7 +47,9 @@ class _CommentsScrenState extends State<CommentsScren> {
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => _commentsbloc),
-          BlocProvider(create: (context) => EditCommentBloc(commentRepository))
+          BlocProvider(create: (context) => EditCommentBloc(commentRepository)),
+          BlocProvider(
+              create: (context) => DeleteCommentBloc(commentRepository)),
         ],
         child: Scaffold(
             bottomNavigationBar: Padding(
@@ -118,6 +121,27 @@ class _CommentsScrenState extends State<CommentsScren> {
               return Container();
             }
             return Container();
+          }),
+          BlocConsumer<DeleteCommentBloc, DeleteCommentState>(
+              listenWhen: (context, state) {
+            return state is DeleteSuccessState || state is DeleteErrorState;
+          }, listener: (context, state) {
+            if (state is DeleteSuccessState) {
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
+              );
+            } else if (state is DeleteErrorState) {
+              _showSnackbar(context, state.message);
+            }
+          }, buildWhen: (context, state) {
+            return state is DeleteCommentInitial;
+          }, builder: (ctx, state) {
+            if (state is DeleteCommentInitial) {
+              return Container();
+            } else {
+              return Container();
+            }
           }),
         ],
       ),
@@ -230,6 +254,7 @@ class _CommentsScrenState extends State<CommentsScren> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     _editButton(comment),
+                    _deleteButton(context, comment),
                     GestureDetector(
                         onTap: () {
                           PreferenceUtils.setString(
@@ -249,22 +274,56 @@ class _CommentsScrenState extends State<CommentsScren> {
     );
   }
 
-  Widget _editButton(Comment comment){
-    if (comment.nick==PreferenceUtils.getString("nick")){
+  Widget _editButton(Comment comment) {
+    if (comment.nick == PreferenceUtils.getString("nick")) {
       return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isEditingText = true;
-                            initialText = comment.comment;
-                            _editingController =
-                                TextEditingController(text: comment.comment);
-                          });
-                        },
-                        child: const Icon(Icons.edit,
-                            color: BlookStyle.whiteColor));
-    }else{
+          onTap: () {
+            setState(() {
+              _isEditingText = true;
+              initialText = comment.comment;
+              _editingController = TextEditingController(text: comment.comment);
+            });
+          },
+          child: const Icon(Icons.edit, color: BlookStyle.whiteColor));
+    } else {
       return Container();
     }
+  }
+
+  Widget _deleteButton(BuildContext context, Comment comment) {
+    if (comment.nick == PreferenceUtils.getString("nick")) {
+      return GestureDetector(
+          onTap: () {
+            _createDeleteDialog(context, comment.bookId);
+          },
+          child: const Icon(Icons.delete, color: BlookStyle.whiteColor));
+    } else {
+      return Container();
+    }
+  }
+
+  AwesomeDialog _createDeleteDialog(context, String id) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.INFO,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Eliminar',
+      desc: '¿Seguro que desea eliminar la reseña?',
+      btnCancelText: "Cancelar",
+      btnOkText: "Eliminar",
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      btnCancelColor: BlookStyle.redColor,
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkOnPress: () {
+        BlocProvider.of<DeleteCommentBloc>(context)
+            .add(DeleteOneCommentEvent(id));
+      },
+      btnCancelOnPress: () {},
+    )..show();
   }
 
   Widget _editTitleTextField(context, Comment comment) {

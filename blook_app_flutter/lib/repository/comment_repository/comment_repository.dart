@@ -10,4 +10,6 @@ abstract class CommentRepository {
 
   Future<Comment> editComment(CreateCommentDto editCommentDto, String id);
 
+  void deleteComment(String id);
+
 }

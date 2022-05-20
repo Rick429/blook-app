@@ -80,4 +80,11 @@ class CommentRepositoryImpl extends CommentRepository {
     }
   }
 
+  @override
+  void deleteComment(String id) {
+     _client.delete(Uri.parse('${Constant.baseurl}comment/$id'), headers: {
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+  }
+
 }
