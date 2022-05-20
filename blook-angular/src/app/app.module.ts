@@ -26,6 +26,7 @@ import { ReportTableComponent } from './pages/report-table/report-table.componen
 import { ReportFormComponent } from './pages/report-form/report-form.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { BookDetailComponent } from './pages/book-detail/book-detail.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { BookDetailComponent } from './pages/book-detail/book-detail.component';
     BrowserAnimationsModule,
     EllipsisModule,
     MatNativeDateModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    MatPaginatorModule
   ],
   providers: [
     DatePipe

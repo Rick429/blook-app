@@ -44,7 +44,6 @@ export class UserFormComponent implements OnInit {
   }
 
   editarCrear(){
-
       const formData = new FormData();
       formData.append('user', new Blob([JSON.stringify(this.formulario.value)], {
         type: 'application/json'
@@ -56,7 +55,7 @@ export class UserFormComponent implements OnInit {
         this.userService.updateAvatar(this.file, this.data.user.id).subscribe(res => {
         });
       }
-  /*     history.go(0) */
+      history.go(0)
 
     }
 

@@ -25,7 +25,7 @@ export class BookTableComponent implements OnInit {
   constructor(private dialog:MatDialog, private bookService: BookService, public datepipe: DatePipe
     ,private router: Router) { }
   ngOnInit(): void {
-    this.bookService.findAllBooks("0","500").subscribe(bookResult => {
+    this.bookService.findAllBooks("0","5").subscribe(bookResult => {
       this.bookList = bookResult.content;
       this.totalElements = bookResult.totalElements;
       this.dataSource = new MatTableDataSource<Book>(this.bookList);
@@ -43,7 +43,7 @@ export class BookTableComponent implements OnInit {
   this.dialog.open(BookFormComponent, {
   });
  }
-/*
+
  nextPage(event: PageEvent) {
 
   this.page = event.pageIndex.toString();
@@ -54,7 +54,7 @@ export class BookTableComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Book>(this.bookList);
     this.dataSource.paginator = this.paginator;
   });
-  (page)="nextPage($event)"
+
 }
- */
+
 }

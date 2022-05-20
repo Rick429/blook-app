@@ -40,7 +40,9 @@ export class BookFormComponent implements OnInit {
     this.genreService.findAllGenres().subscribe(res => {
       this.genresList = res.content;
     });
-    this.genreSelect=this.data.book.genres;
+    if(this.data!=null) {
+      this.genreSelect=this.data.book.genres;
+    }
     this.formulario.get('genres')?.setValue(this.genreSelect);
     this.formulario.patchValue(this.data.book);
   }
@@ -61,7 +63,7 @@ export class BookFormComponent implements OnInit {
     this.createBookDto.name= this.formulario.get('name')?.value;
     this.createBookDto.description= this.formulario.get('description')?.value;
     this.createBookDto.generos= this.genreSelect;
-    if(this.formulario.get('id')?.value!=''){
+    if(this.data!=null){
       const formData = new FormData();
       formData.append('book', new Blob([JSON.stringify(this.createBookDto)], {
         type: 'application/json'
@@ -75,7 +77,7 @@ export class BookFormComponent implements OnInit {
       }
       history.go(0)
     } else {
-      this.bookService.create(this.formulario.value, this.file).subscribe(m => {
+      this.bookService.create(this.createBookDto, this.file).subscribe(m => {
         history.go(0);
       });
     }

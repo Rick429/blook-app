@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as saveAs from 'file-saver';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CreateBookDto } from '../models/dto/createBookDto';
 import { Book, BookResponse } from '../models/interfaces/book_response';
 
 const TOKEN = 'token';
@@ -24,7 +25,7 @@ export class BookService {
     return this.http.get<BookResponse>(`${this.bookBaseUrl}/all?size=${size}&page=${page}`, { headers: encabezados });
   }
 
-  create(book: Book, file:File){
+  create(book: CreateBookDto, file:File){
     let encabezados= new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     });

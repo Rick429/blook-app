@@ -67,5 +67,5 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<mat-paginator class="mat-elevation-z8 mat-paginator" [pageSizeOptions]="[5, 10, 15]" [pageSize]="5" [length]="totalElements"  showFirstLastButtons></mat-paginator>
+<mat-paginator class="mat-elevation-z8 mat-paginator" [pageSizeOptions]="[5, 10, 15]" [pageSize]="5" [length]="totalElements"   (page)="nextPage($event)"  showFirstLastButtons></mat-paginator>
 </section>
