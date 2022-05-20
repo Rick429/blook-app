@@ -15,11 +15,11 @@ export class ReportService {
 
   reportBaseUrl =  `${environment.API_BASE_URL}blook/report`;
 
-  findAllReports():Observable<ReportReponse>{
+  findAllReports(page:String, size:String):Observable<ReportReponse>{
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     })
-    return this.http.get<ReportReponse>(`${this.reportBaseUrl}/all?size=400`, { headers: encabezados });
+    return this.http.get<ReportReponse>(`${this.reportBaseUrl}/all?size=${size}&page=${page}`, { headers: encabezados });
   }
 }

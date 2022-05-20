@@ -15,11 +15,11 @@ export class CommentService {
 
   commentBaseUrl =  `${environment.API_BASE_URL}blook/comment`;
 
-  findAllComments():Observable<CommentResponse>{
+  findAllComments(page:String, size:String):Observable<CommentResponse>{
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     })
-    return this.http.get<CommentResponse>(`${this.commentBaseUrl}/all?size=400`, { headers: encabezados });
+    return this.http.get<CommentResponse>(`${this.commentBaseUrl}/all?size=${size}&page=${page}`, { headers: encabezados });
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Chapter } from 'src/app/models/interfaces/book_response';
 import { ChapterService } from 'src/app/services/chapter.service';
@@ -13,15 +13,17 @@ import { ChapterFormComponent } from '../chapter-form/chapter-form.component';
 })
 export class ChapterTableComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'file', 'acciones'];
-  chapterList: Chapter[] = [];
   dataSource:any;
+  totalElements: number = 0;
+  page!:String;
+  size!:String;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private chapterService: ChapterService) { }
   ngOnInit(): void {
-    this.chapterService.findAllChapters().subscribe(chapterResult => {
-      this.chapterList = chapterResult.content;
-      this.dataSource = new MatTableDataSource<Chapter>(this.chapterList);
+    this.chapterService.findAllChapters("0","5").subscribe(chapterResult => {
+      this.totalElements = chapterResult.totalElements;
+      this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
       this.dataSource.paginator = this.paginator;
     });
   }
@@ -37,4 +39,12 @@ export class ChapterTableComponent implements OnInit {
   });
  }
 
+ nextPage(event: PageEvent) {
+  this.page = event.pageIndex.toString();
+  this.size = event.pageSize.toString();
+  this.chapterService.findAllChapters(this.page, this.size).subscribe(chapterResult => {
+    this.totalElements = chapterResult.totalElements;
+    this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
+  });
+ }
 }

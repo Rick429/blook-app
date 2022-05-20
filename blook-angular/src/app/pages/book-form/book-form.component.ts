@@ -37,7 +37,7 @@ export class BookFormComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.genreService.findAllGenres().subscribe(res => {
+    this.genreService.findAllGenres("0","100").subscribe(res => {
       this.genresList = res.content;
     });
     if(this.data!=null) {
@@ -75,7 +75,7 @@ export class BookFormComponent implements OnInit {
         this.bookService.updateCover(this.file, this.data.book.id).subscribe(res => {
         });
       }
-      history.go(0)
+      /* history.go(0); */
     } else {
       this.bookService.create(this.createBookDto, this.file).subscribe(m => {
         history.go(0);

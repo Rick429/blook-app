@@ -15,12 +15,12 @@ export class UserService {
 
   userBaseUrl =  `${environment.API_BASE_URL}blook/user`;
 
-  findAllUsers():Observable<UserResponse>{
+  findAllUsers(page:String, size:String):Observable<UserResponse>{
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     })
-    return this.http.get<UserResponse>(`${this.userBaseUrl}/all?size=400`, { headers: encabezados });
+    return this.http.get<UserResponse>(`${this.userBaseUrl}/all?size=${size}&page=${page}`, { headers: encabezados });
   }
 
   create(user: User, file:File){

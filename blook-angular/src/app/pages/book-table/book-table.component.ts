@@ -16,7 +16,6 @@ import { BookFormComponent } from '../book-form/book-form.component';
 })
 export class BookTableComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'description', 'releaseDate', 'cover', 'autor', 'acciones'];
-  bookList: Book[] = [];
   dataSource:any;
   totalElements: number = 0;
   page!:String;
@@ -26,9 +25,8 @@ export class BookTableComponent implements OnInit {
     ,private router: Router) { }
   ngOnInit(): void {
     this.bookService.findAllBooks("0","5").subscribe(bookResult => {
-      this.bookList = bookResult.content;
       this.totalElements = bookResult.totalElements;
-      this.dataSource = new MatTableDataSource<Book>(this.bookList);
+      this.dataSource = new MatTableDataSource<Book>(bookResult.content);
       this.dataSource.paginator = this.paginator;
     });
   }
@@ -48,11 +46,9 @@ export class BookTableComponent implements OnInit {
 
   this.page = event.pageIndex.toString();
   this.size = event.pageSize.toString();
-  this.bookService.findAllBooks(this.size, this.page).subscribe(bookResult => {
-    this.bookList = bookResult.content;
+  this.bookService.findAllBooks(this.page, this.size).subscribe(bookResult => {
     this.totalElements = bookResult.totalElements;
-    this.dataSource = new MatTableDataSource<Book>(this.bookList);
-    this.dataSource.paginator = this.paginator;
+    this.dataSource = new MatTableDataSource<Book>(bookResult.content);
   });
 
 }

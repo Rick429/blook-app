@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Comment } from 'src/app/models/interfaces/comment_response';
 import { CommentService } from 'src/app/services/comment.service';
@@ -13,15 +13,17 @@ import { CommentFormComponent } from '../comment-form/comment-form.component';
 })
 export class CommentTableComponent implements OnInit {
   displayedColumns: string[] = ['user_id', 'book_id', 'comment', 'nick', 'avatar', 'created_date','acciones'];
-  commentList: Comment[] = [];
+  totalElements: number = 0;
+  page!:String;
+  size!:String;
   dataSource:any;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private commentService: CommentService) { }
   ngOnInit(): void {
-    this.commentService.findAllComments().subscribe(commentResult => {
-      this.commentList = commentResult.content;
-      this.dataSource = new MatTableDataSource<Comment>(this.commentList);
+    this.commentService.findAllComments("0","5").subscribe(commentResult => {
+      this.totalElements = commentResult.totalElements;
+      this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
       this.dataSource.paginator = this.paginator;
     });
   }
@@ -39,6 +41,15 @@ export class CommentTableComponent implements OnInit {
     data: {
       titulo: "Crear comentario"},
 
+  });
+ }
+
+ nextPage(event: PageEvent) {
+  this.page = event.pageIndex.toString();
+  this.size = event.pageSize.toString();
+  this.commentService.findAllComments(this.page, this.size).subscribe(commentResult => {
+    this.totalElements = commentResult.totalElements;
+    this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
   });
  }
 

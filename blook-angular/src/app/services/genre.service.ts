@@ -15,12 +15,12 @@ export class GenreService {
 
   genreBaseUrl =  `${environment.API_BASE_URL}blook/genre`;
 
-  findAllGenres():Observable<GenreResponse>{
+  findAllGenres(page:String, size:String):Observable<GenreResponse>{
     let encabezados= new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     });
-    return this.http.get<GenreResponse>(`${this.genreBaseUrl}/all?size=400`, { headers: encabezados });
+    return this.http.get<GenreResponse>(`${this.genreBaseUrl}/all?size=${size}&page=${page}`, { headers: encabezados });
   }
 
   create(genre: Genre){

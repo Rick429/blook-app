@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Report } from 'src/app/models/interfaces/report_response';
 import { ReportService } from 'src/app/services/report.service';
@@ -13,15 +13,17 @@ import { ReportFormComponent } from '../report-form/report-form.component';
 })
 export class ReportTableComponent implements OnInit {
   displayedColumns: string[] = ['id', 'user_id', 'book_comment_id', 'report_comment', 'type_report', 'created_date','acciones'];
-  reportList: Report[] = [];
+  totalElements: number = 0;
+  page!:String;
+  size!:String;
   dataSource:any;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private reportService: ReportService) { }
   ngOnInit(): void {
-    this.reportService.findAllReports().subscribe(reportResult => {
-      this.reportList = reportResult.content;
-      this.dataSource = new MatTableDataSource<Report>(this.reportList);
+    this.reportService.findAllReports("0","5").subscribe(reportResult => {
+      this.totalElements = reportResult.totalElements;
+      this.dataSource = new MatTableDataSource<Report>(reportResult.content);
       this.dataSource.paginator = this.paginator;
     });
   }
@@ -39,6 +41,15 @@ export class ReportTableComponent implements OnInit {
     data: {
       titulo: "Crear reporte"},
 
+  });
+ }
+
+ nextPage(event: PageEvent) {
+  this.page = event.pageIndex.toString();
+  this.size = event.pageSize.toString();
+  this.reportService.findAllReports(this.page, this.size).subscribe(reportResult => {
+    this.totalElements = reportResult.totalElements;
+    this.dataSource = new MatTableDataSource<Report>(reportResult.content);
   });
  }
 
