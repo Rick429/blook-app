@@ -74,6 +74,7 @@ class _MenuBookScreenState extends State<MenuBookScreen> {
                       ? BlookStyle.primaryColor
                       : BlookStyle.whiteColor),
               onTap: () {
+                /* PreferenceUtils.setString("comment", ""); */
                 Navigator.pushNamed(context, '/comments');
               },
             ),

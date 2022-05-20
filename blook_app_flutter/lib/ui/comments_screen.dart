@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/comments_bloc/comments_bloc.dart';
+import 'package:blook_app_flutter/blocs/edit_comment_dto/edit_comment_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
+import 'package:blook_app_flutter/models/create_comment_dto.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository_impl.dart';
 import 'package:blook_app_flutter/ui/comment_menu.dart';
@@ -10,6 +13,7 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/comment_response.dart';
+import 'menu_screen.dart';
 
 class CommentsScren extends StatefulWidget {
   const CommentsScren({Key? key}) : super(key: key);
@@ -19,32 +23,46 @@ class CommentsScren extends StatefulWidget {
 }
 
 class _CommentsScrenState extends State<CommentsScren> {
+  bool _isEditingText = false;
+  late TextEditingController _editingController;
+  String initialText = PreferenceUtils.getString("comment") ?? "";
   late CommentRepository commentRepository;
   late CommentsBloc _commentsbloc;
-
   @override
   void initState() {
     PreferenceUtils.init();
+
     commentRepository = CommentRepositoryImpl();
+
     _commentsbloc = CommentsBloc(commentRepository)
       ..add(const FetchAllComments());
     super.initState();
+    _editingController =
+        TextEditingController(text: PreferenceUtils.getString("comment"));
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [BlocProvider(create: (context) => _commentsbloc)],
+        providers: [
+          BlocProvider(create: (context) => _commentsbloc),
+          BlocProvider(create: (context) => EditCommentBloc(commentRepository))
+        ],
         child: Scaffold(
-            bottomNavigationBar: const CommentMenu(),
+            bottomNavigationBar: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: CommentMenu(),
+            ),
             appBar: AppBar(
               backgroundColor: Colors.black,
               iconTheme: const IconThemeData(color: Colors.white),
               centerTitle: true,
               title: Text(
-                    "COMENTARIOS",
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeFive),
+                "COMENTARIOS",
+                style: BlookStyle.textCustom(
+                    BlookStyle.whiteColor, BlookStyle.textSizeFive),
               ),
             ),
             backgroundColor: BlookStyle.blackColor,
@@ -58,27 +76,77 @@ class _CommentsScrenState extends State<CommentsScren> {
   Widget _createBody(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: BlocBuilder<CommentsBloc, CommentsState>(
-        bloc: _commentsbloc,
-        builder: (context, state) {
-          if (state is CommentsInitial) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is CommentsFetchError) {
-            return Center(
-              child: Text(
-                "No hay ningún comentario, se el primero en escribir algo",
-                style: BlookStyle.textCustom(
-                    BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-              ),
-            );
-          } else if (state is CommentsFetched) {
-            return _commentsList(context, state.comments);
-          } else {
-            return const Text('Not support');
-          }
-        },
+      child: Column(
+        children: [
+          BlocBuilder<CommentsBloc, CommentsState>(
+            bloc: _commentsbloc,
+            builder: (context, state) {
+              if (state is CommentsInitial) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is CommentsFetchError) {
+                return Center(
+                  child: Text(
+                    "No hay ningún comentario, se el primero en escribir algo",
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                  ),
+                );
+              } else if (state is CommentsFetched) {
+                return _commentsList(context, state.comments);
+              } else {
+                return const Text('Not support');
+              }
+            },
+          ),
+          BlocConsumer<EditCommentBloc, EditCommentState>(
+              listenWhen: (context, state) {
+            return state is EditCommentSuccessState;
+          }, listener: (context, state) {
+            if (state is EditCommentSuccessState) {
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
+              );
+            } else if (state is EditCommentErrorState) {
+              _showSnackbar(context, state.message);
+            }
+          }, buildWhen: (context, state) {
+            return state is EditCommentInitial ||
+                state is EditCommentSuccessState;
+          }, builder: (context, state) {
+            if (state is EditCommentSuccessState) {
+              return Container();
+            }
+            return Container();
+          }),
+        ],
       ),
     );
+  }
+
+  AwesomeDialog _createDialog(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      dialogType: DialogType.SUCCES,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Correcto',
+      desc: 'El comentario se ha editado correctamente',
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkText: "Aceptar",
+      btnOkOnPress: () {},
+    )..show();
+  }
+
+  void _showSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Widget _commentsList(context, List<Comment> comentarios) {
@@ -92,14 +160,14 @@ class _CommentsScrenState extends State<CommentsScren> {
           scrollDirection: Axis.vertical,
           itemCount: comentarios.length,
           itemBuilder: (context, index) {
-            return _comment(comentarios.elementAt(index));
+            return _comment(context, comentarios.elementAt(index));
           },
         ),
       ),
     );
   }
 
-  Widget _comment(Comment comment) {
+  Widget _comment(context, Comment comment) {
     return Column(
       children: [
         Container(
@@ -143,7 +211,7 @@ class _CommentsScrenState extends State<CommentsScren> {
                   ],
                 ),
               ),
-              Container(
+              /* Container(
                 padding: const EdgeInsets.only(left: 8.0),
                 width: MediaQuery.of(context).size.width,
                 child: Text(
@@ -151,14 +219,17 @@ class _CommentsScrenState extends State<CommentsScren> {
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeOne),
                   textAlign: TextAlign.left,
+                  
                 ),
-              ),
+              ), */
+              _editTitleTextField(context, comment),
               Container(
                 padding: const EdgeInsets.all(20),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    _editButton(comment),
                     GestureDetector(
                         onTap: () {
                           PreferenceUtils.setString(
@@ -175,6 +246,68 @@ class _CommentsScrenState extends State<CommentsScren> {
           ),
         )
       ],
+    );
+  }
+
+  Widget _editButton(Comment comment){
+    if (comment.nick==PreferenceUtils.getString("nick")){
+      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isEditingText = true;
+                            initialText = comment.comment;
+                            _editingController =
+                                TextEditingController(text: comment.comment);
+                          });
+                        },
+                        child: const Icon(Icons.edit,
+                            color: BlookStyle.whiteColor));
+    }else{
+      return Container();
+    }
+  }
+
+  Widget _editTitleTextField(context, Comment comment) {
+    if (_isEditingText) {
+      return Container(
+        padding: const EdgeInsets.only(left: 8.0),
+        width: MediaQuery.of(context).size.width,
+        child: TextField(
+          style: BlookStyle.textCustom(
+              BlookStyle.whiteColor, BlookStyle.textSizeOne),
+          textAlign: TextAlign.left,
+          onSubmitted: (newValue) {
+            setState(() {
+              initialText = newValue;
+              final createCommentDto = CreateCommentDto(comment: newValue);
+
+              BlocProvider.of<EditCommentBloc>(context)
+                  .add(EditOneCommentEvent(createCommentDto, comment.bookId));
+
+              _isEditingText = false;
+            });
+          },
+          autofocus: true,
+          controller: _editingController,
+        ),
+      );
+    }
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _isEditingText = true;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.only(left: 8.0),
+        width: MediaQuery.of(context).size.width,
+        child: Text(
+          comment.comment,
+          style: BlookStyle.textCustom(
+              BlookStyle.whiteColor, BlookStyle.textSizeOne),
+          textAlign: TextAlign.left,
+        ),
+      ),
     );
   }
 }

@@ -7,4 +7,7 @@ abstract class CommentRepository {
   Future<Comment> createComment(CreateCommentDto createCommentDto, String idbook);
   
   Future<List<Comment>>fetchComments();
+
+  Future<Comment> editComment(CreateCommentDto editCommentDto, String id);
+
 }

@@ -54,4 +54,30 @@ class CommentRepositoryImpl extends CommentRepository {
     }
   }
 
+  @override
+  Future<Comment> editComment(CreateCommentDto editCommentDto, String id) async {
+  var request = http.MultipartRequest(
+      'PUT', Uri.parse('${Constant.baseurl}comment/$id'),);
+
+      request.files.add(http.MultipartFile.fromString('comment', jsonEncode(editCommentDto.toJson()),
+        contentType: MediaType('application', 'json'), filename: "comment",
+        )
+        );
+
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+    };
+     request.headers.addAll(headers);
+    var res = await request.send();
+    final respStr = await res.stream.bytesToString();
+    if (res.statusCode == 200) {
+      Comment editComment = Comment.fromJson(json.decode(respStr));
+      return editComment;
+    } else {
+      final error = ErrorResponse.fromJson(json.decode(respStr));
+      throw Exception(error.mensaje);
+    }
+  }
+
 }
