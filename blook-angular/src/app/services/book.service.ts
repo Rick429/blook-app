@@ -75,4 +75,15 @@ export class BookService {
     return this.http.get(`${cover}`, { headers: encabezados });
   }
 
+  buscar(name: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    let formData = new FormData();
+    formData.append('search', new Blob([JSON.stringify(name)], {
+      type: 'application/json'
+    }));
+    return this.http.post<BookResponse>(`${this.bookBaseUrl}/search/all`, formData, { headers: encabezados });
+  }
+
 }

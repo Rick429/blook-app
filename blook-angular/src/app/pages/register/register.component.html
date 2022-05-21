@@ -1,5 +1,5 @@
 <div class="contenedor">
-  <span class="logo"><img src="../../../assets/img/logo.svg" width="200px"></span>
+  <div class="logo"><img src="../../../assets/img/logo.png" width="200px"></div>
   <form [formGroup]="formulario" class="example-form">
 
     <mat-card class="card">
@@ -54,8 +54,8 @@
         </div>
       </div>
 
-      <button mat-raised-button color="success" >Iniciar Sesión</button>
+      <button mat-raised-button color="success" (click)="registrarse()">Registrarse</button>
     </mat-card>
-    <p class="sub">¿No tienes cuenta? Registrate</p>
+    <p class="sub" [routerLink]="['/login']">¿Tienes cuenta? Inicia sesión</p>
   </form>
 </div>

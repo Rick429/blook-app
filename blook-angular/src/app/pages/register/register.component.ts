@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginDto } from 'src/app/models/dto/loginDto';
+import { AuthService } from 'src/app/services/auth.service';
+
+const TOKEN = 'token'
+const AVATAR = 'avatar'
 
 @Component({
   selector: 'app-register',
@@ -19,10 +23,22 @@ export class RegisterComponent implements OnInit {
   });
   loginDto = new LoginDto();
 
-  constructor(/* private authService: AuthService, */ private router:Router) { }
+  constructor(private authService: AuthService, private router:Router) { }
 
   ngOnInit(): void {
   }
 
+
+  registrarse(){
+    this.authService.register(this.formulario.value).subscribe(loginResult => {
+      if(loginResult.role!="ADMIN"){
+        this.router.navigate(['/login']);
+      }else{
+        localStorage.setItem(TOKEN, loginResult.token);
+        localStorage.setItem(AVATAR, loginResult.avatar);
+        this.router.navigate(['/books']);
+      }
+  });
+  }
 
 }

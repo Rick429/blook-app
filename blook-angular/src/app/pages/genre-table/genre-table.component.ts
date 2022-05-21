@@ -30,18 +30,12 @@ export class GenreTableComponent implements OnInit {
 
   editarGenero(genre:Genre){
     this.dialog.open(GenreFormComponent, {
-
-     data: {genre: genre,
-      titulo: "Editar Género"},
-
+     data: {genre: genre},
    });
  }
 
  crearGenero() {
   this.dialog.open(GenreFormComponent, {
-    data: {
-      titulo: "Crear Género"},
-
   });
  }
 

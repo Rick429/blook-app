@@ -27,6 +27,8 @@ import { ReportFormComponent } from './pages/report-form/report-form.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { BookDetailComponent } from './pages/book-detail/book-detail.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { DeleteFormComponent } from './pages/delete-form/delete-form.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     CommentTableComponent,
     ReportTableComponent,
     ReportFormComponent,
-    BookDetailComponent
+    BookDetailComponent,
+    DeleteFormComponent,
+    PerfilComponent
   ],
   imports: [
     BrowserModule,

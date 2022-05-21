@@ -22,4 +22,11 @@ export class CommentService {
     })
     return this.http.get<CommentResponse>(`${this.commentBaseUrl}/all?size=${size}&page=${page}`, { headers: encabezados });
   }
+
+  delete(idComment: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.delete(`${this.commentBaseUrl}/${idComment}`, { headers: encabezados });
+  }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { LoginDto } from 'src/app/models/dto/loginDto';
 import { AuthService } from 'src/app/services/auth.service';
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   });
   loginDto = new LoginDto();
 
-  constructor(private authService: AuthService, private router:Router) { }
+  constructor(private authService: AuthService, private router:Router, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -28,12 +29,14 @@ export class LoginComponent implements OnInit {
     this.loginDto.email=this.formulario.get('email')?.value;
     this.loginDto.password=this.formulario.get('password')?.value;
     this.authService.login(this.loginDto).subscribe(loginResult => {
-
+      if(loginResult.role!="ADMIN"){
+        this.snackBar.open('Necesitas ser administrador para iniciar sesión', 'Aceptar');
+        this.router.navigate(['/login']);
+      }else{
         localStorage.setItem(TOKEN, loginResult.token);
         localStorage.setItem(AVATAR, loginResult.avatar);
         this.router.navigate(['/books']);
-
-
+      }
     });
   }
 }

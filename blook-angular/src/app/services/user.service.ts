@@ -39,11 +39,15 @@ export class UserService {
     return this.http.get<User>(`${this.userBaseUrl}/${idUser}`);
   }
 
-  update(user: any, idUser: number){
+  update(user: any, idUser: String){
+    let formData = new FormData();
+    formData.append('user', new Blob([JSON.stringify(user)], {
+      type: 'application/json'
+    }));
     let encabezados= new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     });
-    return this.http.put<User>(`${this.userBaseUrl}/${idUser}`, user, { headers: encabezados });
+    return this.http.put<User>(`${this.userBaseUrl}/${idUser}`, formData, { headers: encabezados });
   }
 
   delete(idUser: String){
@@ -61,5 +65,16 @@ export class UserService {
     let formData = new FormData();
     formData.append("file", file);
     return this.http.put<User>(`${this.userBaseUrl}/avatar/`, formData, { headers: encabezados });
+  }
+
+  changePassword(changePassword: any){
+    let formData = new FormData();
+    formData.append('user', new Blob([JSON.stringify(changePassword)], {
+      type: 'application/json'
+    }));
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.put<User>(`${this.userBaseUrl}/change/`, formData, { headers: encabezados });
   }
 }

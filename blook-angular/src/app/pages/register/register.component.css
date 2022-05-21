@@ -16,9 +16,8 @@
   }
   .contenedor {
     width: 100% !important;
-    height: 100% !important;
     background-color:#121826;
-    margin-bottom: 20%;
+    margin-bottom: 10%;
   }
 
   html{
@@ -30,6 +29,7 @@
   .logo {
     margin-left: auto;
     margin-right: auto;
+    margin-top: 5%;
     padding-bottom: 30px;
     width: 200px;
   }

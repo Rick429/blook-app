@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,6 +21,10 @@ export class BookTableComponent implements OnInit {
   totalElements: number = 0;
   page!:String;
   size!:String;
+  formulario = new FormGroup({
+    name: new FormControl(''),
+  });
+
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private bookService: BookService, public datepipe: DatePipe
     ,private router: Router) { }
@@ -49,8 +54,14 @@ export class BookTableComponent implements OnInit {
   this.bookService.findAllBooks(this.page, this.size).subscribe(bookResult => {
     this.totalElements = bookResult.totalElements;
     this.dataSource = new MatTableDataSource<Book>(bookResult.content);
-  });
+    });
+  }
 
-}
+  buscar(){
+    this.bookService.buscar(this.formulario.value).subscribe(bookResult => {
+      this.totalElements = bookResult.totalElements;
+      this.dataSource = new MatTableDataSource<Book>(bookResult.content);
+    })
+  }
 
 }

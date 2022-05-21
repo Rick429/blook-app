@@ -55,8 +55,7 @@ export class UserFormComponent implements OnInit {
         this.userService.updateAvatar(this.file, this.data.user.id).subscribe(res => {
         });
       }
-      history.go(0)
-
+      history.go(0);
     }
 
   eliminar() {

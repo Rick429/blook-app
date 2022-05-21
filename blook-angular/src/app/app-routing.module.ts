@@ -6,6 +6,7 @@ import { ChapterTableComponent } from './pages/chapter-table/chapter-table.compo
 import { CommentTableComponent } from './pages/comment-table/comment-table.component';
 import { GenreTableComponent } from './pages/genre-table/genre-table.component';
 import { LoginComponent } from './pages/login/login.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ReportTableComponent } from './pages/report-table/report-table.component';
 import { UserTableComponent } from './pages/user-table/user-table.component';
@@ -20,7 +21,9 @@ const routes: Routes = [
   {path:'reports', component:ReportTableComponent, pathMatch: 'full'},
   {path:'login', component:LoginComponent, pathMatch: 'full'},
   {path:'register', component:RegisterComponent, pathMatch: 'full'},
+  {path:'perfil', component:PerfilComponent, pathMatch: 'full'},
   {path:'book/detail/:idbook', component: BookDetailComponent, pathMatch: 'full' },
+
   {path:'', pathMatch: 'full', redirectTo:'login'}
 ];
 

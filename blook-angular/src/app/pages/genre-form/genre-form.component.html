@@ -1,7 +1,8 @@
 <section >
   <form class="container" [formGroup]="formulario">
     <div class="op">
-    <h2 class="titulo">{{titulo}}</h2>
+    <h2 *ngIf="data!=null" class="titulo">Editar Género</h2>
+    <h2 *ngIf="data==null" class="titulo">Crear Género</h2>
     <a class="closebutton" (click)="cancelar()"><img src="../../../assets/img/close.svg"></a>
   </div>
     <mat-form-field appearance="outline">

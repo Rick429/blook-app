@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Comment } from 'src/app/models/interfaces/comment_response';
 import { CommentService } from 'src/app/services/comment.service';
 import { CommentFormComponent } from '../comment-form/comment-form.component';
+import { DeleteFormComponent } from '../delete-form/delete-form.component';
 
 @Component({
   selector: 'app-comment-table',
@@ -28,21 +29,13 @@ export class CommentTableComponent implements OnInit {
     });
   }
 
-  editarComentario(comment:Comment){
-    this.dialog.open(CommentFormComponent, {
-     data: {comment: comment,
-      titulo: "Editar comentario"},
-
+  eliminarComentario(comment:Comment){
+    this.dialog.open(DeleteFormComponent, {
+     data: {idComment: comment.book_id},
    });
  }
 
- crearComentario() {
-  this.dialog.open(CommentFormComponent, {
-    data: {
-      titulo: "Crear comentario"},
 
-  });
- }
 
  nextPage(event: PageEvent) {
   this.page = event.pageIndex.toString();

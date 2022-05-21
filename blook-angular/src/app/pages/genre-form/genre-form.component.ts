@@ -6,7 +6,6 @@ import { GenreService } from 'src/app/services/genre.service';
 
 export interface GenreDialogData {
   genre: Genre;
-  titulo:String;
 }
 
 @Component({
@@ -19,7 +18,6 @@ export class GenreFormComponent implements OnInit {
     name: new FormControl(''),
     description: new FormControl('')
   });
-  titulo = this.data.titulo;
 
   constructor(public dialogRef: MatDialogRef<GenreFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GenreDialogData,

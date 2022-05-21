@@ -28,6 +28,6 @@
 
       <button mat-raised-button color="success" (click)="doLogin()">Iniciar Sesión</button>
     </mat-card>
-    <p class="sub">¿No tienes cuenta? Registrate</p>
+    <p class="sub" [routerLink]="['/register']">¿No tienes cuenta? Registrate</p>
   </form>
 </div>

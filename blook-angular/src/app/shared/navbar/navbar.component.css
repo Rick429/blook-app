@@ -34,7 +34,7 @@
   color: white;
 }
 .selected{
- background-color: #8CC63E;
+ background-color: #8CC63E !important;
  color: white;
 }
 .logo-icon {
