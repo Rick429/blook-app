@@ -50,9 +50,8 @@ public class Book implements Serializable {
     @JoinColumn(name = "autor_libro_publicado_id")
     private UserEntity autorLibroPublicado;
 
-    @ManyToOne
-    @JoinColumn(name = "user_libro_favorito_id")
-    private UserEntity userLibroFavorito;
+    @ManyToMany(mappedBy = "misFavoritos", fetch = FetchType.EAGER)
+    private List<UserEntity> usersLibroFavorito;
 
     @Builder.Default
     @OneToMany(mappedBy = "libroComentado", orphanRemoval = true)
@@ -77,16 +76,6 @@ public class Book implements Serializable {
     public void removeBookFromUser(UserEntity u) {
         u.getMisLibros().remove(this);
         autorLibroPublicado = null;
-    }
-
-    public void addBookFavoriteToUser(UserEntity u) {
-        userLibroFavorito = u;
-        u.getMisFavoritos().add(this);
-    }
-
-    public void removeBookFavoriteFromUser(UserEntity u) {
-        u.getMisFavoritos().remove(this);
-        userLibroFavorito = null;
     }
 
 }

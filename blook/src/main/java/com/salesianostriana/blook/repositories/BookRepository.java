@@ -14,7 +14,7 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     Page<Book> findByAutorLibroPublicado(UserEntity user, Pageable pageable);
 
-    Page<Book> findByUserLibroFavorito(UserEntity user, Pageable pageable);
+    Page<Book> findByUsersLibroFavorito(UserEntity user, Pageable pageable);
 
     @Query("SELECT b FROM Book b ORDER BY b.releaseDate DESC")
     Page<Book> findTop10OrderByReleaseDateDesc(Pageable pageable);
@@ -23,5 +23,5 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     Page<Book> findByNameIgnoreCaseContains(String name, Pageable pageable);
 
-    boolean existsByIdAndUserLibroFavorito(UUID id, UserEntity user);
+    boolean existsByIdAndUsersLibroFavorito(UUID id, UserEntity user);
 }

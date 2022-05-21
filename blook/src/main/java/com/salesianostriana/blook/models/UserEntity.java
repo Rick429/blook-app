@@ -51,7 +51,13 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "autorLibroPublicado" , orphanRemoval = true)
     private List<Book> misLibros = new ArrayList<>();
     @Builder.Default
-    @OneToMany(mappedBy = "userLibroFavorito", orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = @JoinColumn(name = "userentity_id",
+            foreignKey = @ForeignKey(name="FK_FAVORITO_USER")),
+            inverseJoinColumns = @JoinColumn(name = "book_id",
+                    foreignKey = @ForeignKey(name="FK_FAVORITO_BOOK")),
+            name = "favoritos"
+    )
     private List<Book> misFavoritos = new ArrayList<>();
     @Builder.Default
     @OneToMany(mappedBy = "comentador", orphanRemoval = true)
@@ -85,5 +91,16 @@ public class UserEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void addFavoriteBook(Book b) {
+        this.getMisFavoritos().add(b);
+
+        b.getUsersLibroFavorito().add(this);
+    }
+
+    public void removeFavoriteBook(Book b) {
+        b.getUsersLibroFavorito().remove(this);
+        this.getMisFavoritos().remove(b);
     }
 }

@@ -134,8 +134,7 @@ public class BookService {
             if(b.isEmpty()) {
                 throw new OneEntityNotFound(idbook.toString(), Book.class);
             } else {
-
-                b.get().addBookFavoriteToUser(u.get());
+                u.get().addFavoriteBook(b.get());
                 return bookRepository.save(b.get());
             }
         }
@@ -147,7 +146,7 @@ public class BookService {
         if(u1.isEmpty()) {
             throw new EntityNotFound("No se pudo encontrar el usuario con nick: "+ nick );
         } else {
-            Page<Book> lista = bookRepository.findByUserLibroFavorito(u1.get(), pageable);
+            Page<Book> lista = bookRepository.findByUsersLibroFavorito(u1.get(), pageable);
 
             if(lista.isEmpty()) {
                 throw new ListEntityNotFoundException(Book.class);
@@ -199,7 +198,7 @@ public class BookService {
             if(b.isEmpty()) {
                 throw new OneEntityNotFound(idbook.toString(), Book.class);
             } else {
-                b.get().removeBookFavoriteFromUser(u.get());
+                u.get().removeFavoriteBook(b.get());
                 bookRepository.save(b.get());
             }
         }
@@ -210,7 +209,7 @@ public class BookService {
         if(u.isEmpty()) {
             throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
         } else {
-            return  bookRepository.existsByIdAndUserLibroFavorito(idbook, u.get());
+            return  bookRepository.existsByIdAndUsersLibroFavorito(idbook, u.get());
         }
     }
 
