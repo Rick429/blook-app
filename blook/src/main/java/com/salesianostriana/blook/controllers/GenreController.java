@@ -3,6 +3,7 @@ package com.salesianostriana.blook.controllers;
 import com.salesianostriana.blook.dtos.*;
 import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.Genre;
+import com.salesianostriana.blook.models.Report;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.services.GenreService;
 import com.salesianostriana.blook.utils.PaginationLinksUtils;
@@ -120,6 +121,30 @@ public class GenreController {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
 
+    }
+
+    @Operation(summary = "Buscar géneros")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se devuelve una lista con los géneros encontrados",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Genre.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @GetMapping("/find/")
+    public ResponseEntity<Page<GetGenreDto>> findReports(@AuthenticationPrincipal UserEntity user,
+                                                          @RequestPart("search") BuscarGeneroDto b,
+                                                          @PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                          HttpServletRequest request) {
+
+        Page<GetGenreDto> lista = genreService.buscarGenero(user,b,pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
 
 }

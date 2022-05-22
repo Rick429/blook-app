@@ -114,4 +114,15 @@ public class CommentService {
             }
         }
     }
+
+    public Page<GetCommentDto> findByComment (String comment, Pageable pageable) {
+        Page<Comment> lista = commentRepository.findByCommentIgnoreCaseContains(comment, pageable);
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(Comment.class);
+        } else {
+            return lista.map(commentDtoConverter::commentToGetCommentDto);
+
+        }
+    }
 }

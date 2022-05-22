@@ -1,10 +1,13 @@
 package com.salesianostriana.blook.services;
 
 import com.salesianostriana.blook.dtos.*;
+import com.salesianostriana.blook.enums.Estado;
+import com.salesianostriana.blook.enums.TypeReport;
 import com.salesianostriana.blook.enums.UserRole;
 import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
 import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
 import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
+import com.salesianostriana.blook.models.Comment;
 import com.salesianostriana.blook.models.Genre;
 import com.salesianostriana.blook.models.Report;
 import com.salesianostriana.blook.models.UserEntity;
@@ -14,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,6 +83,44 @@ public class GenreService {
         } else {
             return lista.map(genreDtoConverter::genreToGetGenreDto);
         }
+    }
+
+    public Page<GetGenreDto> buscarGenero(UserEntity user, BuscarGeneroDto b, Pageable pageable){
+        if(user.getRole().equals(UserRole.ADMIN)){
+            Page<Genre> lista = buscar(Optional.ofNullable(b.getName()),
+                    Optional.ofNullable(b.getDescription()), pageable);
+            if(lista.isEmpty()){
+                throw new ListEntityNotFoundException(Genre.class);
+            } else {
+                return lista.map(genreDtoConverter::genreToGetGenreDto);
+            }
+        }else{
+            throw new ForbiddenException("No tiene permisos para realizar esta acción");
+        }
+    }
+
+    private Page<Genre> buscar(Optional<String> name, Optional<String> description, Pageable pageable) {
+        Specification<Genre> specName = (root, query, criteriaBuilder) -> {
+            if (name.isPresent()) {
+                return criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.get().toLowerCase() + "%");
+            } else {
+                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+            }
+        };
+
+        Specification<Genre> specDescription = (root, query, criteriaBuilder) -> {
+            if (description.isPresent()) {
+                return criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + description.get().toLowerCase() + "%");
+            } else {
+                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+            }
+        };
+
+        Specification<Genre> todas =
+                specName
+                        .or(specDescription);
+
+        return this.genreRepository.findAll(todas, pageable);
     }
 
 }

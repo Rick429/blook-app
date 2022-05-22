@@ -1,8 +1,6 @@
 {
-    "nick":"usuario3",
+    "nick":"admin",
     "name":"usuario3",
     "lastname":"usuario3",
-    "email":"usuario3@gmail.com",
-    "password":"usuario3",
-    "password2":"usuario3"
+    "email":"admin@gmail.com"
 }

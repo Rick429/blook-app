@@ -7,8 +7,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class SearchDto {
+public class BuscarGeneroDto {
 
     private String name;
-    private String comment;
+    private String description;
 }

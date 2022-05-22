@@ -3,6 +3,7 @@ package com.salesianostriana.blook.controllers;
 import com.salesianostriana.blook.dtos.*;
 import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.Chapter;
+import com.salesianostriana.blook.models.Comment;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.services.ChapterService;
 import com.salesianostriana.blook.utils.PaginationLinksUtils;
@@ -141,6 +142,25 @@ public class ChapterController {
                                                           @AuthenticationPrincipal UserEntity user,
                                                           HttpServletRequest request) {
         Page<GetChapterDto> lista = chapterService.findAllChapters(pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
+
+    @Operation(summary = "Buscar capitulos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Devuelve una lista con los capitulos",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Chapter.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @GetMapping("/search/all")
+    public ResponseEntity<Page<GetChapterDto>> findByName (@RequestPart("search") SearchDto searchDto,
+                                                        @PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                        HttpServletRequest request) {
+        Page<GetChapterDto> lista = chapterService.findByName(searchDto.getName(), pageable);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }

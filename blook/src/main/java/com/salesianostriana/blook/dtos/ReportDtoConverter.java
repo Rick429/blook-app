@@ -10,7 +10,6 @@ public class ReportDtoConverter {
         return Report.builder()
                 .report_comment(c.getReport_comment())
                 .type_report(c.getType_report())
-                .estado(c.getEstado())
                 .build();
     }
 

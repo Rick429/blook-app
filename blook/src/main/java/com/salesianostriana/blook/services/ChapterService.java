@@ -116,4 +116,15 @@ public class ChapterService {
         }
     }
 
+    public Page<GetChapterDto> findByName (String name, Pageable pageable) {
+        Page<Chapter> lista = chapterRepository.findByNameIgnoreCaseContains(name, pageable);
+
+        if(lista.isEmpty()) {
+            throw new ListEntityNotFoundException(Chapter.class);
+        } else {
+            return lista.map(chapterDtoConverter::chapterToGetChapterDto);
+
+        }
+    }
+
 }

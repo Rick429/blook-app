@@ -1,9 +1,7 @@
 package com.salesianostriana.blook.controllers;
 
-import com.salesianostriana.blook.dtos.EditUserDto;
-import com.salesianostriana.blook.dtos.GetUserDto;
-import com.salesianostriana.blook.dtos.PasswordDto;
-import com.salesianostriana.blook.dtos.UserDtoConverter;
+import com.salesianostriana.blook.dtos.*;
+import com.salesianostriana.blook.models.Report;
 import com.salesianostriana.blook.models.UserEntity;
 import com.salesianostriana.blook.services.UserEntityService;
 import com.salesianostriana.blook.utils.PaginationLinksUtils;
@@ -111,4 +109,63 @@ public class UserEntityController {
                                      @AuthenticationPrincipal UserEntity user) {
         return userDtoConverter.userEntityToGetUserDto(userEntityService.changePassword(p, user));
     }
+
+    @Operation(summary = "Buscar reportes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se devuelve una lista con los reportes encontrados",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Report.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @GetMapping("/find/")
+    public ResponseEntity<Page<GetUserDto>> findUsers(@AuthenticationPrincipal UserEntity user,
+                                                          @RequestPart("search") BuscarUserDto u,
+                                                          @PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                          HttpServletRequest request) {
+
+        Page<GetUserDto> lista = userEntityService.buscarUser(user,u,pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
+
+    @Operation(summary = "Dar rol de admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se cambia el rol de un usuario a admin",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Report.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+    })
+    @PutMapping("/give/admin/{id}")
+    public ResponseEntity<GetUserDto> giveAdmin(@AuthenticationPrincipal UserEntity user, @PathVariable UUID id) {
+        return ResponseEntity.ok()
+                .body(userDtoConverter.userEntityToGetUserDto(
+                        userEntityService.giveAdmin(user, id)));
+    }
+
+    @Operation(summary = "Quitar rol de admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se cambia el rol de un usuario a user",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Report.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+    })
+    @PutMapping("/remove/admin/{id}")
+    public ResponseEntity<GetUserDto> removeAdmin(@AuthenticationPrincipal UserEntity user, @PathVariable UUID id) {
+        return ResponseEntity.ok()
+                .body(userDtoConverter.userEntityToGetUserDto(
+                        userEntityService.removeAdmin(user, id)));
+    }
+
 }

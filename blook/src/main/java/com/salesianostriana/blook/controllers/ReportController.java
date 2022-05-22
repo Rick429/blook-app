@@ -71,4 +71,64 @@ public class ReportController {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
+
+    @Operation(summary = "Buscar reportes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se devuelve una lista con los reportes encontrados",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Report.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @GetMapping("/find/")
+    public ResponseEntity<Page<GetReportDto>> findReports(@AuthenticationPrincipal UserEntity user,
+                                                          @RequestPart("search") BuscarReporteDto b,
+                                                          @PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                          HttpServletRequest request) {
+
+        Page<GetReportDto> lista = reportService.buscarReporte(user,b,pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
+
+    @Operation(summary = "Finalizar reporte")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se cambia el estado del reporte a finalizado",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Report.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+    })
+    @PutMapping("/close/{id}")
+    public ResponseEntity<GetReportDto> finalizarReporte(@AuthenticationPrincipal UserEntity user,
+                                                     @PathVariable UUID id) {
+        return ResponseEntity.ok()
+                .body(reportDtoConverter.reportToGetReportDto(
+                        reportService.finalizarReporte(user, id)));
+    }
+
+    @Operation(summary = "Reabrir reporte")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se cambia el estado del reporte a abierto",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Report.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Error en los datos",
+                    content = @Content),
+    })
+    @PutMapping("/open/{id}")
+    public ResponseEntity<GetReportDto> abrirReporte(@AuthenticationPrincipal UserEntity user,
+                                                         @PathVariable UUID id) {
+        return ResponseEntity.ok()
+                .body(reportDtoConverter.reportToGetReportDto(
+                        reportService.abrirReporte(user, id)));
+    }
 }

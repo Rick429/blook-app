@@ -42,5 +42,6 @@ public class Report {
     private TypeReport type_report;
     @CreatedDate
     private LocalDate created_date;
-    private Estado estado;
+    @Builder.Default
+    private Estado estado = Estado.ABIERTO;
 }

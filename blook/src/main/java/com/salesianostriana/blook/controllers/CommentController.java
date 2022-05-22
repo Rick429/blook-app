@@ -146,4 +146,23 @@ public class CommentController {
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
 
+    @Operation(summary = "Buscar comentario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Devuelve una lista con los comentarios",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Comment.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "La lista esta vacia",
+                    content = @Content),
+    })
+    @GetMapping("/search/")
+    public ResponseEntity<Page<GetCommentDto>> findByComment (@RequestPart("search") SearchDto searchDto,
+                                                        @PageableDefault(size = 10, page = 0) Pageable pageable,
+                                                        HttpServletRequest request) {
+        Page<GetCommentDto> lista = commentService.findByComment(searchDto.getComment(), pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
+    }
+
 }
