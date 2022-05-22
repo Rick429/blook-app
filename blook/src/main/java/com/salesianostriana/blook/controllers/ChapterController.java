@@ -156,7 +156,7 @@ public class ChapterController {
                     description = "La lista esta vacia",
                     content = @Content),
     })
-    @GetMapping("/search/all")
+    @PostMapping("/search/all")
     public ResponseEntity<Page<GetChapterDto>> findByName (@RequestPart("search") SearchDto searchDto,
                                                         @PageableDefault(size = 10, page = 0) Pageable pageable,
                                                         HttpServletRequest request) {

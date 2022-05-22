@@ -136,7 +136,7 @@ public class GenreController {
                     description = "La lista esta vacia",
                     content = @Content),
     })
-    @GetMapping("/find/")
+    @PostMapping("/find/")
     public ResponseEntity<Page<GetGenreDto>> findReports(@AuthenticationPrincipal UserEntity user,
                                                           @RequestPart("search") BuscarGeneroDto b,
                                                           @PageableDefault(size = 10, page = 0) Pageable pageable,

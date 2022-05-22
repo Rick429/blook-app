@@ -156,7 +156,7 @@ public class CommentController {
                     description = "La lista esta vacia",
                     content = @Content),
     })
-    @GetMapping("/search/")
+    @PostMapping("/search/")
     public ResponseEntity<Page<GetCommentDto>> findByComment (@RequestPart("search") SearchDto searchDto,
                                                         @PageableDefault(size = 10, page = 0) Pageable pageable,
                                                         HttpServletRequest request) {

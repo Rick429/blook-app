@@ -123,7 +123,7 @@ public class UserEntityController {
                     description = "La lista esta vacia",
                     content = @Content),
     })
-    @GetMapping("/find/")
+    @PostMapping("/find/")
     public ResponseEntity<Page<GetUserDto>> findUsers(@AuthenticationPrincipal UserEntity user,
                                                           @RequestPart("search") BuscarUserDto u,
                                                           @PageableDefault(size = 10, page = 0) Pageable pageable,
