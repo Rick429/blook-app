@@ -61,7 +61,7 @@ export class BookTableComponent implements OnInit {
     this.bookService.buscar(this.formulario.value).subscribe(bookResult => {
       this.totalElements = bookResult.totalElements;
       this.dataSource = new MatTableDataSource<Book>(bookResult.content);
-    })
+    });
   }
 
 }

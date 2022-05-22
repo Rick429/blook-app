@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { SearchGenreDto } from 'src/app/models/dto/searchGenreDto';
 import { Genre } from 'src/app/models/interfaces/genre_response';
 import { GenreService } from 'src/app/services/genre.service';
 import { GenreFormComponent } from '../genre-form/genre-form.component';
@@ -17,7 +19,10 @@ export class GenreTableComponent implements OnInit {
   page!:String;
   size!:String;
   dataSource:any;
-
+  formulario = new FormGroup({
+    texto: new FormControl(''),
+  });
+  searchGenreDto = new SearchGenreDto;
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private genreService: GenreService) { }
   ngOnInit(): void {
@@ -32,12 +37,12 @@ export class GenreTableComponent implements OnInit {
     this.dialog.open(GenreFormComponent, {
      data: {genre: genre},
    });
- }
+  }
 
- crearGenero() {
-  this.dialog.open(GenreFormComponent, {
-  });
- }
+  crearGenero() {
+    this.dialog.open(GenreFormComponent, {
+    });
+  }
 
  nextPage(event: PageEvent) {
   this.page = event.pageIndex.toString();
@@ -47,5 +52,14 @@ export class GenreTableComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Genre>(genreResult.content);
   });
  }
+
+ buscar(){
+  this.searchGenreDto.name=this.formulario.get('texto')?.value;
+  this.searchGenreDto.description=this.formulario.get('texto')?.value;
+  this.genreService.buscar(this.searchGenreDto).subscribe(genreResult => {
+    this.totalElements = genreResult.totalElements;
+    this.dataSource = new MatTableDataSource<Genre>(genreResult.content);
+  });
+  }
 
 }

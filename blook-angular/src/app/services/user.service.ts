@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { SearchUserDto } from '../models/dto/searchUserDto';
 import { User, UserResponse } from '../models/interfaces/user_response';
 
 const TOKEN = 'token';
@@ -76,5 +77,31 @@ export class UserService {
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     });
     return this.http.put<User>(`${this.userBaseUrl}/change/`, formData, { headers: encabezados });
+  }
+
+  giveAdmin(idUser: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    return this.http.put<User>(`${this.userBaseUrl}/give/admin/${idUser}`, null, { headers: encabezados });
+  }
+
+  removeAdmin(idUser: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    console.log(localStorage.getItem(TOKEN));
+    return this.http.put<User>(`${this.userBaseUrl}/remove/admin/${idUser}`, null, { headers: encabezados });
+  }
+
+  buscar(searchUserDto: SearchUserDto){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    let formData = new FormData();
+    formData.append('search', new Blob([JSON.stringify(searchUserDto)], {
+      type: 'application/json'
+    }));
+    return this.http.post<UserResponse>(`${this.userBaseUrl}/find/`, formData, { headers: encabezados });
   }
 }

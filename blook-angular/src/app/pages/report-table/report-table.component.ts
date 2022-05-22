@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { SearchReportDto } from 'src/app/models/dto/searchReportDto';
 import { Report } from 'src/app/models/interfaces/report_response';
 import { ReportService } from 'src/app/services/report.service';
 import { ReportFormComponent } from '../report-form/report-form.component';
@@ -12,11 +14,17 @@ import { ReportFormComponent } from '../report-form/report-form.component';
   styleUrls: ['./report-table.component.css']
 })
 export class ReportTableComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'user_id', 'book_comment_id', 'report_comment', 'type_report', 'created_date','acciones'];
+  displayedColumns: string[] = ['id', 'user_id', 'book_comment_id', 'report_comment', 'type_report', 'created_date', 'estado', 'acciones'];
   totalElements: number = 0;
   page!:String;
   size!:String;
   dataSource:any;
+  formulario = new FormGroup({
+    texto: new FormControl(''),
+    tipo: new FormControl(''),
+    estado: new FormControl('')
+  });
+  searchReportDto = new SearchReportDto;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private reportService: ReportService) { }
@@ -28,21 +36,12 @@ export class ReportTableComponent implements OnInit {
     });
   }
 
-  editarReporte(report:Report){
+  cerrarAbrir(report:Report){
     this.dialog.open(ReportFormComponent, {
-     data: {report: report,
-      titulo: "Editar reporte"},
-
+     data: {report: report},
    });
  }
 
- crearReporte() {
-  this.dialog.open(ReportFormComponent, {
-    data: {
-      titulo: "Crear reporte"},
-
-  });
- }
 
  nextPage(event: PageEvent) {
   this.page = event.pageIndex.toString();
@@ -52,5 +51,21 @@ export class ReportTableComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Report>(reportResult.content);
   });
  }
+
+ buscar(){
+  this.searchReportDto.report_comment=this.formulario.get('texto')?.value;
+
+  if(this.formulario.get('tipo')?.value!=""){
+    this.searchReportDto.type_report=this.formulario.get('tipo')?.value;
+  }
+  if(this.formulario.get('estado')?.value!=""){
+    this.searchReportDto.estado=this.formulario.get('estado')?.value;
+  }
+
+  this.reportService.buscar(this.searchReportDto).subscribe(reportResult => {
+    this.totalElements = reportResult.totalElements;
+    this.dataSource = new MatTableDataSource<Report>(reportResult.content);
+  })
+}
 
 }

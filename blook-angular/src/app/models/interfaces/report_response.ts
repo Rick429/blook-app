@@ -21,6 +21,7 @@ export interface Report {
   report_comment:  string;
   type_report:     string;
   created_date:    string;
+  estado:          string;
 }
 
 export interface Pageable {

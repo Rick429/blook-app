@@ -1,14 +1,33 @@
 <section class="main-container">
-  <h1 class="title-pages">Reportes</h1>
+  <form [formGroup]="formulario">
+    <h1 class="title-pages">Reportes</h1>
 
-    <div class="h1-table-options">
-        <div class="aligned">
-            <div class="search-box">
-                <button class="btn-search"><img src="../../../assets/img/search.svg"></button>
-                <input type="text" class="input-search" placeholder="Buscar">
-            </div>
-        </div>
-    </div>
+      <div class="h1-table-options">
+          <div class="aligned">
+              <div class="search-box">
+                  <button class="btn-search"><img src="../../../assets/img/search.svg"></button>
+                  <input (change)="buscar()" formControlName="texto" type="text" class="input-search" placeholder="Buscar">
+              </div>
+              <mat-form-field  appearance="outline">
+                <mat-label>Tipo</mat-label>
+                <mat-select (selectionChange)="buscar()" formControlName="tipo" name="tipo">
+                  <mat-option ></mat-option>
+                  <mat-option value="LIBRO">Libro</mat-option>
+                  <mat-option value="COMENTARIO">Comentario</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field  appearance="outline">
+                <mat-label>Estado</mat-label>
+                <mat-select (selectionChange)="buscar()" formControlName="estado" name="estado">
+                  <mat-option ></mat-option>
+                  <mat-option value="ABIERTO">Abierto</mat-option>
+                  <mat-option value="FINALIZADO">Finalizado</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+          </div>
+      </div>
+    </form>
 
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -42,10 +61,16 @@
     <td colspan="2" mat-cell *matCellDef="let element"> {{element.created_date}} </td>
   </ng-container>
 
+  <ng-container matColumnDef="estado" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Estado </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.estado}} </td>
+  </ng-container>
+
   <ng-container matColumnDef="acciones">
     <th colspan="2" mat-header-cell *matHeaderCellDef> Acciones </th>
     <td colspan="2" mat-cell *matCellDef="let element">
-      <button mat-button (click)="editarReporte(element)"  matTooltip="Finalizar"><mat-icon>assignment</mat-icon></button>
+      <button mat-button *ngIf="element.estado=='FINALIZADO'" (click)="cerrarAbrir(element)"  matTooltip="Reabrir"><mat-icon>assignment</mat-icon></button>
+      <button mat-button *ngIf="element.estado=='ABIERTO'" (click)="cerrarAbrir(element)"  matTooltip="Finalizar"><mat-icon>assignment_turned_in</mat-icon></button>
     </td>
 
   </ng-container>

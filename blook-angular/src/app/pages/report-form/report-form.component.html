@@ -1,1 +1,10 @@
-<p>report-form works!</p>
+<h1 *ngIf="data.report.estado=='ABIERTO'">¿Seguro que desea finalizar este reporte?</h1>
+<h1 *ngIf="data.report.estado=='FINALIZADO'">¿Seguro que desea reabrir este reporte?</h1>
+<div class="botones">
+  <button (click)="finalizar()" class="buttonsave" mat-flat-button color="delete">
+    Aceptar
+  </button>
+  <button (click)="cancelar()" class="buttonsave" mat-flat-button color="save">
+    Cancelar
+  </button>
+</div>

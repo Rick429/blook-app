@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Genre } from 'src/app/models/interfaces/genre_response';
 import { GenreService } from 'src/app/services/genre.service';
+import { DeleteFormComponent } from '../delete-form/delete-form.component';
 
 export interface GenreDialogData {
   genre: Genre;
@@ -21,7 +22,7 @@ export class GenreFormComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<GenreFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GenreDialogData,
-    private genreService: GenreService) {
+    private genreService: GenreService, private dialog:MatDialog) {
 
      }
 
@@ -49,8 +50,8 @@ export class GenreFormComponent implements OnInit {
   }
 
   eliminar() {
-    this.genreService.delete(this.data.genre.id).subscribe(m => {
-      history.go(0);
+    this.dialog.open(DeleteFormComponent, {
+      data: {idGenre: this.data.genre.id},
     });
   }
 

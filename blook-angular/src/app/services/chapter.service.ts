@@ -63,4 +63,15 @@ export class ChapterService {
     formData.append("file", file);
     return this.http.put<Chapter>(`${this.chapterBaseUrl}/file/${idChapter}`, formData, { headers: encabezados });
   }
+
+  buscar(name: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    let formData = new FormData();
+    formData.append('search', new Blob([JSON.stringify(name)], {
+      type: 'application/json'
+    }));
+    return this.http.post<ChapterResponse>(`${this.chapterBaseUrl}/search/all`, formData, { headers: encabezados });
+  }
 }

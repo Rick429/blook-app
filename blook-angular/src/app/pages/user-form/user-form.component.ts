@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from 'src/app/models/interfaces/user_response';
 import { UserService } from 'src/app/services/user.service';
+import { DeleteFormComponent } from '../delete-form/delete-form.component';
 
 export interface UserDialogData {
   user: User;
-  titulo:String;
 }
 
 @Component({
@@ -22,13 +22,11 @@ export class UserFormComponent implements OnInit {
     password: new FormControl(''),
     password2: new FormControl(''),
   });
-
-  titulo = this.data.titulo;
   file!: File;
 
   constructor(public dialogRef: MatDialogRef<UserFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: UserDialogData,
-    private userService: UserService) {
+    private userService: UserService, private dialog:MatDialog) {
      }
 
   ngOnInit(): void {
@@ -59,8 +57,8 @@ export class UserFormComponent implements OnInit {
     }
 
   eliminar() {
-    this.userService.delete(this.data.user.id).subscribe(m => {
-      history.go(0);
+    this.dialog.open(DeleteFormComponent, {
+      data: {idUser: this.data.user.id},
     });
   }
 

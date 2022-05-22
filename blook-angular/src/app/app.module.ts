@@ -29,6 +29,7 @@ import { BookDetailComponent } from './pages/book-detail/book-detail.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { DeleteFormComponent } from './pages/delete-form/delete-form.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
+import { AdminDialogComponent } from './dialogs/admin-dialog/admin-dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
     ReportFormComponent,
     BookDetailComponent,
     DeleteFormComponent,
-    PerfilComponent
+    PerfilComponent,
+    AdminDialogComponent
   ],
   imports: [
     BrowserModule,

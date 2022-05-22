@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,6 +19,9 @@ export class CommentTableComponent implements OnInit {
   page!:String;
   size!:String;
   dataSource:any;
+  formulario = new FormGroup({
+    comment: new FormControl(''),
+  });
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private commentService: CommentService) { }
@@ -45,5 +49,12 @@ export class CommentTableComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
   });
  }
+
+ buscar(){
+  this.commentService.buscar(this.formulario.value).subscribe(commentResult => {
+    this.totalElements = commentResult.totalElements;
+    this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
+  });
+  }
 
 }

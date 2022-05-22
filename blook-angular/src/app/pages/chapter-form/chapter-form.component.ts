@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CreateChapterDto } from 'src/app/models/dto/createChapterDto';
 import { Chapter } from 'src/app/models/interfaces/book_response';
 import { ChapterService } from 'src/app/services/chapter.service';
+import { DeleteFormComponent } from '../delete-form/delete-form.component';
 
 export interface ChapterDialogData {
   idBook: String;
@@ -23,7 +24,7 @@ export class ChapterFormComponent implements OnInit {
   createChapterDto = new CreateChapterDto;
   constructor(public dialogRef: MatDialogRef<ChapterFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ChapterDialogData,
-    private chapterService:ChapterService) { }
+    private chapterService:ChapterService, private dialog:MatDialog) { }
 
   ngOnInit(): void {
     this.formulario.patchValue(this.data.chapter);
@@ -64,8 +65,8 @@ export class ChapterFormComponent implements OnInit {
   }
 
   eliminar() {
-    this.chapterService.delete(this.data.chapter.id).subscribe(m => {
-      history.go(0);
+    this.dialog.open(DeleteFormComponent, {
+      data: {idChapter: this.data.chapter.id},
     });
   }
 }

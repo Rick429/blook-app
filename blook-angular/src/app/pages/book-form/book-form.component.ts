@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Book } from 'src/app/models/interfaces/book_response';
 import { BookService } from 'src/app/services/book.service';
 import {saveAs} from 'file-saver';
@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Genre } from 'src/app/models/interfaces/genre_response';
 import { GenreService } from 'src/app/services/genre.service';
 import { CreateBookDto } from 'src/app/models/dto/createBookDto';
+import { DeleteFormComponent } from '../delete-form/delete-form.component';
 
 const TOKEN = 'token';
 
@@ -33,7 +34,8 @@ export class BookFormComponent implements OnInit {
   createBookDto = new CreateBookDto;
   constructor(public dialogRef: MatDialogRef<BookFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BookDialogData,
-    private bookService: BookService, private genreService: GenreService) {
+    private bookService: BookService, private genreService: GenreService,
+    private dialog:MatDialog) {
      }
 
   ngOnInit(): void {
@@ -84,8 +86,8 @@ export class BookFormComponent implements OnInit {
     }
 
   eliminar() {
-    this.bookService.delete(this.data.book.id).subscribe(m => {
-      history.go(0);
+    this.dialog.open(DeleteFormComponent, {
+      data: {idBook: this.data.book.id},
     });
   }
 

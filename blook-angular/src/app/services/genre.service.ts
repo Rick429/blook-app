@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
+import { SearchGenreDto } from '../models/dto/searchGenreDto';
 import { Genre, GenreResponse } from '../models/interfaces/genre_response';
 
 const TOKEN = 'token';
@@ -57,5 +58,16 @@ export class GenreService {
       'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
     });
     return this.http.delete(`${this.genreBaseUrl}/${idGenre}`, { headers: encabezados });
+  }
+
+  buscar(searchGenreDto: SearchGenreDto){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    let formData = new FormData();
+    formData.append('search', new Blob([JSON.stringify(searchGenreDto)], {
+      type: 'application/json'
+    }));
+    return this.http.post<GenreResponse>(`${this.genreBaseUrl}/find/`, formData, { headers: encabezados });
   }
 }

@@ -29,4 +29,15 @@ export class CommentService {
     });
     return this.http.delete(`${this.commentBaseUrl}/${idComment}`, { headers: encabezados });
   }
+
+  buscar(comment: String){
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+    let formData = new FormData();
+    formData.append('search', new Blob([JSON.stringify(comment)], {
+      type: 'application/json'
+    }));
+    return this.http.post<CommentResponse>(`${this.commentBaseUrl}/search/`, formData, { headers: encabezados });
+  }
 }

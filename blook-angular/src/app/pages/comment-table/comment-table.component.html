@@ -3,9 +3,9 @@
 
     <div class="h1-table-options">
         <div class="aligned">
-            <div class="search-box">
+            <div class="search-box" [formGroup]="formulario">
                 <button class="btn-search"><img src="../../../assets/img/search.svg"></button>
-                <input type="text" class="input-search" placeholder="Buscar">
+                <input (change)="buscar()" type="text" formControlName="comment" class="input-search" placeholder="Buscar">
             </div>
         </div>
     </div>

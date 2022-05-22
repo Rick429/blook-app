@@ -31,7 +31,7 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.authService.userLogged().subscribe(m => {
       this.formulario.patchValue(m);
-      this.avatar=m.avatar
+      this.avatar=m.avatar;
       this.user=m;
     });
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,6 +18,10 @@ export class ChapterTableComponent implements OnInit {
   totalElements: number = 0;
   page!:String;
   size!:String;
+  formulario = new FormGroup({
+    name: new FormControl(''),
+  });
+
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private chapterService: ChapterService) { }
@@ -47,4 +52,11 @@ export class ChapterTableComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
   });
  }
+
+  buscar(){
+  this.chapterService.buscar(this.formulario.value).subscribe(chapterResult => {
+    this.totalElements = chapterResult.totalElements;
+    this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
+  });
+  }
 }

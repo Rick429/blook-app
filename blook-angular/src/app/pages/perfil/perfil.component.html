@@ -3,7 +3,8 @@
     <div class="op">
       <h2 class="titulo">Mi Perfil</h2>
     </div>
-    <img class="borde" src="{{avatar}}" />
+    <img *ngIf="avatar!=''" class="borde" src="{{avatar}}" />
+    <img *ngIf="avatar==''" class="borde" src="../../../assets/img/perfil.jpg" />
     <h2>{{user.nick}}</h2>
     <div>
       <input type="file" placeholder="cover" name="file" id="file" (change)="onFileChanged($event)" />
