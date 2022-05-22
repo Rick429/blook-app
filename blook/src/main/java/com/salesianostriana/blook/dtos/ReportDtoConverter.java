@@ -10,6 +10,7 @@ public class ReportDtoConverter {
         return Report.builder()
                 .report_comment(c.getReport_comment())
                 .type_report(c.getType_report())
+                .estado(c.getEstado())
                 .build();
     }
 
@@ -21,6 +22,7 @@ public class ReportDtoConverter {
                 .report_comment(r.getReport_comment())
                 .type_report(r.getType_report())
                 .created_date(r.getCreated_date())
+                .estado(r.getEstado())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.salesianostriana.blook.dtos;
 
+import com.salesianostriana.blook.enums.Estado;
 import com.salesianostriana.blook.enums.TypeReport;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,5 +20,6 @@ public class GetReportDto {
     private String report_comment;
     private TypeReport type_report;
     private LocalDate created_date;
+    private Estado estado;
 
 }

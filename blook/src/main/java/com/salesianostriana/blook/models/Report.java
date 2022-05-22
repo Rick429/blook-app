@@ -1,5 +1,6 @@
 package com.salesianostriana.blook.models;
 
+import com.salesianostriana.blook.enums.Estado;
 import com.salesianostriana.blook.enums.TypeReport;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -41,4 +42,5 @@ public class Report {
     private TypeReport type_report;
     @CreatedDate
     private LocalDate created_date;
+    private Estado estado;
 }
