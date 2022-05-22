@@ -1,5 +1,6 @@
 package com.salesianostriana.blook.dtos;
 
+import com.salesianostriana.blook.validation.anotations.PasswordsMatch;
 import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -8,6 +9,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Getter @Setter
 @Builder
+@PasswordsMatch(passwordField = "passwordNew",
+        verifyPasswordField = "passwordNew2",
+        message = "{user.password.notmatch}")
 public class PasswordDto {
 
     @NotBlank

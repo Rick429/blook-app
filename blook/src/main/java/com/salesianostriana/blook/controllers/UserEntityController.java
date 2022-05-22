@@ -46,7 +46,7 @@ public class UserEntityController {
                     description = "No se encontro a usuario",
                     content = @Content),
     })
-    @PostMapping("/avatar/")
+    @PutMapping("/avatar/")
     public ResponseEntity<GetUserDto> uploadAvatar(@RequestPart("file")MultipartFile file,
                                                    @AuthenticationPrincipal UserEntity user) {
         return ResponseEntity.status(HttpStatus.OK).body(userDtoConverter
