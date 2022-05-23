@@ -137,7 +137,7 @@ public class GenreController {
                     content = @Content),
     })
     @PostMapping("/find/")
-    public ResponseEntity<Page<GetGenreDto>> findReports(@AuthenticationPrincipal UserEntity user,
+    public ResponseEntity<Page<GetGenreDto>> findGenres(@AuthenticationPrincipal UserEntity user,
                                                           @RequestPart("search") BuscarGeneroDto b,
                                                           @PageableDefault(size = 10, page = 0) Pageable pageable,
                                                           HttpServletRequest request) {

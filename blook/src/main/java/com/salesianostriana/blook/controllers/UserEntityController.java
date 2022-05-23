@@ -110,12 +110,12 @@ public class UserEntityController {
         return userDtoConverter.userEntityToGetUserDto(userEntityService.changePassword(p, user));
     }
 
-    @Operation(summary = "Buscar reportes")
+    @Operation(summary = "Buscar usuarios")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Se devuelve una lista con los reportes encontrados",
+                    description = "Se devuelve una lista con los usuarios encontrados",
                     content = {@Content(mediaType = "aplication/json",
-                            schema = @Schema(implementation = Report.class))}),
+                            schema = @Schema(implementation = UserEntity.class))}),
             @ApiResponse(responseCode = "400",
                     description = "Error en los datos",
                     content = @Content),
