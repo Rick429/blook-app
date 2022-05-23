@@ -1,0 +1,24 @@
+.fila{
+
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-direction: row !important;
+}
+.borde{
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+.texto{
+  width: 250px;
+  height: 20px;
+  padding: 20px;
+}
+.columna{
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  flex-direction: column !important;
+}

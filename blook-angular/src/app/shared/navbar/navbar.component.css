@@ -1,0 +1,54 @@
+.app-menu{
+
+  width: 200px;
+  height: 800px;
+  left: 0px;
+  top: 60px;
+  background: #71973F;
+  border-bottom-right-radius: 0 px;
+  border-top-right-radius: 0 px;
+}
+.ml1{
+
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  width: 68px;
+  height: 33px;
+  left: 64px;
+  top: 10px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 25px;
+  margin-left: 15px;
+  margin-right: auto;
+
+}
+.notSelected{
+  color: white;
+}
+.app-menu :hover{
+  background-color:#8CC63E;
+}
+.app-menu :hover .ml1{
+  color: white;
+}
+.selected{
+ background-color: #8CC63E !important;
+ color: white;
+}
+.logo-icon {
+  padding-top: 20px;
+  padding-left: 10px;
+  width: 264px;
+  height: 80px;
+  left: 0px;
+  top: 60px;
+  background: #2E2925;
+  border-bottom-right-radius: 0 px;
+  border-top-right-radius: 0 px;
+}
+.elemento{
+padding-left: 40px;
+padding-right: 40px;
+}
