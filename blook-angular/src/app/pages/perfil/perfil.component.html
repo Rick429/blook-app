@@ -1,8 +1,6 @@
 <section class="columna">
   <form class="container" [formGroup]="formulario">
-    <div class="op">
-      <h2 class="titulo">Mi Perfil</h2>
-    </div>
+      <h2>Mi Perfil</h2>
     <img *ngIf="avatar!=''" class="borde" src="{{avatar}}" />
     <img *ngIf="avatar==''" class="borde" src="../../../assets/img/perfil.jpg" />
     <h2>{{user.nick}}</h2>
@@ -14,56 +12,40 @@
     </div>
 
   <div class="fila">
-    <div>
-      <mat-form-field appearance="outline" *ngIf="editar">
+      <mat-form-field appearance="outline">
         <mat-label>Nombre</mat-label>
-        <input matInput placeholder="nombre" formControlName="name">
+        <input matInput [readonly]="!editar" placeholder="nombre" formControlName="name">
       </mat-form-field>
-        <p class="texto" *ngIf="!editar">{{user.name}}</p>
-    </div>
-    <div>
-      <mat-form-field appearance="outline" *ngIf="editar">
+
+      <mat-form-field appearance="outline">
         <mat-label>Apellidos</mat-label>
-        <input matInput placeholder="Apellidos" formControlName="lastname">
+        <input matInput [readonly]="!editar" placeholder="Apellidos" formControlName="lastname">
       </mat-form-field>
-      <p class="texto" *ngIf="!editar">{{user.lastname}}</p>
-    </div>
   </div>
   <div class="fila">
-    <div>
-      <mat-form-field appearance="outline" *ngIf="editar">
+      <mat-form-field appearance="outline">
         <mat-label>Correo electrónico</mat-label>
-        <input matInput placeholder="Correo electrónico" formControlName="email">
+        <input matInput [readonly]="!editar" placeholder="Correo electrónico" formControlName="email">
       </mat-form-field>
-      <p class="texto" *ngIf="!editar">{{user.email}}</p>
-    </div>
   </div>
   </form>
   <form [formGroup]="formularioPassword">
     <div class="fila">
-      <div>
-        <mat-form-field appearance="outline" *ngIf="editar">
+        <mat-form-field appearance="outline">
           <mat-label>Contraseña actual</mat-label>
-          <input matInput placeholder="Contraseña actual" formControlName="password">
+          <input matInput [readonly]="!editar" placeholder="Contraseña actual" formControlName="password">
         </mat-form-field>
-          <p class="texto" *ngIf="!editar">*********</p>
-      </div>
-      <div>
-        <mat-form-field appearance="outline" *ngIf="editar">
+
+        <mat-form-field appearance="outline">
           <mat-label>Nueva contraseña</mat-label>
-          <input matInput placeholder="Nueva contraseña" formControlName="passwordNew">
+          <input matInput [readonly]="!editar" placeholder="Nueva contraseña" formControlName="passwordNew">
         </mat-form-field>
-        <p class="texto" *ngIf="!editar"></p>
-      </div>
     </div>
     <div class="fila">
-      <div>
-        <mat-form-field appearance="outline" *ngIf="editar">
+        <mat-form-field appearance="outline">
           <mat-label>Confirmar contraseña</mat-label>
-          <input matInput placeholder="Confirmar contraseña" formControlName="passwordNew2">
+          <input matInput [readonly]="!editar" placeholder="Confirmar contraseña" formControlName="passwordNew2">
         </mat-form-field>
-          <p class="texto" *ngIf="!editar"></p>
-      </div>
     </div>
   </form>
   <div class="rectangule">
