@@ -30,6 +30,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { DeleteFormComponent } from './pages/delete-form/delete-form.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { AdminDialogComponent } from './dialogs/admin-dialog/admin-dialog.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { AdminDialogComponent } from './dialogs/admin-dialog/admin-dialog.compon
     EllipsisModule,
     MatNativeDateModule,
     NoopAnimationsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    FlexLayoutModule
   ],
   providers: [
     DatePipe

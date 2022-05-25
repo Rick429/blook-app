@@ -1,4 +1,4 @@
-<section class="columna">
+<section fxLayout="column" fxLayoutAlign="space-between center" >
   <form class="container" [formGroup]="formulario">
       <h2>Mi Perfil</h2>
     <img *ngIf="avatar!=''" class="borde" src="{{avatar}}" />
@@ -11,38 +11,39 @@
       </button>
     </div>
 
-  <div class="fila">
-      <mat-form-field appearance="outline">
+  <div fxFlexAlign="start">
+      <mat-form-field fxFlex="49" appearance="outline">
         <mat-label>Nombre</mat-label>
         <input matInput [readonly]="!editar" placeholder="nombre" formControlName="name">
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field fxFlex="49" appearance="outline">
         <mat-label>Apellidos</mat-label>
         <input matInput [readonly]="!editar" placeholder="Apellidos" formControlName="lastname">
       </mat-form-field>
   </div>
-  <div class="fila">
-      <mat-form-field appearance="outline">
+  <div fxFlexAlign="start">
+      <mat-form-field fxFlex="98%" appearance="outline">
         <mat-label>Correo electrónico</mat-label>
         <input matInput [readonly]="!editar" placeholder="Correo electrónico" formControlName="email">
       </mat-form-field>
+
   </div>
   </form>
   <form [formGroup]="formularioPassword">
-    <div class="fila">
-        <mat-form-field appearance="outline">
+    <div fxFlexAlign="start">
+        <mat-form-field fxFlex="49" appearance="outline">
           <mat-label>Contraseña actual</mat-label>
           <input matInput [readonly]="!editar" placeholder="Contraseña actual" formControlName="password">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field fxFlex="49" appearance="outline">
           <mat-label>Nueva contraseña</mat-label>
           <input matInput [readonly]="!editar" placeholder="Nueva contraseña" formControlName="passwordNew">
         </mat-form-field>
     </div>
-    <div class="fila">
-        <mat-form-field appearance="outline">
+    <div fxFlexAlign="start">
+        <mat-form-field fxFlex="98%" appearance="outline">
           <mat-label>Confirmar contraseña</mat-label>
           <input matInput [readonly]="!editar" placeholder="Confirmar contraseña" formControlName="passwordNew2">
         </mat-form-field>
