@@ -41,10 +41,15 @@ export class BookFormComponent implements OnInit {
   ngOnInit(): void {
     this.genreService.findAllGenres("0","100").subscribe(res => {
       this.genresList = res.content;
+      if(this.data!=null) {
+        this.genreSelect = this.genresList.filter(g =>
+          this.data.book.genres.some(g2 =>
+            g2.id == g.id
+          )
+        )
+      }
     });
-    if(this.data!=null) {
-      this.genreSelect=this.data.book.genres;
-    }
+
     this.formulario.get('genres')?.setValue(this.genreSelect);
     this.formulario.patchValue(this.data.book);
   }
@@ -77,7 +82,7 @@ export class BookFormComponent implements OnInit {
         this.bookService.updateCover(this.file, this.data.book.id).subscribe(res => {
         });
       }
-      /* history.go(0); */
+      history.go(0);
     } else {
       this.bookService.create(this.createBookDto, this.file).subscribe(m => {
         history.go(0);
