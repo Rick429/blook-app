@@ -80,9 +80,12 @@ export class BookFormComponent implements OnInit {
       });
       if(this.file!=undefined){
         this.bookService.updateCover(this.file, this.data.book.id).subscribe(res => {
+          history.go(0);
         });
+      }else {
+        history.go(0);
       }
-      history.go(0);
+
     } else {
       this.bookService.create(this.createBookDto, this.file).subscribe(m => {
         history.go(0);

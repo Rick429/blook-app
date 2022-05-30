@@ -14,6 +14,7 @@ const AVATAR = 'avatar'
 export class PerfilComponent implements OnInit {
   editar=false;
   formulario = new FormGroup({
+    nick: new FormControl(''),
     name: new FormControl(''),
     lastname:new FormControl(''),
     email:new FormControl('')
@@ -44,16 +45,21 @@ export class PerfilComponent implements OnInit {
     this.userService.update(this.formulario.value, this.user.id).subscribe(result => {
 
     });
-    if(this.file!=undefined){
-      this.userService.updateAvatar(this.file, this.user.id).subscribe(res => {
-        localStorage.setItem(AVATAR, res.avatar);
-      });
-    }
-    if(this.formularioPassword.value!=null){
+    if(this.formularioPassword.get('password')?.value!=""){
       this.userService.changePassword(this.formularioPassword.value).subscribe(res => {
       });
     }
-    history.go(0);
+
+    if(this.file!=undefined){
+     this.userService.updateAvatar(this.file, this.user.id).subscribe(res => {
+        localStorage.setItem(AVATAR, res.avatar);
+        history.go(0);
+      });
+    } else {
+      history.go(0);
+    }
+
+
 
   }
 

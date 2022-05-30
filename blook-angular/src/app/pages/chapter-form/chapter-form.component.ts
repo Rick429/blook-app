@@ -52,9 +52,12 @@ export class ChapterFormComponent implements OnInit {
       });
       if(this.file!=undefined){
         this.chapterService.updateFile(this.file, this.data.chapter.id).subscribe(res => {
+          history.go(0);
         });
+      }else {
+        history.go(0);
       }
-        history.go(0)
+
     } else {
 
       this.chapterService.create(this.formulario.value, this.data.idBook, this.file).subscribe(m => {
