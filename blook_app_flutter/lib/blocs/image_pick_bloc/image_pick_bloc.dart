@@ -22,7 +22,7 @@ class ImagePickBloc extends Bloc<ImagePickEvent, ImagePickState> {
         source: event.source,
       );
       if (pickedFile != null) {
-        final user = await userRepository.uploadAvatar(pickedFile.path);
+        final user = await userRepository.uploadAvatar(pickedFile.path, PreferenceUtils.getString("idUser")??"");
         PreferenceUtils.setString(Constant.avatar, user.avatar);
         emit(ImageSelectedSuccessState(pickedFile));
       } else {

@@ -106,6 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _userItem(User userLogged) {
+    PreferenceUtils.setString('idUser', userLogged.id);
     return Column(
       children: [
         Center(

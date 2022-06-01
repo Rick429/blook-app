@@ -14,9 +14,9 @@ class UserRepositoryImpl extends UserRepository {
   final Client _client = Client();
 
   @override
-  Future<User> uploadAvatar(String filename) async{
+  Future<User> uploadAvatar(String filename, String id) async{
     var request = http.MultipartRequest(
-      'POST', Uri.parse('${Constant.baseurl}user/avatar/'),);
+      'PUT', Uri.parse('${Constant.baseurl}user/avatar/$id'),);
     
       request.files.add(await http.MultipartFile.fromPath('file',filename));
     Map<String, String> headers = {
