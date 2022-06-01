@@ -44,11 +44,12 @@ public class UserEntityController {
                     description = "No se encontro a usuario",
                     content = @Content),
     })
-    @PutMapping("/avatar/")
+    @PutMapping("/avatar/{id}")
     public ResponseEntity<GetUserDto> uploadAvatar(@RequestPart("file")MultipartFile file,
+                                                   @PathVariable UUID id,
                                                    @AuthenticationPrincipal UserEntity user) {
         return ResponseEntity.status(HttpStatus.OK).body(userDtoConverter
-                .userEntityToGetUserDto(userEntityService.uploadAvatar(file, user)));
+                .userEntityToGetUserDto(userEntityService.uploadAvatar(file, user, id)));
 
     }
 

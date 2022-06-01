@@ -62,14 +62,18 @@ public class UserEntityService implements UserDetailsService {
                 .orElseThrow(() -> new OneEntityNotFound(id.toString(), UserEntity.class));
     }
 
-    public UserEntity uploadAvatar (MultipartFile file, UserEntity user) {
-        Optional<UserEntity> u1 = userEntityRepository.findById(user.getId());
+    public UserEntity uploadAvatar (MultipartFile file, UserEntity user, UUID id) {
+        Optional<UserEntity> u1 = userEntityRepository.findById(id);
         if(u1.isEmpty()){
             throw new OneEntityNotFound(user.getId().toString(), UserEntity.class);
         }else{
-            String uri = storageService.store(file);
-            u1.get().setAvatar(storageService.completeUri(uri));
-            return userEntityRepository.save(u1.get());
+            if(user.getId().equals(id) || user.getRole().equals(UserRole.ADMIN)) {
+                String uri = storageService.store(file);
+                u1.get().setAvatar(storageService.completeUri(uri));
+                return userEntityRepository.save(u1.get());
+            } else {
+                throw new ForbiddenException("Permisos insuficientes");
+            }
         }
     }
 
