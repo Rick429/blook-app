@@ -26,10 +26,13 @@ export class ChapterTableComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private chapterService: ChapterService) { }
   ngOnInit(): void {
-    this.chapterService.findAllChapters("0","5").subscribe(chapterResult => {
-      this.totalElements = chapterResult.totalElements;
-      this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
-      this.dataSource.paginator = this.paginator;
+    this.chapterService.findAllChapters("0","5").subscribe({
+      next: (chapterResult => {
+        this.totalElements = chapterResult.totalElements;
+        this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
+        this.dataSource.paginator = this.paginator;
+      }),
+      error: err => console.log(err.error.mensaje),
     });
   }
 
@@ -47,16 +50,23 @@ export class ChapterTableComponent implements OnInit {
  nextPage(event: PageEvent) {
   this.page = event.pageIndex.toString();
   this.size = event.pageSize.toString();
-  this.chapterService.findAllChapters(this.page, this.size).subscribe(chapterResult => {
-    this.totalElements = chapterResult.totalElements;
-    this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
+  this.chapterService.findAllChapters(this.page, this.size).subscribe({
+    next: (chapterResult => {
+      this.totalElements = chapterResult.totalElements;
+      this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
+      this.dataSource.paginator = this.paginator;
+    }),
+    error: err => console.log(err.error.mensaje),
   });
  }
 
   buscar(){
-  this.chapterService.buscar(this.formulario.value).subscribe(chapterResult => {
-    this.totalElements = chapterResult.totalElements;
-    this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
+  this.chapterService.buscar(this.formulario.value).subscribe({
+    next: (chapterResult => {
+      this.totalElements = chapterResult.totalElements;
+      this.dataSource = new MatTableDataSource<Chapter>(chapterResult.content);
+    }),
+    error: err => console.log(err.error.mensaje),
   });
   }
 }

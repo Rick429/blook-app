@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from 'src/app/models/interfaces/user_response';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 import { DeleteFormComponent } from '../delete-form/delete-form.component';
 
 export interface UserDialogData {
@@ -16,11 +17,10 @@ export interface UserDialogData {
 })
 export class UserFormComponent implements OnInit {
   formulario = new FormGroup({
-    id: new FormControl(''),
+    nick: new FormControl(''),
     name: new FormControl(''),
-    lastname: new FormControl(''),
-    password: new FormControl(''),
-    password2: new FormControl(''),
+    lastname:new FormControl(''),
+    email:new FormControl('')
   });
   file!: File;
 
@@ -31,6 +31,7 @@ export class UserFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.formulario.patchValue(this.data.user);
+    console.log(JSON.stringify(this.formulario.value));
   }
 
   onFileChanged(event: any) {
@@ -42,18 +43,30 @@ export class UserFormComponent implements OnInit {
   }
 
   editarCrear(){
-      const formData = new FormData();
-      formData.append('user', new Blob([JSON.stringify(this.formulario.value)], {
-        type: 'application/json'
-      }));
-
-      this.userService.update(formData, this.formulario.get('id')?.value).subscribe(res => {
+      this.userService.update(this.formulario.value, this.data.user.id).subscribe({
+        next: ( res => {
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
       if(this.file!=undefined){
-        this.userService.updateAvatar(this.file, this.data.user.id).subscribe(res => {
+        this.userService.updateAvatar(this.file, this.data.user.id).subscribe({
+          next: ( res => {
+            history.go(0);
+          }),
+          error: err => Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.error.mensaje,
+          })
         });
+      } else {
+        history.go(0);
       }
-      history.go(0);
+
     }
 
   eliminar() {

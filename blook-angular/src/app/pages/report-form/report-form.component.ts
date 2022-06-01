@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Report } from 'src/app/models/interfaces/report_response';
 import { ReportService } from 'src/app/services/report.service';
+import Swal from 'sweetalert2';
 
 export interface ReportDialogData {
   report:Report,
@@ -24,12 +25,26 @@ export class ReportFormComponent implements OnInit {
   finalizar(){
     if(this.data!= null){
       if(this.data.report.estado=="ABIERTO") {
-        this.reportService.finalizarReporte(this.data.report.id).subscribe(m=> {
-          history.go(0)
+        this.reportService.finalizarReporte(this.data.report.id).subscribe({
+          next: ( res => {
+            history.go(0);
+          }),
+          error: err => Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.error.mensaje,
+          })
         });
       }else{
-        this.reportService.abrirReporte(this.data.report.id).subscribe(m=> {
-          history.go(0)
+        this.reportService.abrirReporte(this.data.report.id).subscribe({
+          next: ( res => {
+            history.go(0);
+          }),
+          error: err => Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.error.mensaje,
+          })
         });
       }
     }

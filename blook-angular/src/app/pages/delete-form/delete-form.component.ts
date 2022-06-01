@@ -5,6 +5,7 @@ import { ChapterService } from 'src/app/services/chapter.service';
 import { CommentService } from 'src/app/services/comment.service';
 import { GenreService } from 'src/app/services/genre.service';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 
 export interface DialogData {
   idComment:String,
@@ -31,28 +32,63 @@ export class DeleteFormComponent implements OnInit {
 
   eliminar(){
     if(this.data.idComment != null){
-      this.commentService.delete(this.data.idComment).subscribe(m=> {
-        history.go(0)
+      this.commentService.delete(this.data.idComment).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
     }
     if(this.data.idUser != null){
-      this.userService.delete(this.data.idUser).subscribe(m => {
-        history.go(0);
+      this.userService.delete(this.data.idUser).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
     }
     if(this.data.idBook != null){
-      this.bookService.delete(this.data.idBook).subscribe(m => {
-        history.go(0);
+      this.bookService.delete(this.data.idBook).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
     }
     if(this.data.idChapter != null){
-      this.chapterService.delete(this.data.idChapter).subscribe(m => {
-        history.go(0);
+      this.chapterService.delete(this.data.idChapter).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
     }
     if(this.data.idGenre != null){
-      this.genreService.delete(this.data.idGenre).subscribe(m => {
-        history.go(0);
+      this.genreService.delete(this.data.idGenre).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
     }
   }

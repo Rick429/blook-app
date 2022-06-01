@@ -29,10 +29,13 @@ export class ReportTableComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private reportService: ReportService) { }
   ngOnInit(): void {
-    this.reportService.findAllReports("0","5").subscribe(reportResult => {
-      this.totalElements = reportResult.totalElements;
-      this.dataSource = new MatTableDataSource<Report>(reportResult.content);
-      this.dataSource.paginator = this.paginator;
+    this.reportService.findAllReports("0","5").subscribe({
+      next: (reportResult => {
+        this.totalElements = reportResult.totalElements;
+        this.dataSource = new MatTableDataSource<Report>(reportResult.content);
+        this.dataSource.paginator = this.paginator;
+      }),
+      error: err => console.log(err.error.mensaje)
     });
   }
 
@@ -46,9 +49,12 @@ export class ReportTableComponent implements OnInit {
  nextPage(event: PageEvent) {
   this.page = event.pageIndex.toString();
   this.size = event.pageSize.toString();
-  this.reportService.findAllReports(this.page, this.size).subscribe(reportResult => {
-    this.totalElements = reportResult.totalElements;
-    this.dataSource = new MatTableDataSource<Report>(reportResult.content);
+  this.reportService.findAllReports(this.page, this.size).subscribe({
+    next: (reportResult => {
+      this.totalElements = reportResult.totalElements;
+      this.dataSource = new MatTableDataSource<Report>(reportResult.content);
+    }),
+    error: err => console.log(err.error.mensaje)
   });
  }
 
@@ -62,10 +68,12 @@ export class ReportTableComponent implements OnInit {
     this.searchReportDto.estado=this.formulario.get('estado')?.value;
   }
 
-  this.reportService.buscar(this.searchReportDto).subscribe(reportResult => {
-    this.totalElements = reportResult.totalElements;
-    this.dataSource = new MatTableDataSource<Report>(reportResult.content);
-  })
-}
-
+  this.reportService.buscar(this.searchReportDto).subscribe({
+    next: (reportResult => {
+      this.totalElements = reportResult.totalElements;
+      this.dataSource = new MatTableDataSource<Report>(reportResult.content);
+    }),
+    error: err => console.log(err.error.mensaje)
+    });
+  }
 }

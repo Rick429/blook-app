@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { CreateChapterDto } from 'src/app/models/dto/createChapterDto';
 import { Chapter } from 'src/app/models/interfaces/book_response';
 import { ChapterService } from 'src/app/services/chapter.service';
+import Swal from 'sweetalert2';
 import { DeleteFormComponent } from '../delete-form/delete-form.component';
 
 export interface ChapterDialogData {
@@ -48,11 +49,26 @@ export class ChapterFormComponent implements OnInit {
         type: 'application/json'
       }));
 
-      this.chapterService.update(formData, this.data.chapter.id).subscribe(res => {
+      this.chapterService.update(formData, this.data.chapter.id).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
       if(this.file!=undefined){
-        this.chapterService.updateFile(this.file, this.data.chapter.id).subscribe(res => {
-          history.go(0);
+        this.chapterService.updateFile(this.file, this.data.chapter.id).subscribe({
+          next: ( res => {
+            history.go(0);
+          }),
+          error: err => Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.error.mensaje,
+          })
         });
       }else {
         history.go(0);
@@ -60,10 +76,16 @@ export class ChapterFormComponent implements OnInit {
 
     } else {
 
-      this.chapterService.create(this.formulario.value, this.data.idBook, this.file).subscribe(m => {
-        history.go(0);
+      this.chapterService.create(this.formulario.value, this.data.idBook, this.file).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
-
     }
   }
 

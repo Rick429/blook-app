@@ -26,10 +26,13 @@ export class CommentTableComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private commentService: CommentService) { }
   ngOnInit(): void {
-    this.commentService.findAllComments("0","5").subscribe(commentResult => {
-      this.totalElements = commentResult.totalElements;
-      this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
-      this.dataSource.paginator = this.paginator;
+    this.commentService.findAllComments("0","5").subscribe({
+      next: (commentResult => {
+        this.totalElements = commentResult.totalElements;
+        this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
+        this.dataSource.paginator = this.paginator;
+      }),
+      error: err => console.log(err.error.mensaje),
     });
   }
 
@@ -44,17 +47,23 @@ export class CommentTableComponent implements OnInit {
  nextPage(event: PageEvent) {
   this.page = event.pageIndex.toString();
   this.size = event.pageSize.toString();
-  this.commentService.findAllComments(this.page, this.size).subscribe(commentResult => {
-    this.totalElements = commentResult.totalElements;
-    this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
+  this.commentService.findAllComments(this.page, this.size).subscribe({
+    next: (commentResult => {
+      this.totalElements = commentResult.totalElements;
+      this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
+      this.dataSource.paginator = this.paginator;
+    }),
+    error: err => console.log(err.error.mensaje),
   });
  }
 
  buscar(){
-  this.commentService.buscar(this.formulario.value).subscribe(commentResult => {
-    this.totalElements = commentResult.totalElements;
-    this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
-  });
+  this.commentService.buscar(this.formulario.value).subscribe({
+    next: (commentResult => {
+      this.totalElements = commentResult.totalElements;
+      this.dataSource = new MatTableDataSource<Comment>(commentResult.content);
+    }),
+    error: err => console.log(err.error.mensaje),
+    });
   }
-
 }

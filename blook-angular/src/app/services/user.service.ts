@@ -65,7 +65,7 @@ export class UserService {
 
     let formData = new FormData();
     formData.append("file", file);
-    return this.http.put<User>(`${this.userBaseUrl}/avatar/`, formData, { headers: encabezados });
+    return this.http.put<User>(`${this.userBaseUrl}/avatar/${idUser}`, formData, { headers: encabezados });
   }
 
   changePassword(changePassword: any){

@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Genre } from 'src/app/models/interfaces/genre_response';
 import { GenreService } from 'src/app/services/genre.service';
+import Swal from 'sweetalert2';
 import { DeleteFormComponent } from '../delete-form/delete-form.component';
 
 export interface GenreDialogData {
@@ -23,7 +24,6 @@ export class GenreFormComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<GenreFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: GenreDialogData,
     private genreService: GenreService, private dialog:MatDialog) {
-
      }
 
   ngOnInit(): void {
@@ -36,17 +36,29 @@ export class GenreFormComponent implements OnInit {
   }
 
   editarCrear(){
-
     if(this.data.genre!=null){
-      this.genreService.update(this.formulario.value, this.data.genre.id).subscribe(res => {
-        history.go(0);
+      this.genreService.update(this.formulario.value, this.data.genre.id).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
     } else {
-      this.genreService.create(this.formulario.value).subscribe(m => {
-        history.go(0);
+      this.genreService.create(this.formulario.value).subscribe({
+        next: ( res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
     }
-
   }
 
   eliminar() {
@@ -54,7 +66,6 @@ export class GenreFormComponent implements OnInit {
       data: {idGenre: this.data.genre.id},
     });
   }
-
 
 }
 

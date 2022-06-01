@@ -7,6 +7,7 @@ import { AdminDialogComponent } from 'src/app/dialogs/admin-dialog/admin-dialog.
 import { SearchUserDto } from 'src/app/models/dto/searchUserDto';
 import { User } from 'src/app/models/interfaces/user_response';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 import { UserFormComponent } from '../user-form/user-form.component';
 
 @Component({
@@ -28,10 +29,13 @@ export class UserTableComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private userService: UserService) { }
   ngOnInit(): void {
-    this.userService.findAllUsers("0","5").subscribe(userResult => {
-      this.totalElements = userResult.totalElements;
-      this.dataSource = new MatTableDataSource<User>(userResult.content);
-      this.dataSource.paginator = this.paginator;
+    this.userService.findAllUsers("0","5").subscribe({
+      next: (userResult => {
+        this.totalElements = userResult.totalElements;
+        this.dataSource = new MatTableDataSource<User>(userResult.content);
+        this.dataSource.paginator = this.paginator;
+      }),
+      error: err => console.log(err.error.mensaje)
     });
   }
 
@@ -44,9 +48,12 @@ export class UserTableComponent implements OnInit {
  nextPage(event: PageEvent) {
   this.page = event.pageIndex.toString();
   this.size = event.pageSize.toString();
-  this.userService.findAllUsers(this.page, this.size).subscribe(userResult => {
-    this.totalElements = userResult.totalElements;
-    this.dataSource = new MatTableDataSource<User>(userResult.content);
+  this.userService.findAllUsers(this.page, this.size).subscribe({
+    next: (userResult => {
+      this.totalElements = userResult.totalElements;
+      this.dataSource = new MatTableDataSource<User>(userResult.content);
+    }),
+    error: err => console.log(err.error.mensaje)
   });
 }
 
@@ -65,10 +72,13 @@ export class UserTableComponent implements OnInit {
       this.searchUserDto.role=this.formulario.get('role')?.value;
     }
 
-    this.userService.buscar(this.searchUserDto).subscribe(userResult => {
-      this.totalElements = userResult.totalElements;
-      this.dataSource = new MatTableDataSource<User>(userResult.content);
-    });
+    this.userService.buscar(this.searchUserDto).subscribe({
+        next: (userResult => {
+          this.totalElements = userResult.totalElements;
+          this.dataSource = new MatTableDataSource<User>(userResult.content);
+        }),
+        error: err => console.log(err.error.mensaje)
+      });
   }
 
 }

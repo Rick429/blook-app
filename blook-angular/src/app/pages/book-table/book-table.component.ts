@@ -29,10 +29,13 @@ export class BookTableComponent implements OnInit {
   constructor(private dialog:MatDialog, private bookService: BookService, public datepipe: DatePipe
     ,private router: Router) { }
   ngOnInit(): void {
-    this.bookService.findAllBooks("0","5").subscribe(bookResult => {
-      this.totalElements = bookResult.totalElements;
-      this.dataSource = new MatTableDataSource<Book>(bookResult.content);
-      this.dataSource.paginator = this.paginator;
+    this.bookService.findAllBooks("0","5").subscribe({
+      next: (bookResult => {
+        this.totalElements = bookResult.totalElements;
+        this.dataSource = new MatTableDataSource<Book>(bookResult.content);
+        this.dataSource.paginator = this.paginator;
+      }),
+      error: err => console.log(err.error.mensaje),
     });
   }
 
@@ -51,17 +54,22 @@ export class BookTableComponent implements OnInit {
 
   this.page = event.pageIndex.toString();
   this.size = event.pageSize.toString();
-  this.bookService.findAllBooks(this.page, this.size).subscribe(bookResult => {
-    this.totalElements = bookResult.totalElements;
-    this.dataSource = new MatTableDataSource<Book>(bookResult.content);
+  this.bookService.findAllBooks(this.page, this.size).subscribe({
+    next: (bookResult => {
+      this.totalElements = bookResult.totalElements;
+      this.dataSource = new MatTableDataSource<Book>(bookResult.content);
+    }),
+    error: err => console.log(err.error.mensaje),
     });
   }
 
   buscar(){
-    this.bookService.buscar(this.formulario.value).subscribe(bookResult => {
-      this.totalElements = bookResult.totalElements;
-      this.dataSource = new MatTableDataSource<Book>(bookResult.content);
+    this.bookService.buscar(this.formulario.value).subscribe({
+      next: (bookResult => {
+        this.totalElements = bookResult.totalElements;
+        this.dataSource = new MatTableDataSource<Book>(bookResult.content);
+      }),
+      error: err => console.log(err.error.mensaje),
     });
   }
-
 }

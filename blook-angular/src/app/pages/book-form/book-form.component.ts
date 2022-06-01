@@ -9,6 +9,7 @@ import { Genre } from 'src/app/models/interfaces/genre_response';
 import { GenreService } from 'src/app/services/genre.service';
 import { CreateBookDto } from 'src/app/models/dto/createBookDto';
 import { DeleteFormComponent } from '../delete-form/delete-form.component';
+import Swal from 'sweetalert2';
 
 const TOKEN = 'token';
 
@@ -39,19 +40,25 @@ export class BookFormComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.genreService.findAllGenres("0","100").subscribe(res => {
-      this.genresList = res.content;
-      if(this.data!=null) {
-        this.genreSelect = this.genresList.filter(g =>
-          this.data.book.genres.some(g2 =>
-            g2.id == g.id
+    this.genreService.findAllGenres("0","100").subscribe({
+      next: (res => {
+        this.genresList = res.content;
+        if(this.data!=null) {
+          this.genreSelect = this.genresList.filter(g =>
+            this.data.book.genres.some(g2 =>
+              g2.id == g.id
+            )
           )
-        )
-      }
+        }
+        this.formulario.get('genres')?.setValue(this.genreSelect);
+        this.formulario.patchValue(this.data.book);
+      }),
+      error: err => Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err.error.mensaje,
+      })
     });
-
-    this.formulario.get('genres')?.setValue(this.genreSelect);
-    this.formulario.patchValue(this.data.book);
   }
 
   onFileChanged(event: any) {
@@ -76,19 +83,40 @@ export class BookFormComponent implements OnInit {
         type: 'application/json'
       }));
 
-      this.bookService.update(formData, this.formulario.get('id')?.value).subscribe(res => {
+      this.bookService.update(formData, this.formulario.get('id')?.value).subscribe({
+        next: (res => {
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
       if(this.file!=undefined){
-        this.bookService.updateCover(this.file, this.data.book.id).subscribe(res => {
-          history.go(0);
+        this.bookService.updateCover(this.file, this.data.book.id).subscribe({
+          next: (res => {
+            history.go(0);
+          }),
+          error: err => Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.error.mensaje,
+          })
         });
       }else {
         history.go(0);
       }
 
     } else {
-      this.bookService.create(this.createBookDto, this.file).subscribe(m => {
-        history.go(0);
+      this.bookService.create(this.createBookDto, this.file).subscribe({
+        next: (res => {
+          history.go(0);
+        }),
+        error: err => Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.error.mensaje,
+        })
       });
     }
     }

@@ -29,12 +29,15 @@ export class BookDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.bookId = params['idbook'];
-      this.bookService.findById(this.bookId).subscribe(result => {
-        this.book = result;
-        this.image= result.cover;
-        this.chapterList = result.chapters;
-        this.dataSource = new MatTableDataSource<Chapter>(this.chapterList);
-        this.dataSource.paginator = this.paginator;
+      this.bookService.findById(this.bookId).subscribe({
+        next: (result => {
+          this.book = result;
+          this.image= result.cover;
+          this.chapterList = result.chapters;
+          this.dataSource = new MatTableDataSource<Chapter>(this.chapterList);
+          this.dataSource.paginator = this.paginator;
+        }),
+        error: err => console.log(err.error.mensaje),
       });
     });
   }

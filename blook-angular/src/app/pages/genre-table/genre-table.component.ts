@@ -26,10 +26,13 @@ export class GenreTableComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   constructor(private dialog:MatDialog, private genreService: GenreService) { }
   ngOnInit(): void {
-    this.genreService.findAllGenres("0","5").subscribe(genreResult => {
-      this.totalElements = genreResult.totalElements;
-      this.dataSource = new MatTableDataSource<Genre>(genreResult.content);
-      this.dataSource.paginator = this.paginator;
+    this.genreService.findAllGenres("0","5").subscribe({
+      next: (genreResult => {
+        this.totalElements = genreResult.totalElements;
+        this.dataSource = new MatTableDataSource<Genre>(genreResult.content);
+        this.dataSource.paginator = this.paginator;
+      }),
+      error: err => console.log(err.error.mensaje),
     });
   }
 
@@ -47,18 +50,24 @@ export class GenreTableComponent implements OnInit {
  nextPage(event: PageEvent) {
   this.page = event.pageIndex.toString();
   this.size = event.pageSize.toString();
-  this.genreService.findAllGenres(this.page, this.size).subscribe(genreResult => {
-    this.totalElements = genreResult.totalElements;
-    this.dataSource = new MatTableDataSource<Genre>(genreResult.content);
+  this.genreService.findAllGenres(this.page, this.size).subscribe({
+    next: (genreResult => {
+      this.totalElements = genreResult.totalElements;
+      this.dataSource = new MatTableDataSource<Genre>(genreResult.content);
+    }),
+    error: err => console.log(err.error.mensaje),
   });
  }
 
  buscar(){
   this.searchGenreDto.name=this.formulario.get('texto')?.value;
   this.searchGenreDto.description=this.formulario.get('texto')?.value;
-  this.genreService.buscar(this.searchGenreDto).subscribe(genreResult => {
-    this.totalElements = genreResult.totalElements;
-    this.dataSource = new MatTableDataSource<Genre>(genreResult.content);
+  this.genreService.buscar(this.searchGenreDto).subscribe({
+    next: (genreResult => {
+      this.totalElements = genreResult.totalElements;
+      this.dataSource = new MatTableDataSource<Genre>(genreResult.content);
+    }),
+    error: err => console.log(err.error.mensaje),
   });
   }
 
