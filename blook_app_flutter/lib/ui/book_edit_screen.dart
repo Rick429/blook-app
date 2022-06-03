@@ -115,7 +115,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
       ),
       BlocConsumer<EditBookBloc, EditBookState>(
           listenWhen: (context, state) {
-            return state is EditBookSuccessState;
+            return state is EditBookSuccessState || state is EditBookErrorState;
           },
            listener: (context, state) {
             if (state is EditBookSuccessState) {

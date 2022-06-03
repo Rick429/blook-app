@@ -39,7 +39,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
   final ImagePicker _picker = ImagePicker();
   late List<Genre> lista;
   late GenresBloc _genresbloc;
-  late List<Object?> _selectedgenres;
+  late List<Object?> _selectedgenres = [];
 
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
@@ -96,9 +96,16 @@ class _BookNewScreenState extends State<BookNewScreen> {
       child: Column(children: [
         BlocConsumer<BookNewBloc, BookNewState>(
             listenWhen: (context, state) {
-              return state is CreateBookSuccessState;
+              return state is CreateBookSuccessState || state is CreateBookErrorState;
             },
-            listener: (context, state) {},
+            listener: (context, state) {
+               if (state is CreateBookSuccessState) {
+             Navigator.pushNamed(context, '/chapternew');
+              
+            } else if (state is CreateBookErrorState) {
+              _showSnackbar(context, state.message);
+            }
+            },
             buildWhen: (context, state) {
               return state is BookNewInitial || state is CreateBookSuccessState;
             },
@@ -131,7 +138,12 @@ class _BookNewScreenState extends State<BookNewScreen> {
       ]),
     );
   }
-
+ void _showSnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
   Widget _genresList(context, List<Genre> genresList) {
     return Column(
       children: [
@@ -159,7 +171,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
                 elevation: 15.0,
               ),
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
+                if (_formKey.currentState!.validate() && PreferenceUtils.getString("cover")!="") {
                   final createBookDto = CreateBookDto(
                       name: nameController.text,
                       description: descriptionController.text,
@@ -167,7 +179,9 @@ class _BookNewScreenState extends State<BookNewScreen> {
 
                   BlocProvider.of<BookNewBloc>(context).add(CreateBookEvent(
                       PreferenceUtils.getString("cover")!, createBookDto));
-                  Navigator.pushNamed(context, '/chapternew');
+                  
+                } else {
+                  _showSnackbar(context, "Debe rellenar todos los datos para crear el libro");
                 }
               },
               child: Text("Siguiente",

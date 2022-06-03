@@ -23,7 +23,7 @@ class BookNewBloc extends Bloc<BookNewEvent, BookNewState> {
 
       emit(CreateBookSuccessState(event.source, book));
     } catch (e) {
-      emit(const CreateBookErrorState('Error al crear el libro'));
+      emit(CreateBookErrorState(e.toString()));
     }
   }
 }
