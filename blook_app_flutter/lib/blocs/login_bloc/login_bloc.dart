@@ -23,7 +23,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginSuccessState(loginResponse));
       return;
     } on Exception catch (e) {
-      emit(LoginErrorState(e.toString()));
+      emit(const LoginErrorState("El correo electrónico o la contraseña introducidos son incorrectos"));
     }
   }
 }

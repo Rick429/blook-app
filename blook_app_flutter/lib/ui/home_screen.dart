@@ -118,9 +118,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Image.network(
               book.cover,
-              headers: {
+          /*     headers: {
                 'Authorization': 'Bearer ${PreferenceUtils.getString('token')}'
-              },
+              }, */
               height: 350,
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.cover,
@@ -247,10 +247,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
                     book.cover,
-                    headers: {
+                    /* headers: {
                       'Authorization':
                           'Bearer ${PreferenceUtils.getString('token')}'
-                    },
+                    }, */
                     width: 130,
                     height: 200,
                     fit: BoxFit.cover,

@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../models/error_response.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
@@ -63,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               MaterialPageRoute(builder: (context) => const MenuScreen()),
             );
           } else if (state is RegisterErrorState) {
-            _showSnackbar(context, state.toString());
+            _showSnackbar(context, state.error);
           }
         }, buildWhen: (context, state) {
           return state is RegisterInitial || state is RegisterLoadingState;
@@ -80,9 +82,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void _showSnackbar(BuildContext context, String message) {
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 150,
+        child: Column(
+          children: [
+            Text(error.mensaje),
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:blook_app_flutter/blocs/book_new_bloc/book_new_bloc.dart';
 import 'package:blook_app_flutter/blocs/genres_bloc/genres_bloc.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
+import 'package:blook_app_flutter/models/error_response.dart';
 import 'package:blook_app_flutter/models/genre_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
@@ -103,7 +104,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
              Navigator.pushNamed(context, '/chapternew');
               
             } else if (state is CreateBookErrorState) {
-              _showSnackbar(context, state.message);
+              _showSnackbar(context, state.error);
             }
             },
             buildWhen: (context, state) {
@@ -138,12 +139,23 @@ class _BookNewScreenState extends State<BookNewScreen> {
       ]),
     );
   }
- void _showSnackbar(BuildContext context, String message) {
+  
+ void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 100,
+        child: Column(
+          children: [
+            Text(error.mensaje),
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
   Widget _genresList(context, List<Genre> genresList) {
     return Column(
       children: [
@@ -171,7 +183,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
                 elevation: 15.0,
               ),
               onPressed: () {
-                if (_formKey.currentState!.validate() && PreferenceUtils.getString("cover")!="") {
+              
                   final createBookDto = CreateBookDto(
                       name: nameController.text,
                       description: descriptionController.text,
@@ -179,11 +191,8 @@ class _BookNewScreenState extends State<BookNewScreen> {
 
                   BlocProvider.of<BookNewBloc>(context).add(CreateBookEvent(
                       PreferenceUtils.getString("cover")!, createBookDto));
-                  
-                } else {
-                  _showSnackbar(context, "Debe rellenar todos los datos para crear el libro");
-                }
-              },
+              
+               },
               child: Text("Siguiente",
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeThree))),

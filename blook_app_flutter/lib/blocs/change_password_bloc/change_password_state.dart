@@ -19,10 +19,10 @@ class ChangePasswordSuccessState extends ChangePasswordState {
 }
 
 class ChangePasswordErrorState extends ChangePasswordState {
-  final String message;
+  final ErrorResponse error;
 
-  const ChangePasswordErrorState(this.message);
+  const ChangePasswordErrorState(this.error);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }

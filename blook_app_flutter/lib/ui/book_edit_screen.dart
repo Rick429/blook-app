@@ -19,6 +19,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
+import '../models/error_response.dart';
+
 typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
@@ -126,7 +128,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
               );
               _createDialog(context);
             } else if (state is EditBookErrorState) {
-              _showSnackbar(context, state.message);
+              _showSnackbar(context, state.error);
             }
           },
           buildWhen: (context, state) {
@@ -159,9 +161,18 @@ class _BookEditScreenState extends State<BookEditScreen> {
     )..show();
   }
 
-  void _showSnackbar(BuildContext context, String message) {
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 100,
+        child: Column(
+          children: [
+            Text(error.mensaje),
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -309,9 +320,9 @@ class _BookEditScreenState extends State<BookEditScreen> {
         },
         child: Image.network(
           cover,
-          headers: {
+          /* headers: {
             'Authorization': 'Bearer ${PreferenceUtils.getString('token')}'
-          },
+          }, */
           height: 200,
           fit: BoxFit.cover,
         ),

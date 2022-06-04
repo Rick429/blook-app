@@ -36,7 +36,7 @@ class CommentRepositoryImpl extends CommentRepository {
       return commentNew;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));
-      throw Exception(error.mensaje);
+      throw error;
     }
   }
 

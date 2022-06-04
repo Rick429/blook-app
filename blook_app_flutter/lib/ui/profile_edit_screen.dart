@@ -8,6 +8,8 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../models/error_response.dart';
+
 class ProfileEditScreen extends StatefulWidget {
   final String name;
   final String lastName;
@@ -65,7 +67,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     return 
       BlocConsumer<EditUserBloc, EditUserState>(
           listenWhen: (context, state) {
-            return state is EditUserSuccessState;
+            return state is EditUserSuccessState || state is EditUserErrorState;
           },
            listener: (context, state) {
             if (state is EditUserSuccessState) {
@@ -75,7 +77,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               );
               _createDialog(context);
             } else if (state is EditUserErrorState) {
-              _showSnackbar(context, state.message);
+              _showSnackbar(context, state.error);
             }
           },
           buildWhen: (context, state) {
@@ -108,13 +110,21 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     )..show();
   }
 
-  void _showSnackbar(BuildContext context, String message) {
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 150,
+        child: Column(
+          children: [
+            Text(error.mensaje),
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
-
 
   Widget buildF(BuildContext context) {
     return SingleChildScrollView(

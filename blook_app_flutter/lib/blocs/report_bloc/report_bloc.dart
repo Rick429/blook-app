@@ -4,6 +4,8 @@ import 'package:blook_app_flutter/models/report.dart';
 import 'package:blook_app_flutter/repository/report_repository/report_repository.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../models/error_response.dart';
+
 part 'report_event.dart';
 part 'report_state.dart';
 
@@ -20,8 +22,8 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
 
       emit(ReportSuccessState(reportResponse));
       return;
-    } on Exception catch (e) {
-      emit(ReportErrorState(e.toString()));
+    } on ErrorResponse catch (e) {
+      emit(ReportErrorState(e));
     }
   }
 }

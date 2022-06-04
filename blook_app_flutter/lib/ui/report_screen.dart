@@ -8,6 +8,8 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../models/error_response.dart';
+
 class ReportScreen extends StatefulWidget {
   const ReportScreen({Key? key}) : super(key: key);
 
@@ -67,7 +69,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   MaterialPageRoute(builder: (context) => const MenuScreen()),
                 );
               } else if (state is ReportErrorState) {
-                _showSnackbar(context, state.message);
+                _showSnackbar(context, state.error);
               }
             }, buildWhen: (context, state) {
               return state is ReportInitial || state is ReportLoadingState;
@@ -84,9 +86,18 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  void _showSnackbar(BuildContext context, String message) {
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 100,
+        child: Column(
+          children: [
+            Text(error.mensaje),
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -159,8 +170,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               reportComment: commentController.text, typeReport: PreferenceUtils.getString('typereport')!);
                           BlocProvider.of<ReportBloc>(context)
                               .add(DoReportEvent(createReport));
-                        } 
-                          Navigator.pushNamed(context, '/');
+                        }                        
                         },
                         child: Text("Enviar",
                             style: BlookStyle.textCustom(BlookStyle.whiteColor,

@@ -21,10 +21,10 @@ class CommentSuccessState extends CommentNewState {
 }
 
 class CommentErrorState extends CommentNewState {
-  final String message;
+  final ErrorResponse error;
 
-  const CommentErrorState(this.message);
+  const CommentErrorState(this.error);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }

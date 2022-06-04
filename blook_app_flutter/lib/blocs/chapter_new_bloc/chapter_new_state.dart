@@ -20,10 +20,10 @@ class CreateChapterSuccessState extends ChapterNewState {
 }
 
 class CreateChapterErrorState extends ChapterNewState {
-  final String message;
+  final ErrorResponse error;
 
-  const CreateChapterErrorState(this.message);
+  const CreateChapterErrorState(this.error);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }

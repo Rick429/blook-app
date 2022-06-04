@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
+import 'package:blook_app_flutter/models/error_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
@@ -22,8 +23,8 @@ class BookNewBloc extends Bloc<BookNewEvent, BookNewState> {
           event.createBookDto, event.source.toString());
 
       emit(CreateBookSuccessState(event.source, book));
-    } catch (e) {
-      emit(CreateBookErrorState(e.toString()));
+    } on ErrorResponse catch ( e) {
+      emit(CreateBookErrorState(e));
     }
   }
 }

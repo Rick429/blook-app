@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../models/error_response.dart';
+
 typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
@@ -74,9 +76,10 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
           }, listener: (context, state) {
             if (state is CreateChapterSuccessState) {
               PreferenceUtils.setString(Constant.file, state.pickedFile);
+              Navigator.pushNamed(context, '/');
               _createDialog(context);
             } else if (state is CreateChapterErrorState) {
-              _showSnackbar(context, state.toString());
+              _showSnackbar(context, state.error);
             }
           }, buildWhen: (context, state) {
             return state is ChapterNewInitial;
@@ -110,9 +113,18 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
     )..show();
   }
 
-  void _showSnackbar(BuildContext context, String message) {
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 100,
+        child: Column(
+          children: [
+            Text(error.mensaje),
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -212,7 +224,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                                   PreferenceUtils.getString("image")!,
                                   createChapterDto,
                                   PreferenceUtils.getString("idbook")!));
-                          Navigator.pushNamed(context, '/');
+                          
                         }
                       }
                     },

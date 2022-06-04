@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:blook_app_flutter/models/error_login.dart';
 import 'package:blook_app_flutter/models/error_response.dart';
 import 'package:blook_app_flutter/models/login_dto.dart';
 import 'package:blook_app_flutter/models/login_response.dart';
@@ -33,7 +34,7 @@ class AuthRepositoryImpl extends AuthRepository {
       }
       return userLogged;
     } else {
-      final error = ErrorResponse.fromJson(json.decode(response.body));
+      final error = ErrorLogin.fromJson(json.decode(response.body));
       throw Exception(error.mensaje);
     }
   }

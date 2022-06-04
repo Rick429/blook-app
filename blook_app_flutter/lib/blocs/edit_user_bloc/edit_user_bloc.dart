@@ -4,6 +4,8 @@ import 'package:blook_app_flutter/models/user_dto.dart';
 import 'package:blook_app_flutter/repository/user_repository/user_repository.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../models/error_response.dart';
+
 part 'edit_user_event.dart';
 part 'edit_user_state.dart';
 
@@ -19,8 +21,8 @@ class EditUserBloc extends Bloc<EditUserEvent, EditUserState> {
       var user = await userRepository.edit(event.editUserDto, event.id);
 
       emit(EditUserSuccessState(user));
-    } catch (e) {
-      emit(const EditUserErrorState('Error al cambiar la contraseña'));
+    }on ErrorResponse catch (e) {
+      emit(EditUserErrorState(e));
     }
   }
 }

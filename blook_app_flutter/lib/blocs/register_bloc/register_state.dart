@@ -21,10 +21,10 @@ class RegisterSuccessState extends RegisterState {
 }
 
 class RegisterErrorState extends RegisterState {
-  final Exception errorsResponse;
+  final ErrorResponse error;
 
-  const RegisterErrorState(this.errorsResponse);
+  const RegisterErrorState(this.error);
 
   @override
-  List<Object> get props => [errorsResponse];
+  List<Object> get props => [error];
 }

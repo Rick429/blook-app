@@ -5,6 +5,8 @@ import 'package:blook_app_flutter/repository/book_repository/book_repository.dar
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../models/error_response.dart';
+
 part 'edit_book_event.dart';
 part 'edit_book_state.dart';
 
@@ -24,8 +26,8 @@ class EditBookBloc extends Bloc<EditBookEvent, EditBookState> {
       }
       PreferenceUtils.setString("coveredit", "");
       emit(EditBookSuccessState(event.source, book));
-    } catch (e) {
-      emit(const EditBookErrorState('Error al editar el libro'));
+    }on ErrorResponse catch (e) {
+      emit(EditBookErrorState(e));
     }
   }
 }

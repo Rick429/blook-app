@@ -20,10 +20,10 @@ class EditBookSuccessState extends EditBookState {
 }
 
 class EditBookErrorState extends EditBookState {
-  final String message;
+  final ErrorResponse error;
 
-  const EditBookErrorState(this.message);
+  const EditBookErrorState(this.error);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }

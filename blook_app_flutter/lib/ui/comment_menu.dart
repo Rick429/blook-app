@@ -10,6 +10,8 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../models/error_response.dart';
+
 class CommentMenu extends StatefulWidget {
   const CommentMenu({Key? key}) : super(key: key);
 
@@ -48,7 +50,7 @@ class _CommentMenuState extends State<CommentMenu> {
                 PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
               );
       } else if (state is CommentErrorState) {
-        _showSnackbar(context, state.message);
+        _showSnackbar(context, state.error);
       }
     }, buildWhen: (context, state) {
       return state is CommentNewInitial || state is CommentLoadingState;
@@ -63,9 +65,18 @@ class _CommentMenuState extends State<CommentMenu> {
     });
   }
 
-  void _showSnackbar(BuildContext context, String message) {
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 150,
+        child: Column(
+          children: [
+            Text(error.mensaje),
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

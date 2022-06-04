@@ -4,6 +4,8 @@ import 'package:blook_app_flutter/models/register_dto.dart';
 import 'package:blook_app_flutter/repository/auth_repository/auth_repository.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../models/error_response.dart';
+
 part 'register_event.dart';
 part 'register_state.dart';
 
@@ -19,7 +21,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       final loginResponse = await authRepository.register(event.registerDto);
       emit(RegisterSuccessState(loginResponse));
       return;
-    } on Exception catch (e) {
+    } on ErrorResponse catch (e) {
       emit(RegisterErrorState(e));
     }
   }

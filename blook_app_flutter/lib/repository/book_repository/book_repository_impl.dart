@@ -41,7 +41,7 @@ class BookRepositoryImpl extends BookRepository {
       return bookNew;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));
-      throw Exception(error.mensaje);
+      throw error;
     }
   }
 
@@ -205,7 +205,7 @@ class BookRepositoryImpl extends BookRepository {
       return editBook;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));
-      throw Exception(error.mensaje);
+      throw error;
     }
   }
 
@@ -228,7 +228,7 @@ class BookRepositoryImpl extends BookRepository {
       return editBook;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));
-      throw Exception(error.mensaje);
+      throw error;
     } 
   }
 

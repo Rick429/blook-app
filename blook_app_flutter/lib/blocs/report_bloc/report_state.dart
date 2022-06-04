@@ -21,10 +21,10 @@ class ReportSuccessState extends ReportState {
 }
 
 class ReportErrorState extends ReportState {
-  final String message;
+  final ErrorResponse error;
 
-  const ReportErrorState(this.message);
+  const ReportErrorState(this.error);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }

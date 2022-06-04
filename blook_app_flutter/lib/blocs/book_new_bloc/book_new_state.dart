@@ -20,10 +20,10 @@ class CreateBookSuccessState extends BookNewState {
 }
 
 class CreateBookErrorState extends BookNewState {
-  final String message;
+  final ErrorResponse error;
 
-  const CreateBookErrorState(this.message);
+  const CreateBookErrorState(this.error);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }

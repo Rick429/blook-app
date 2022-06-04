@@ -8,6 +8,8 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../models/error_response.dart';
+
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);
 
@@ -58,7 +60,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return 
       BlocConsumer<ChangePasswordBloc, ChangePasswordState>(
           listenWhen: (context, state) {
-            return state is ChangePasswordSuccessState;
+            return state is ChangePasswordSuccessState ||state is ChangePasswordErrorState;
           },
            listener: (context, state) {
             if (state is ChangePasswordSuccessState) {
@@ -68,7 +70,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               );
               _createDialog(context);
             } else if (state is ChangePasswordErrorState) {
-              _showSnackbar(context, state.message);
+              _showSnackbar(context, state.error);
             }
           },
           buildWhen: (context, state) {
@@ -101,9 +103,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     )..show();
   }
 
-  void _showSnackbar(BuildContext context, String message) {
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 150,
+        child: Column(
+          children: [
+            Text(error.mensaje),
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -206,6 +217,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       elevation: 15.0,
                     ),
                     onPressed: () {
+                   
                   final passwordDto = PasswordDto(
                     password: passwordController.text, 
                     passwordNew: password2Controller.text, 

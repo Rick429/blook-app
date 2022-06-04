@@ -36,7 +36,7 @@ class ChapterRepositoryImpl extends ChapterRepository {
       return chapterNew;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));
-      throw Exception(error.mensaje);
+      throw error;
     }
   }
 
@@ -69,7 +69,7 @@ class ChapterRepositoryImpl extends ChapterRepository {
       return editChapter;
     } else {
       final error = ErrorResponse.fromJson(json.decode(respStr));
-      throw Exception(error.mensaje);
+      throw error;
     }
   }
 

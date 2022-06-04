@@ -19,10 +19,10 @@ class EditUserSuccessState extends EditUserState {
 }
 
 class EditUserErrorState extends EditUserState {
-  final String message;
+  final ErrorResponse error;
 
-  const EditUserErrorState(this.message);
+  const EditUserErrorState(this.error);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }
