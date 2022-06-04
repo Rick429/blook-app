@@ -14,12 +14,12 @@ import javax.validation.constraints.Size;
         message = "{user.password.notmatch}")
 public class PasswordDto {
 
-    @NotBlank
+    @NotBlank(message = "{user.password.blank}")
     private String password;
-    @Size(min = 8)
-    @NotBlank
+    @Size(min = 8, message = "{user.password.size}")
+    @NotBlank(message = "{user.password.blank}")
     private String passwordNew;
-    @Size(min = 8)
-    @NotBlank
+    @Size(min = 8, message = "{user.password.size}")
+    @NotBlank(message = "{user.password.blank}")
     private String passwordNew2;
 }

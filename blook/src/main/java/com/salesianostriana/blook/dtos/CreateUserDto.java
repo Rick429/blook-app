@@ -18,18 +18,18 @@ import javax.validation.constraints.Size;
         message = "{user.password.notmatch}")
 public class CreateUserDto {
 
-    @NotBlank
+    @NotBlank(message = "{user.nick.blank}")
     @UniqueUsername(message = "{user.unique.nick}")
     private String nick;
     private String name;
     private String lastname;
-    @NotBlank
-    @Email
+    @NotBlank(message = "{user.email.blank}")
+    @Email(message = "{user.email.email}")
     @UniqueEmail(message = "{user.unique.email}")
     private String email;
-    @Size(min = 8)
+    @Size(min = 8, message = "{user.password.size}")
     private String password;
-    @Size(min = 8)
+    @Size(min = 8, message = "{user.password.size}")
     private String password2;
 
 }

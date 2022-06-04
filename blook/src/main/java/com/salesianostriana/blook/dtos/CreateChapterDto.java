@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class CreateChapterDto {
 
-    @NotBlank
+    @NotBlank(message = "{chapter.name.blank}")
     private String name;
 
 }

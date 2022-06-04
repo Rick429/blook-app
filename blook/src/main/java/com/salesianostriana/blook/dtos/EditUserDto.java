@@ -17,6 +17,6 @@ public class EditUserDto {
     private String nick;
     private String name;
     private String lastname;
-    @Email
+    @Email(message = "{user.email.email}")
     private String email;
 }

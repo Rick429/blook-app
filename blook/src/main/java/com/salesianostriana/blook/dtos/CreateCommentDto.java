@@ -2,6 +2,7 @@ package com.salesianostriana.blook.dtos;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -10,6 +11,7 @@ import java.util.UUID;
 @Builder
 public class CreateCommentDto {
 
+    @NotBlank(message = "{comment.comment.blank}")
     private String comment;
 
 }
