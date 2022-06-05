@@ -144,7 +144,6 @@ class _BookNewScreenState extends State<BookNewScreen> {
         height: 100,
         child: Column(
           children: [
-            Text(error.mensaje),
             for (SubErrores e in error.subErrores) Text(e.mensaje)
           ],
         ),

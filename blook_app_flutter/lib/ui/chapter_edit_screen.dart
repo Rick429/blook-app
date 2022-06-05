@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../models/error_response.dart';
+
 typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
@@ -76,10 +78,10 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
                 state is EditChapterErrorState;
           }, listener: (context, state) {
             if (state is EditChapterSuccessState) {
-          
+               Navigator.pushNamed(context, '/');
               _createDialog(context);
             } else if (state is EditChapterErrorState) {
-              _showSnackbar(context, state.toString());
+              _showSnackbar(context, state.error);
             }
           }, buildWhen: (context, state) {
             return state is EditChapterInitial;
@@ -94,7 +96,6 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
       ),
     );
   }
-
 
   AwesomeDialog _createDialog(context) {
     return AwesomeDialog(
@@ -114,9 +115,17 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
     )..show();
   }
 
-  void _showSnackbar(BuildContext context, String message) {
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
-      content: Text(message),
+      duration: const Duration(seconds: 4),
+      content: SizedBox(
+        height: 80,
+        child: Column(
+          children: [
+            for (SubErrores e in error.subErrores) Text(e.mensaje)
+          ],
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -215,8 +224,7 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
                               EditOneChapterEvent(
                                   PreferenceUtils.getString("image")!,
                                   createChapterDto,
-                                  widget.idCapitulo));
-                          Navigator.pushNamed(context, '/');
+                                  widget.idCapitulo));       
                         }
                       }
                     },

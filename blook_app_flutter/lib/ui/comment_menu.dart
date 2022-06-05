@@ -72,7 +72,6 @@ class _CommentMenuState extends State<CommentMenu> {
         height: 150,
         child: Column(
           children: [
-            Text(error.mensaje),
             for (SubErrores e in error.subErrores) Text(e.mensaje)
           ],
         ),

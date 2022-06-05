@@ -120,7 +120,6 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
         height: 100,
         child: Column(
           children: [
-            Text(error.mensaje),
             for (SubErrores e in error.subErrores) Text(e.mensaje)
           ],
         ),

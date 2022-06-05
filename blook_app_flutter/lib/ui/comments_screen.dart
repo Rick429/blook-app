@@ -32,9 +32,7 @@ class _CommentsScrenState extends State<CommentsScren> {
   @override
   void initState() {
     PreferenceUtils.init();
-
     commentRepository = CommentRepositoryImpl();
-
     _commentsbloc = CommentsBloc(commentRepository)
       ..add(const FetchAllComments());
     super.initState();

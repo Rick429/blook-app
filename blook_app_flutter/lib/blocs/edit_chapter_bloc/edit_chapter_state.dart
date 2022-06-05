@@ -19,10 +19,10 @@ class EditChapterSuccessState extends EditChapterState {
 }
 
 class EditChapterErrorState extends EditChapterState {
-  final String message;
+  final ErrorResponse error;
 
-  const EditChapterErrorState(this.message);
+  const EditChapterErrorState(this.error);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }
