@@ -26,11 +26,11 @@ class _PdfViewerState extends State<PdfViewer> {
   }
 
   loadDocument() async {
-    pdfDocument = await PDFDocument.fromURL(document,
+    pdfDocument = await PDFDocument.fromURL(document/* ,
                 headers: {
                   'Authorization':
                       'Bearer ${PreferenceUtils.getString('token')}'
-                },);
+                } */,);
     setState(() => _isLoading = false);
   }
 
@@ -44,20 +44,20 @@ class _PdfViewerState extends State<PdfViewer> {
             ),
       body: Center(
         child: _isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Container(
-                decoration: BoxDecoration(),
-                child: PDF(
+                decoration: const BoxDecoration(),
+                child: const PDF(
                   fitPolicy: FitPolicy.BOTH,
                   autoSpacing: true,
                   fitEachPage: true,
                   pageSnap: false,
                 ).fromUrl(
-                  document,
+                  document/* ,
                   headers: {
                     'Authorization':
                         'Bearer ${PreferenceUtils.getString('token')}'
-                  },
+                  }, */
                 ),
               ),
              /*  PDFViewer(

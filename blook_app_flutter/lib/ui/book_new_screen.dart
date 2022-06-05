@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/book_new_bloc/book_new_bloc.dart';
 import 'package:blook_app_flutter/blocs/genres_bloc/genres_bloc.dart';
 import 'package:blook_app_flutter/models/create_book_dto.dart';
@@ -95,28 +96,24 @@ class _BookNewScreenState extends State<BookNewScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(children: [
-        BlocConsumer<BookNewBloc, BookNewState>(
-            listenWhen: (context, state) {
-              return state is CreateBookSuccessState || state is CreateBookErrorState;
-            },
-            listener: (context, state) {
-               if (state is CreateBookSuccessState) {
-             Navigator.pushNamed(context, '/chapternew');
-              
-            } else if (state is CreateBookErrorState) {
-              _showSnackbar(context, state.error);
-            }
-            },
-            buildWhen: (context, state) {
-              return state is BookNewInitial || state is CreateBookSuccessState;
-            },
-            builder: (context, state) {
-              if (state is CreateBookSuccessState) {
-                PreferenceUtils.setString("idbook", state.book.id);
-                return buildForm(context, state);
-              }
-              return buildForm(context, state);
-            }),
+        BlocConsumer<BookNewBloc, BookNewState>(listenWhen: (context, state) {
+          return state is CreateBookSuccessState ||
+              state is CreateBookErrorState;
+        }, listener: (context, state) {
+          if (state is CreateBookSuccessState) {
+            Navigator.pushNamed(context, '/chapternew');
+          } else if (state is CreateBookErrorState) {
+            _showSnackbar(context, state.error);
+          }
+        }, buildWhen: (context, state) {
+          return state is BookNewInitial || state is CreateBookSuccessState;
+        }, builder: (context, state) {
+          if (state is CreateBookSuccessState) {
+            PreferenceUtils.setString("idbook", state.book.id);
+            return buildForm(context, state);
+          }
+          return buildForm(context, state);
+        }),
         BlocBuilder<GenresBloc, GenresState>(
           bloc: _genresbloc,
           builder: (context, state) {
@@ -139,8 +136,8 @@ class _BookNewScreenState extends State<BookNewScreen> {
       ]),
     );
   }
-  
- void _showSnackbar(BuildContext context, ErrorResponse error) {
+
+  void _showSnackbar(BuildContext context, ErrorResponse error) {
     final snackBar = SnackBar(
       duration: const Duration(seconds: 4),
       content: SizedBox(
@@ -168,7 +165,9 @@ class _BookNewScreenState extends State<BookNewScreen> {
                 borderRadius: BorderRadius.circular(20.0),
               ),
               title: const Text("Géneros"),
-              items: genresList.map((e) => MultiSelectItem(e, utf8.decode(e.name.codeUnits))).toList(),
+              items: genresList
+                  .map((e) => MultiSelectItem(e, utf8.decode(e.name.codeUnits)))
+                  .toList(),
               listType: MultiSelectListType.CHIP,
               onConfirm: (values) {
                 _selectedgenres = values;
@@ -183,16 +182,17 @@ class _BookNewScreenState extends State<BookNewScreen> {
                 elevation: 15.0,
               ),
               onPressed: () {
-              
-                  final createBookDto = CreateBookDto(
-                      name: nameController.text,
-                      description: descriptionController.text,
-                      generos: _selectedgenres);
-
+                final createBookDto = CreateBookDto(
+                    name: nameController.text,
+                    description: descriptionController.text,
+                    generos: _selectedgenres);
+                if (PreferenceUtils.getString("cover") != "") {
                   BlocProvider.of<BookNewBloc>(context).add(CreateBookEvent(
                       PreferenceUtils.getString("cover")!, createBookDto));
-              
-               },
+                } else {
+                  _createDialogC(context);
+                }
+              },
               child: Text("Siguiente",
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeThree))),
@@ -201,29 +201,33 @@ class _BookNewScreenState extends State<BookNewScreen> {
     );
   }
 
-  Widget coverUrl(String cover) {
-    if(cover.isEmpty) {
+  Widget coverUrl(context, String cover) {
+    if (cover.isEmpty) {
       return GestureDetector(
-                  onTap: () async {                
-                    final XFile? pickedFile =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    setState(() {
-                      PreferenceUtils.setString("cover", pickedFile!.path);
-                    });
-                  },
-                  child: Image.asset("assets/images/upload.png", height: 200),
-                );
+        onTap: () async {
+          final XFile? pickedFile =
+              await _picker.pickImage(source: ImageSource.gallery);
+          setState(() {
+  
+              PreferenceUtils.setString("cover", pickedFile!.path);
+
+          });
+        },
+        child: Image.asset("assets/images/upload.png", height: 200),
+      );
     } else {
       return GestureDetector(
-                  onTap: () async {                
-                    final XFile? pickedFile =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    setState(() {
-                      PreferenceUtils.setString("cover", pickedFile!.path);
-                    });
-                  },
-                  child: Image.file(File(PreferenceUtils.getString("cover")!), height: 200,)
-                );
+        onTap: () async {
+          final XFile? pickedFile =
+              await _picker.pickImage(source: ImageSource.gallery);
+          setState(() {
+    
+              PreferenceUtils.setString("cover", pickedFile!.path);
+            
+          });
+        },
+        child: Image.file(File(PreferenceUtils.getString("cover")!), height: 200,)
+      );
     }
   }
 
@@ -235,7 +239,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
             key: _formKey,
             child: Column(
               children: [
-                coverUrl(PreferenceUtils.getString("cover")??""),
+                coverUrl(context, PreferenceUtils.getString("cover") ?? ""),
                 Container(
                   height: 50,
                   margin: const EdgeInsets.all(10),
@@ -295,5 +299,23 @@ class _BookNewScreenState extends State<BookNewScreen> {
         ],
       ),
     );
+  }
+
+  AwesomeDialog _createDialogC(context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.ERROR,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Error',
+      desc: 'Debe seleccionar una imagen',
+      btnOkText: "Aceptar",
+      dialogBackgroundColor: BlookStyle.quaternaryColor,
+      btnOkColor: BlookStyle.primaryColor,
+      titleTextStyle:
+          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
+      descTextStyle: BlookStyle.textCustom(
+          BlookStyle.whiteColor, BlookStyle.textSizeThree),
+      btnOkOnPress: () {},
+    )..show();
   }
 }

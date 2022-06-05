@@ -103,7 +103,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
       dialogType: DialogType.SUCCES,
       animType: AnimType.BOTTOMSLIDE,
       title: 'Correcto',
-      desc: 'El libro se ha creado correctamente',
+      desc: 'El capitulo se ha creado correctamente',
       titleTextStyle:
           BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
       descTextStyle: BlookStyle.textCustom(
