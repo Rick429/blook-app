@@ -6,10 +6,13 @@ import 'package:blook_app_flutter/blocs/delete_book_bloc/delete_book_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_chapter_bloc/delete_chapter_bloc.dart';
 import 'package:blook_app_flutter/blocs/remove_favorite_bloc/remove_favorite_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
+import 'package:blook_app_flutter/models/comment_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository_impl.dart';
+import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
+import 'package:blook_app_flutter/repository/comment_repository/comment_repository_impl.dart';
 import 'package:blook_app_flutter/ui/book_edit_screen.dart';
 import 'package:blook_app_flutter/ui/info_book_screen.dart';
 import 'package:blook_app_flutter/ui/menu_book_screen.dart';
@@ -33,6 +36,7 @@ class _BookScreenState extends State<BookScreen> {
   late BookRepository bookRepository;
   late BookBloc _oneBookBloc;
   late ChapterRepository chapterRepository;
+  late CommentRepository commentRepository;
 
   @override
   void initState() {
@@ -42,7 +46,8 @@ class _BookScreenState extends State<BookScreen> {
                 PreferenceUtils.setString("coveredit", ""); */
     bookRepository = BookRepositoryImpl();
     chapterRepository = ChapterRepositoryImpl();
-    _oneBookBloc = BookBloc(bookRepository)..add(const FetchOneBook());
+    commentRepository = CommentRepositoryImpl();
+    _oneBookBloc = BookBloc(bookRepository, commentRepository)..add(const FetchOneBook());
     super.initState();
   }
 

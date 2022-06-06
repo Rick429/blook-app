@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:blook_app_flutter/constants.dart';
+import 'package:blook_app_flutter/models/comment_exists_response.dart';
 import 'package:blook_app_flutter/models/comment_response.dart';
 import 'package:blook_app_flutter/models/create_comment_dto.dart';
 import 'package:blook_app_flutter/models/error_response.dart';
@@ -81,10 +82,25 @@ class CommentRepositoryImpl extends CommentRepository {
   }
 
   @override
-  void deleteComment(String id) {
+  Future<void> deleteComment(String id) async {
      _client.delete(Uri.parse('${Constant.baseurl}comment/$id'), headers: {
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
     });
   }
 
+  @override
+  Future<CommentExistsResponse>findCommentById(String id) async{
+     final response = await _client.get(Uri.parse('${Constant.baseurl}comment/exists/bool/${id}'), headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+    if (response.statusCode == 200) {
+      var res = CommentExistsResponse.fromJson(json.decode(response.body));
+ 
+      return res;
+    } else {
+      throw Exception('Fail to load comment');
+    }
+  }
 }

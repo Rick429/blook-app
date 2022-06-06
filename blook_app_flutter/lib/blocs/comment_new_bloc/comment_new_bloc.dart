@@ -5,6 +5,7 @@ import 'package:blook_app_flutter/repository/comment_repository/comment_reposito
 import 'package:equatable/equatable.dart';
 
 import '../../models/error_response.dart';
+import '../../utils/preferences.dart';
 
 part 'comment_new_event.dart';
 part 'comment_new_state.dart';
@@ -18,8 +19,24 @@ class CommentNewBloc extends Bloc<CommentNewEvent, CommentNewState> {
 
   void _createCommentEvent(createCommentEvent event, Emitter<CommentNewState> emit) async {
     try {
-      final comment = await commentRepository.createComment(event.createCommentDto, event.idbook);
-      emit(CommentSuccessState(comment));
+      final ex = await commentRepository.findCommentById(event.idbook);
+
+      final comment;
+      if(ex.commentexist){
+ comment = await commentRepository.editComment(
+          event.createCommentDto, event.idbook);
+     
+
+      }
+    
+      else {
+          comment = await commentRepository.createComment(event.createCommentDto, event.idbook);
+
+ 
+      }
+      final ex2 = await commentRepository.findCommentById(event.idbook);
+    PreferenceUtils.setBool("exists", ex2.commentexist);
+      emit(CommentSuccessState(comment, ex2.commentexist));
       return;
     } on ErrorResponse catch (e) {
       emit(CommentErrorState(e));

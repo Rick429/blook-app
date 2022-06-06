@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:blook_app_flutter/blocs/comment_new_bloc/comment_new_bloc.dart';
+import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
+import 'package:blook_app_flutter/models/comment_exists_response.dart';
 import 'package:blook_app_flutter/models/create_comment_dto.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository_impl.dart';
@@ -9,7 +13,7 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:http/http.dart' as http;
 import '../models/error_response.dart';
 
 class CommentMenu extends StatefulWidget {
@@ -21,15 +25,44 @@ class CommentMenu extends StatefulWidget {
 
 class _CommentMenuState extends State<CommentMenu> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController commentController = TextEditingController();
-
+  late TextEditingController commentController;
+  late bool _editable;
   late CommentRepository commentRepository;
+  late Future<CommentExistsResponse> exist;
   @override
   void initState() {
+       exist = fetchPost();
+    setState(() {
+      if(PreferenceUtils.getBool("exists")){
+      _editable = false;
+    }else{
+      _editable = true;
+    }
+    });
+    
     commentRepository = CommentRepositoryImpl();
+   
     super.initState();
-  }
+    commentController = TextEditingController(text: PreferenceUtils.getString("hola"));
+   
+    
 
+  
+  }
+Future<CommentExistsResponse> fetchPost() async {
+   final response = await http.get(Uri.parse("http://10.0.2.2:8080/blook/comment/exists/bool/${PreferenceUtils.getString("idbook")}"), headers: {
+     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+    });
+  
+    if (response.statusCode == 200) {
+      var res = CommentExistsResponse.fromJson(jsonDecode(response.body));
+ 
+      return res;
+    } else {
+      throw Exception('Failed to load');
+    }
+
+}
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -45,6 +78,8 @@ class _CommentMenuState extends State<CommentMenu> {
       return state is CommentSuccessState || state is CommentErrorState;
     }, listener: (context, state) {
       if (state is CommentSuccessState) {
+ 
+        
          Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
@@ -116,6 +151,8 @@ class _CommentMenuState extends State<CommentMenu> {
                     hintText: 'Escribir una reseña',
                   ),
                   onSaved: (String? value) {},
+                  enabled: _editable,
+
                   validator: (String? value) {
                     return (value == null) ? 'Escriba una reseña' : null;
                   },

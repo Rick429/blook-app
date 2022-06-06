@@ -13,11 +13,11 @@ class CommentLoadingState extends CommentNewState {}
 
 class CommentSuccessState extends CommentNewState {
   final Comment comment;
-
-  const CommentSuccessState(this.comment);
+  final bool exists;
+  const CommentSuccessState(this.comment, this.exists);
 
   @override
-  List<Object> get props => [comment];
+  List<Object> get props => [comment, exists];
 }
 
 class CommentErrorState extends CommentNewState {

@@ -11,11 +11,11 @@ class CommentsInitial extends CommentsState {}
 
 class CommentsFetched extends CommentsState {
   final List<Comment> comments;
-
-  const CommentsFetched(this.comments);
+  final bool exists;
+  const CommentsFetched(this.comments, this.exists);
 
   @override
-  List<Object> get props => [comments];
+  List<Object> get props => [comments, exists];
 }
 
 class CommentsFetchError extends CommentsState {

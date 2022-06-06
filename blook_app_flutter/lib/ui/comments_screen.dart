@@ -93,6 +93,8 @@ class _CommentsScrenState extends State<CommentsScren> {
                   ),
                 );
               } else if (state is CommentsFetched) {
+              
+                PreferenceUtils.setString("hola", "");
                 return _commentsList(context, state.comments);
               } else {
                 return const Text('Not support');
@@ -233,7 +235,7 @@ class _CommentsScrenState extends State<CommentsScren> {
                   ],
                 ),
               ),
-              /* Container(
+              Container(
                 padding: const EdgeInsets.only(left: 8.0),
                 width: MediaQuery.of(context).size.width,
                 child: Text(
@@ -243,15 +245,15 @@ class _CommentsScrenState extends State<CommentsScren> {
                   textAlign: TextAlign.left,
                   
                 ),
-              ), */
-              _editTitleTextField(context, comment),
+              ),
+             /*  _editTitleTextField(context, comment), */
               Container(
                 padding: const EdgeInsets.all(20),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    _editButton(comment),
+                    _editButton(context, comment),
                     _deleteButton(context, comment),
                     GestureDetector(
                         onTap: () {
@@ -272,11 +274,16 @@ class _CommentsScrenState extends State<CommentsScren> {
     );
   }
 
-  Widget _editButton(Comment comment) {
+  Widget _editButton(context, Comment comment) {
     if (comment.nick == PreferenceUtils.getString("nick")) {
       return GestureDetector(
           onTap: () {
             setState(() {
+              PreferenceUtils.setBool("exists", false);
+              PreferenceUtils.setString("hola", comment.comment);
+               Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),);
               _isEditingText = true;
               initialText = comment.comment;
               _editingController = TextEditingController(text: comment.comment);
