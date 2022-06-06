@@ -165,4 +165,22 @@ public class CommentController {
         return ResponseEntity.ok().header("link", paginationLinksUtils.createLinkHeader(lista, uriBuilder)).body(lista);
     }
 
+    @Operation(summary = "Comprobar si existe comentario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se comprueba si ya existe un comentario del usuario",
+                    content = {@Content(mediaType = "aplication/json",
+                            schema = @Schema(implementation = Comment.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se encontro el comentario",
+                    content = @Content),
+    })
+    @GetMapping("/exists/bool/{id}")
+    public CommentExistDto commentExists(@PathVariable UUID id,@AuthenticationPrincipal UserEntity user) {
+        CommentExistDto c = CommentExistDto.builder()
+                .commentexist(commentService.commentExists(id, user))
+                .build();
+        return c;
+    }
+
 }

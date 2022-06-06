@@ -13,4 +13,6 @@ public interface CommentRepository extends JpaRepository<Comment, CommentPK> {
     Page<Comment> findByLibroComentado(Book book, Pageable pageable);
 
     Page<Comment> findByCommentIgnoreCaseContains(String comment, Pageable pageable);
+
+    boolean existsById(CommentPK id);
 }

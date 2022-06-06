@@ -125,4 +125,12 @@ public class CommentService {
 
         }
     }
+
+    public boolean commentExists(UUID idbook, UserEntity user){
+        CommentPK c = CommentPK.builder()
+                .usuario_id(user.getId())
+                .libro_comentado_id(idbook)
+                .build();
+        return commentRepository.existsById(c);
+    }
 }
