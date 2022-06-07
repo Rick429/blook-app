@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:blook_app_flutter/blocs/books_bloc/books_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/genre_response.dart';

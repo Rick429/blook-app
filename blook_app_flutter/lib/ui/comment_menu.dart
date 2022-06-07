@@ -31,7 +31,6 @@ class _CommentMenuState extends State<CommentMenu> {
   late Future<CommentExistsResponse> exist;
   @override
   void initState() {
-       exist = fetchPost();
     setState(() {
       if(PreferenceUtils.getBool("exists")){
       _editable = false;
@@ -39,30 +38,11 @@ class _CommentMenuState extends State<CommentMenu> {
       _editable = true;
     }
     });
-    
     commentRepository = CommentRepositoryImpl();
-   
     super.initState();
     commentController = TextEditingController(text: PreferenceUtils.getString("hola"));
-   
-    
-
-  
   }
-Future<CommentExistsResponse> fetchPost() async {
-   final response = await http.get(Uri.parse("http://10.0.2.2:8080/blook/comment/exists/bool/${PreferenceUtils.getString("idbook")}"), headers: {
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
-    });
-  
-    if (response.statusCode == 200) {
-      var res = CommentExistsResponse.fromJson(jsonDecode(response.body));
- 
-      return res;
-    } else {
-      throw Exception('Failed to load');
-    }
 
-}
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -128,9 +108,10 @@ Future<CommentExistsResponse> fetchPost() async {
         child: Form(
           key: _formKey,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               SizedBox(
-                width: 292,
+                width: MediaQuery.of(context).size.width/1.4,
                 child: TextFormField(
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeTwo),

@@ -20,14 +20,15 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
   late BookRepository bookRepository;
   late MyBooksBloc _mybooksbloc;
   late String title = "";
-  late String sortopt ="name,desc";
+  late String sortopt = "name,desc";
 
   @override
   void initState() {
     PreferenceUtils.init();
     PreferenceUtils.setString("s", sortopt);
     bookRepository = BookRepositoryImpl();
-    _mybooksbloc = MyBooksBloc(bookRepository)..add( FetchAllMyBooks(10, PreferenceUtils.getString("s")!));
+    _mybooksbloc = MyBooksBloc(bookRepository)
+      ..add(FetchAllMyBooks(10, PreferenceUtils.getString("s")!));
     super.initState();
   }
 
@@ -46,7 +47,8 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
   }
 
   Widget _createBody(BuildContext context) {
-    return SizedBox(
+    return Center(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: BlocBuilder<MyBooksBloc, MyBooksState>(
           bloc: _mybooksbloc,
@@ -54,41 +56,45 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
             if (state is MyBooksInitial) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is MyBooksFetchError) {
-              return Column(
-                children: [
-                  Center(
-                    child: Text("MIS LIBROS",
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeFive)),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: BlookStyle.quaternaryColor,
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    Center(
+                      child: Text("MIS LIBROS",
+                          style: BlookStyle.textCustom(
+                              BlookStyle.whiteColor, BlookStyle.textSizeFive)),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            "Ordenado por:",
-                            style: BlookStyle.textCustom(
-                                BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                    Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: BlookStyle.quaternaryColor,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              "Ordenado por:",
+                              style: BlookStyle.textCustom(
+                                  BlookStyle.whiteColor,
+                                  BlookStyle.textSizeTwo),
+                            ),
                           ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Icon(
-                            Icons.filter_list,
-                            color: BlookStyle.whiteColor,
-                          ),
-                        )
-                      ],
+                          const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Icon(
+                              Icons.filter_list,
+                              color: BlookStyle.whiteColor,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             } else if (state is MyBooksFetched) {
               return _booksList(context, state.mybooks, state.pagesize);
@@ -97,11 +103,14 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
             }
           },
         ),
+      ),
     );
   }
 
   Widget _booksList(context, List<Book> mybooks, int pagesize) {
-    return Column(
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
         children: [
           Center(
             child: Text("MIS LIBROS",
@@ -141,8 +150,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(bottom: 100),
-            height: 490,
+            margin: const EdgeInsets.only(bottom: 200),
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
@@ -151,19 +159,23 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
               itemBuilder: (context, index) {
                 print(index);
                 print("size $pagesize");
-                    if(sortopt!="") {
-  context.watch<MyBooksBloc>().add(FetchAllMyBooks(10, sortopt));
-
-    sortopt="";
- }
-                if(index==mybooks.length-1&&mybooks.length<pagesize){
-                  context.watch<MyBooksBloc>().add(FetchAllMyBooks(index+10, sortopt));
+                if (sortopt != "") {
+                  context
+                      .watch<MyBooksBloc>()
+                      .add(FetchAllMyBooks(10, sortopt));
+                  sortopt = "";
+                }
+                if (index == mybooks.length - 1 && mybooks.length < pagesize) {
+                  context
+                      .watch<MyBooksBloc>()
+                      .add(FetchAllMyBooks(index + 10, sortopt));
                 }
                 return _bookItem(mybooks.elementAt(index));
               },
             ),
           ),
         ],
+      ),
     );
   }
 
@@ -189,10 +201,10 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.network(
                         book.cover,
-                        headers: {
+                        /* headers: {
                           'Authorization':
                               'Bearer ${PreferenceUtils.getString('token')}'
-                        },
+                        }, */
                         width: 130,
                         height: 200,
                         fit: BoxFit.cover,
@@ -213,28 +225,27 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/comments");
-                              },
-                              child: Column(
-                                children: [
-                                  const Icon(Icons.comment,
-                                      color: BlookStyle.whiteColor),
-                                  Text(
-                                    '${book.comments.length}',
-                                    style: BlookStyle.textCustom(
-                                        BlookStyle.whiteColor,
-                                        BlookStyle.textSizeTwo),
-                                  )
-                                ],
-                              ),
-                            ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, "/comments");
+                          },
+                          child: Column(
+                            children: [
+                              const Icon(Icons.comment,
+                                  color: BlookStyle.whiteColor),
+                              Text(
+                                '${book.comments.length}',
+                                style: BlookStyle.textCustom(
+                                    BlookStyle.whiteColor,
+                                    BlookStyle.textSizeTwo),
+                              )
+                            ],
                           ),
-                        ],       
+                        ),
+                      ),
+                    ],
                   ),
                 )
               ],
@@ -259,52 +270,53 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                    SizedBox(
-                      width: 150,
-                      child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: BlookStyle.primaryColor,
-                        elevation: 15.0,
+                      SizedBox(
+                        width: 150,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: BlookStyle.primaryColor,
+                            elevation: 15.0,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              title = "más reciente";
+                              sortopt = "releaseDate,desc";
+                              PreferenceUtils.setString("s", sortopt);
+
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: Text("Más reciente",
+                              style: BlookStyle.textCustom(
+                                  BlookStyle.whiteColor,
+                                  BlookStyle.textSizeThree)),
+                        ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          title="más reciente";
-                          sortopt="releaseDate,desc";
-                          PreferenceUtils.setString("s", sortopt);
-                          
-                          Navigator.pop(context);
-                        });
-      
-                      },
-                      child: Text("Más reciente",
-                          style: BlookStyle.textCustom(
-                              BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                      SizedBox(
+                        width: 150,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: BlookStyle.primaryColor,
+                            elevation: 15.0,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              title = "más antiguo";
+                              sortopt = "releaseDate,asc";
+                              PreferenceUtils.setString("s", sortopt);
+                              books.sort((a, b) =>
+                                  a.releaseDate.compareTo(b.releaseDate));
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: Text("Más antiguo",
+                              style: BlookStyle.textCustom(
+                                  BlookStyle.whiteColor,
+                                  BlookStyle.textSizeThree)),
+                        ),
+                      )
+                    ],
                   ),
-                    ),
-                  SizedBox(
-                    width: 150,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: BlookStyle.primaryColor,
-                        elevation: 15.0,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          title="más antiguo";
-                          sortopt="releaseDate,asc";
-                           PreferenceUtils.setString("s", sortopt);
-                            books.sort((a, b) => a.releaseDate.compareTo(b.releaseDate));
-                          Navigator.pop(context);
-                         
-                        });
-    
-                      },
-                      child: Text("Más antiguo",
-                          style: BlookStyle.textCustom(
-                              BlookStyle.whiteColor, BlookStyle.textSizeThree)),
-                    ),
-                  )
-                  ],),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -317,17 +329,17 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                           ),
                           onPressed: () {
                             setState(() {
-                              title="nombre de A-Z";
-                              sortopt="name,desc";    
+                              title = "nombre de A-Z";
+                              sortopt = "name,desc";
                               PreferenceUtils.setString("s", sortopt);
-                               books.sort((a, b) => b.name.compareTo(a.name));        
+                              books.sort((a, b) => b.name.compareTo(a.name));
                               Navigator.pop(context);
                             });
-                   
                           },
                           child: Text("Ordenar de A-Z",
                               style: BlookStyle.textCustom(
-                                  BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                                  BlookStyle.whiteColor,
+                                  BlookStyle.textSizeThree)),
                         ),
                       ),
                       SizedBox(
@@ -339,16 +351,16 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                           ),
                           onPressed: () {
                             setState(() {
-                              title="nombre de Z-A";
-                              sortopt="name,asc";
+                              title = "nombre de Z-A";
+                              sortopt = "name,asc";
                               PreferenceUtils.setString("s", sortopt);
                               Navigator.pop(context);
                             });
-                            
                           },
                           child: Text("Ordenar de Z-A",
                               style: BlookStyle.textCustom(
-                                  BlookStyle.whiteColor, BlookStyle.textSizeThree)),
+                                  BlookStyle.whiteColor,
+                                  BlookStyle.textSizeThree)),
                         ),
                       ),
                     ],

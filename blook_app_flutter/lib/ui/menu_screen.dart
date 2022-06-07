@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:blook_app_flutter/ui/favorite_screen.dart';
 import 'package:blook_app_flutter/ui/my_books_screen.dart';
 import 'package:blook_app_flutter/ui/profile_screen.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 import 'home_screen.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -22,12 +23,42 @@ class _MenuScreenState extends State<MenuScreen> {
     const MyBooksScreen(),
     const ProfileScreen(),
   ];
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content:
+              const Text('¿Deseas salir de la aplicación?'),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                      onPressed: () => exit(0),
+                      child: const Text(
+                        'Si',
+                        style: TextStyle(
+                          color: BlookStyle.redColor,
+                        ),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: BlookStyle.quaternaryColor,
-        body: pages[_currentIndex], bottomNavigationBar: _buildBottomBar());
+        backgroundColor: BlookStyle.quaternaryColor,
+        body: WillPopScope(onWillPop: _onWillPop, child: pages[_currentIndex]),
+        bottomNavigationBar: _buildBottomBar());
   }
 
   Widget _buildBottomBar() {

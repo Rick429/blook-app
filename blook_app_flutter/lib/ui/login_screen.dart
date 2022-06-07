@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:blook_app_flutter/blocs/login_bloc/login_bloc.dart';
 import 'package:blook_app_flutter/models/login_dto.dart';
 import 'package:blook_app_flutter/repository/auth_repository/auth_repository.dart';
@@ -31,6 +32,35 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content:
+              const Text('¿Deseas salir de la aplicación?'),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                      onPressed: () => exit(0),
+                      child: const Text(
+                        'Si',
+                        style: TextStyle(
+                          color: BlookStyle.redColor,
+                        ),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        )) ??false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -41,35 +71,38 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _createBody(BuildContext context) {
-    return Scaffold(
-      backgroundColor: BlookStyle.blackColor,
-      body: Center(
-        child: Container(
-            padding: const EdgeInsets.all(20),
-            child: BlocConsumer<LoginBloc, LoginState>(
-                listenWhen: (context, state) {
-              return state is LoginSuccessState || state is LoginErrorState;
-            }, listener: (context, state) {
-              if (state is LoginSuccessState) {
-                
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MenuScreen()),
-                );
-              } else if (state is LoginErrorState) {
-                _showSnackbar(context, state.message);
-              }
-            }, buildWhen: (context, state) {
-              return state is LoginInitialState || state is LoginLoadingState;
-            }, builder: (ctx, state) {
-              if (state is LoginInitialState) {
-                return buildForm(ctx);
-              } else if (state is LoginLoadingState) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return buildForm(ctx);
-              }
-            })),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: BlookStyle.blackColor,
+        body: Center(
+          child: Container(
+              padding: const EdgeInsets.all(20),
+              child: BlocConsumer<LoginBloc, LoginState>(
+                  listenWhen: (context, state) {
+                return state is LoginSuccessState || state is LoginErrorState;
+              }, listener: (context, state) {
+                if (state is LoginSuccessState) {
+                  
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MenuScreen()),
+                  );
+                } else if (state is LoginErrorState) {
+                  _showSnackbar(context, state.message);
+                }
+              }, buildWhen: (context, state) {
+                return state is LoginInitialState || state is LoginLoadingState;
+              }, builder: (ctx, state) {
+                if (state is LoginInitialState) {
+                  return buildForm(ctx);
+                } else if (state is LoginLoadingState) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return buildForm(ctx);
+                }
+              })),
+        ),
       ),
     );
   }

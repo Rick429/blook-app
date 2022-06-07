@@ -175,9 +175,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(
                             book.cover,
-                        headers: {
+                        /* headers: {
                           'Authorization':
-                              'Bearer ${PreferenceUtils.getString('token')}'},
+                              'Bearer ${PreferenceUtils.getString('token')}'}, */
                             width: 130,
                             height: 200,
                             fit: BoxFit.cover,

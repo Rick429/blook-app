@@ -44,6 +44,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content:
+              const Text('¿Esta seguro?'),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                      onPressed: () => {
+                        PreferenceUtils.clear(),
+                Navigator.pushNamed(context, '/login'),
+                      },
+                      child: const Text(
+                        'Si',
+                        style: TextStyle(
+                          color: BlookStyle.redColor,
+                        ),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        )) ??false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -231,8 +263,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 elevation: 15.0,
               ),
               onPressed: () {
-                PreferenceUtils.clear();
-                Navigator.pushNamed(context, '/login');
+                 showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Cerrar sesión"),
+            content:
+              const Text('¿Estas seguro que quieres salir?'),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('No'),
+                  ),
+                  TextButton(
+                      onPressed: () => {
+                        PreferenceUtils.clear(),
+                Navigator.pushNamed(context, '/login'),
+                      },
+                      child: const Text(
+                        'Si',
+                        style: TextStyle(
+                          color: BlookStyle.redColor,
+                        ),
+                      )),
+                ],
+              ),
+            ],
+          ));
+        
               },
               child: Text("Cerrar sesión",
                   style: BlookStyle.textCustom(
@@ -263,10 +323,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fit: BoxFit.fill,
                         image: NetworkImage(
                           PreferenceUtils.getString("avatar")!,
-                          headers: {
+                         /*  headers: {
                             'Authorization':
                                 'Bearer ${PreferenceUtils.getString('token')}'
-                          },))));
+                          }, */))));
     }
    
   }

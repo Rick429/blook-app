@@ -363,10 +363,10 @@ class _BookScreenState extends State<BookScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: Image.network(
                     book.cover,
-                    headers: {
+                    /* headers: {
                       'Authorization':
                           'Bearer ${PreferenceUtils.getString('token')}'
-                    },
+                    }, */
                     height: 260,
                     width: 50,
                     fit: BoxFit.cover,
@@ -383,11 +383,11 @@ class _BookScreenState extends State<BookScreen> {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.network(
-                          book.cover,
+                          book.cover/* ,
                           headers: {
                             'Authorization':
                                 'Bearer ${PreferenceUtils.getString('token')}'
-                          },
+                          } */,
                           height: 200,
                           fit: BoxFit.cover,
                         )),

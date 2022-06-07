@@ -93,7 +93,6 @@ class _CommentsScrenState extends State<CommentsScren> {
                   ),
                 );
               } else if (state is CommentsFetched) {
-              
                 PreferenceUtils.setString("hola", "");
                 return _commentsList(context, state.comments);
               } else {
@@ -204,28 +203,26 @@ class _CommentsScrenState extends State<CommentsScren> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.asset(
-                        'assets/images/portada.jpg',
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        utf8.decode(comment.nick.codeUnits),
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeOne),
-                      ),
+                    Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: avatar(comment.avatar),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            utf8.decode(comment.nick.codeUnits),
+                            style: BlookStyle.textCustom(
+                                BlookStyle.whiteColor, BlookStyle.textSizeOne),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width / 3.5),
-                      padding: const EdgeInsets.only(left: 8),
+                      padding: const EdgeInsets.only(right: 8),
                       child: Text(
                         comment.createdDate,
                         style: BlookStyle.textCustom(
@@ -243,10 +240,9 @@ class _CommentsScrenState extends State<CommentsScren> {
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeOne),
                   textAlign: TextAlign.left,
-                  
                 ),
               ),
-             /*  _editTitleTextField(context, comment), */
+              /*  _editTitleTextField(context, comment), */
               Container(
                 padding: const EdgeInsets.all(20),
                 width: MediaQuery.of(context).size.width,
@@ -274,6 +270,33 @@ class _CommentsScrenState extends State<CommentsScren> {
     );
   }
 
+  Widget avatar(String avatarUrl) {
+    if (avatarUrl.isEmpty) {
+      return Container(
+          width: 50,
+          height: 50,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage("assets/images/upload.png"))));
+    } else {
+      return Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.fill,
+            image: NetworkImage(
+              PreferenceUtils.getString("avatar")!,
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
   Widget _editButton(context, Comment comment) {
     if (comment.nick == PreferenceUtils.getString("nick")) {
       return GestureDetector(
@@ -281,9 +304,10 @@ class _CommentsScrenState extends State<CommentsScren> {
             setState(() {
               PreferenceUtils.setBool("exists", false);
               PreferenceUtils.setString("hola", comment.comment);
-               Navigator.pushReplacement(
+              Navigator.pushReplacement(
                 context,
-                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),);
+                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
+              );
               _isEditingText = true;
               initialText = comment.comment;
               _editingController = TextEditingController(text: comment.comment);
