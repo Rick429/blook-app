@@ -50,6 +50,14 @@ export class AuthService {
 
   logout(){
     localStorage.clear();
-    this.router.navigate(['login'])
+    this.router.navigate(['login']);
+  }
+
+  getToken(){
+    return localStorage.getItem(TOKEN);
+  }
+
+  getRol(){
+    return localStorage.getItem('rol');
   }
 }

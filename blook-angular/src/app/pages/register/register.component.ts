@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 
 const TOKEN = 'token'
 const AVATAR = 'avatar'
+const ROL = 'rol'
 
 @Component({
   selector: 'app-register',
@@ -31,13 +32,10 @@ export class RegisterComponent implements OnInit {
 
   registrarse(){
     this.authService.register(this.formulario.value).subscribe(loginResult => {
-      if(loginResult.role!="ADMIN"){
-        this.router.navigate(['/login']);
-      }else{
         localStorage.setItem(TOKEN, loginResult.token);
+        localStorage.setItem(ROL, loginResult.role);
         localStorage.setItem(AVATAR, loginResult.avatar);
         this.router.navigate(['/books']);
-      }
   });
   }
 

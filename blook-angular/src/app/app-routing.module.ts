@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
+import { LoginGuard } from './guards/login.guard';
 import { BookDetailComponent } from './pages/book-detail/book-detail.component';
 import { BookTableComponent } from './pages/book-table/book-table.component';
 import { ChapterTableComponent } from './pages/chapter-table/chapter-table.component';
@@ -13,16 +15,16 @@ import { UserTableComponent } from './pages/user-table/user-table.component';
 
 
 const routes: Routes = [
-  {path:'books', component:BookTableComponent, pathMatch: 'full'},
-  {path:'genres', component:GenreTableComponent, pathMatch: 'full'},
-  {path:'users', component:UserTableComponent, pathMatch: 'full'},
-  {path:'chapters', component:ChapterTableComponent, pathMatch: 'full'},
-  {path:'comments', component:CommentTableComponent, pathMatch: 'full'},
-  {path:'reports', component:ReportTableComponent, pathMatch: 'full'},
+  {path:'books', component:BookTableComponent, pathMatch: 'full', canActivate:[LoginGuard]},
+  {path:'genres', component:GenreTableComponent, pathMatch: 'full', canActivate:[AuthGuard]},
+  {path:'users', component:UserTableComponent, pathMatch: 'full', canActivate:[AuthGuard]},
+  {path:'chapters', component:ChapterTableComponent, pathMatch: 'full', canActivate:[AuthGuard]},
+  {path:'comments', component:CommentTableComponent, pathMatch: 'full', canActivate:[AuthGuard]},
+  {path:'reports', component:ReportTableComponent, pathMatch: 'full', canActivate:[AuthGuard]},
   {path:'login', component:LoginComponent, pathMatch: 'full'},
   {path:'register', component:RegisterComponent, pathMatch: 'full'},
-  {path:'perfil', component:PerfilComponent, pathMatch: 'full'},
-  {path:'book/detail/:idbook', component: BookDetailComponent, pathMatch: 'full' },
+  {path:'perfil', component:PerfilComponent, pathMatch: 'full', canActivate:[AuthGuard]},
+  {path:'book/detail/:idbook', component: BookDetailComponent, pathMatch: 'full', canActivate:[AuthGuard]},
 
   {path:'', pathMatch: 'full', redirectTo:'login'}
 ];

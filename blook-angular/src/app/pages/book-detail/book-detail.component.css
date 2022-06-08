@@ -1,5 +1,4 @@
 .image{
-
   width: 350px;
   margin: 2%;
 }
@@ -14,6 +13,8 @@ mat-card-content{
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+  font-family: 'Poppins';
+  font-size: 12pt;
 }
 .bot{
   margin: 2%;

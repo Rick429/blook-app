@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth.service';
 
 const TOKEN = 'token'
 const AVATAR = 'avatar'
+const ROL = 'rol'
 
 @Component({
   selector: 'app-login',
@@ -29,14 +30,10 @@ export class LoginComponent implements OnInit {
     this.loginDto.email=this.formulario.get('email')?.value;
     this.loginDto.password=this.formulario.get('password')?.value;
     this.authService.login(this.loginDto).subscribe(loginResult => {
-      if(loginResult.role!="ADMIN"){
-        this.snackBar.open('Necesitas ser administrador para iniciar sesión', 'Aceptar');
-        this.router.navigate(['/login']);
-      }else{
         localStorage.setItem(TOKEN, loginResult.token);
         localStorage.setItem(AVATAR, loginResult.avatar);
+        localStorage.setItem(ROL, loginResult.role);
         this.router.navigate(['/books']);
-      }
     });
   }
 }

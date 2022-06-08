@@ -53,11 +53,7 @@ export class BookFormComponent implements OnInit {
         this.formulario.get('genres')?.setValue(this.genreSelect);
         this.formulario.patchValue(this.data.book);
       }),
-      error: err => Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: err.error.mensaje,
-      })
+      error: err => console.log(err.error.mensaje),
     });
   }
 

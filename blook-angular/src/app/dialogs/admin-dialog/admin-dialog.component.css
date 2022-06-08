@@ -3,3 +3,8 @@
   align-items: center;
   justify-content: space-around;
 }
+h1{
+  width: 400px;
+  text-align: left;
+  font-size: 14pt;
+}

@@ -78,11 +78,8 @@
   font-family: "Mohave";
   color: #B1E457;
   margin: 0px;
-}
-.subtitulo{
-  font-family: 'Mohave';
-  color: #6C727F;
-
+  width: 180px;
+  text-align: center;
 }
 
 .validador {
@@ -108,4 +105,6 @@
 .sub {
   text-align: center;
   color: white;
+  cursor: pointer;
 }
+
