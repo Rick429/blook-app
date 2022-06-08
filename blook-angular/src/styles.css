@@ -31,14 +31,12 @@ td {
   padding: 5px !important;
 }
 
-
 .truncate {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   max-width: 200px !important;
 }
-
 
 .input-search {
   height: 41px;
@@ -103,9 +101,6 @@ td {
   margin-top: 20px !important;
   font-size: 26pt !important;
 }
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .op{
   display: flex;
