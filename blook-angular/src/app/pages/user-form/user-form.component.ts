@@ -43,29 +43,7 @@ export class UserFormComponent implements OnInit {
   }
 
   editarCrear(){
-      this.userService.update(this.formulario.value, this.data.user.id).subscribe({
-        next: ( res => {
-        }),
-        error: err => Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.error.mensaje,
-        })
-      });
-      if(this.file!=undefined){
-        this.userService.updateAvatar(this.file, this.data.user.id).subscribe({
-          next: ( res => {
-            history.go(0);
-          }),
-          error: err => Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.mensaje,
-          })
-        });
-      } else {
-        history.go(0);
-      }
+      this.userService.editarUsuario(this.formulario.value, this.file, this.data.user.id);
 
     }
 

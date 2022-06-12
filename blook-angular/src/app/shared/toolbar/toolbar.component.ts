@@ -20,7 +20,7 @@ export class ToolbarComponent implements OnInit {
       text: "¿Seguro que quieres salir?",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#C00218',
+      confirmButtonColor: '#d84e4e',
       cancelButtonColor: '#8CC63E',
       cancelButtonText:'No',
       confirmButtonText: 'Si'

@@ -74,35 +74,7 @@ export class BookFormComponent implements OnInit {
     this.createBookDto.description= this.formulario.get('description')?.value;
     this.createBookDto.generos= this.genreSelect;
     if(this.data!=null){
-      const formData = new FormData();
-      formData.append('book', new Blob([JSON.stringify(this.createBookDto)], {
-        type: 'application/json'
-      }));
-
-      this.bookService.update(formData, this.formulario.get('id')?.value).subscribe({
-        next: (res => {
-        }),
-        error: err => Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.error.mensaje,
-        })
-      });
-      if(this.file!=undefined){
-        this.bookService.updateCover(this.file, this.data.book.id).subscribe({
-          next: (res => {
-            history.go(0);
-          }),
-          error: err => Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.mensaje,
-          })
-        });
-      }else {
-        history.go(0);
-      }
-
+      this.bookService.editarLibro(this.createBookDto, this.data.book.id, this.file);
     } else {
       this.bookService.create(this.createBookDto, this.file).subscribe({
         next: (res => {

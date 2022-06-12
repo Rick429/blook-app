@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginGuard } from './guards/login.guard';
+import { UnsaveGuard } from './guards/unsave.guard';
 import { BookDetailComponent } from './pages/book-detail/book-detail.component';
 import { BookTableComponent } from './pages/book-table/book-table.component';
 import { ChapterTableComponent } from './pages/chapter-table/chapter-table.component';
@@ -23,7 +24,7 @@ const routes: Routes = [
   {path:'reports', component:ReportTableComponent, pathMatch: 'full', canActivate:[AuthGuard]},
   {path:'login', component:LoginComponent, pathMatch: 'full'},
   {path:'register', component:RegisterComponent, pathMatch: 'full'},
-  {path:'perfil', component:PerfilComponent, pathMatch: 'full', canActivate:[AuthGuard]},
+  {path:'perfil', component:PerfilComponent, pathMatch: 'full', canActivate:[AuthGuard], canDeactivate:[UnsaveGuard]},
   {path:'book/detail/:idbook', component: BookDetailComponent, pathMatch: 'full', canActivate:[AuthGuard]},
 
   {path:'', pathMatch: 'full', redirectTo:'login'}

@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Chapter } from '../models/interfaces/book_response';
 import { ChapterResponse } from '../models/interfaces/chapter_response';
+import { catchError, map, switchMap, } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 const TOKEN = 'token';
 
@@ -73,5 +76,40 @@ export class ChapterService {
       type: 'application/json'
     }));
     return this.http.post<ChapterResponse>(`${this.chapterBaseUrl}/search/all`, formData, { headers: encabezados });
+  }
+
+  editarCapitulo(chapter: any, idChapter: String, file: File) {
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+
+    let formData2 = new FormData();
+      formData2.append('chapter', new Blob([JSON.stringify(chapter)], {
+        type: 'application/json'
+      }));
+
+    let formData = new FormData();
+    formData.append("file", file);
+
+    return this.http.put<Chapter>(`${this.chapterBaseUrl}/${idChapter}`, formData2, { headers: encabezados }).pipe(
+      file!=undefined?
+      switchMap(chapter =>
+        this.http.put<Chapter>(`${this.chapterBaseUrl}/file/${idChapter}`, formData, { headers: encabezados }).pipe(
+        map(chapter2 => ({ chapter, chapter2})),
+      )):map( chapter2=> ({ chapter2})),catchError(err => Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err.error.mensaje,
+      }),),
+    ).subscribe({
+      next: chapter2 => Swal.fire('Cambios Guardados', '', 'success').then(r=>{
+        history.go(0);
+      }),
+      error: err => Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err.error.mensaje,
+      })
+    ,})
   }
 }

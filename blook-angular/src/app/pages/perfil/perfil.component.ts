@@ -1,9 +1,11 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { User } from 'src/app/models/interfaces/user_response';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
+
 
 const AVATAR = 'avatar'
 
@@ -12,8 +14,9 @@ const AVATAR = 'avatar'
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css']
 })
+
 export class PerfilComponent implements OnInit {
-  editar=false;
+  editar=true;
   formulario = new FormGroup({
     nick: new FormControl(''),
     name: new FormControl(''),
@@ -31,6 +34,7 @@ export class PerfilComponent implements OnInit {
   constructor(private authService: AuthService, private userService: UserService) { }
 
   ngOnInit(): void {
+    localStorage.setItem('seleccionado', 'Perfil');
     this.authService.userLogged().subscribe({
       next: (m => {
         this.formulario.patchValue(m);
@@ -39,6 +43,7 @@ export class PerfilComponent implements OnInit {
       }),
       error: err => console.log(err.error.mensaje),
     });
+
   }
 
   onFileChanged(event: any) {
@@ -46,41 +51,10 @@ export class PerfilComponent implements OnInit {
   }
 
   guardar(){
-    this.userService.update(this.formulario.value, this.user.id).subscribe({
-      next: (res => {
-      }),
-      error: err => Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: err.error.mensaje,
-      })
-    });
-    if(this.formularioPassword.get('password')?.value!=""){
-      this.userService.changePassword(this.formularioPassword.value).subscribe({
-        next: ( res => {
-        }),
-        error: err => Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.error.mensaje,
-        })
-      });
-    }
-
-    if(this.file!=undefined){
-     this.userService.updateAvatar(this.file, this.user.id).subscribe({
-      next: (res => {
-        localStorage.setItem(AVATAR, res.avatar);
-        history.go(0);
-      }),
-      error: err => Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: err.error.mensaje,
-      })
-    });
-    } else {
-      history.go(0);
+    if(this.formularioPassword.get('password')?.value!=''){
+      this.userService.editarUsuario(this.formulario.value, this.file, this.user.id,this.formularioPassword.value);
+    }else{
+      this.userService.editarUsuario(this.formulario.value, this.file, this.user.id);
     }
   }
 
@@ -91,5 +65,4 @@ export class PerfilComponent implements OnInit {
       this.editar=true;
     }
   }
-
 }

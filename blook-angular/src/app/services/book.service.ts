@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CreateBookDto } from '../models/dto/createBookDto';
 import { Book, BookResponse } from '../models/interfaces/book_response';
+import { catchError, map, switchMap, } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 const TOKEN = 'token';
 
@@ -84,6 +86,41 @@ export class BookService {
       type: 'application/json'
     }));
     return this.http.post<BookResponse>(`${this.bookBaseUrl}/search/all`, formData, { headers: encabezados });
+  }
+
+  editarLibro(createBookDto: any, idBook: string, file: File) {
+    let encabezados= new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem(TOKEN)}`
+    });
+
+    let formData2 = new FormData();
+    formData2.append('book', new Blob([JSON.stringify(createBookDto)], {
+      type: 'application/json'
+    }));
+
+    let formData = new FormData();
+    formData.append("file", file);
+
+    return this.http.put<Book>(`${this.bookBaseUrl}/${idBook}`, formData2, { headers: encabezados }).pipe(
+      file!=undefined?
+      switchMap(book =>
+        this.http.put<Book>(`${this.bookBaseUrl}/cover/${idBook}`, formData, { headers: encabezados }).pipe(
+        map(book2 => ({ book, book2})),
+      )):map( book2=> ({book2})),catchError(err => Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err.error.mensaje,
+      }),),
+    ).subscribe({
+      next: book2 => Swal.fire('Cambios Guardados', '', 'success').then(r=>{
+        history.go(0);
+      }),
+      error: err => Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err.error.mensaje,
+      })
+    ,})
   }
 
 }

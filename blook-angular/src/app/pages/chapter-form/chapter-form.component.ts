@@ -35,45 +35,13 @@ export class ChapterFormComponent implements OnInit {
     this.file = event.target.files[0];
   }
 
-
   cancelar() {
     this.dialogRef.close();
   }
 
   editarCrear(){
     if(this.data.chapter!=null){
-      console.log(this.formulario.get('id')?.value);
-      this.createChapterDto.name= this.formulario.get('name')?.value;
-      const formData = new FormData();
-      formData.append('chapter', new Blob([JSON.stringify(this.formulario.value)], {
-        type: 'application/json'
-      }));
-
-      this.chapterService.update(formData, this.data.chapter.id).subscribe({
-        next: ( res => {
-          history.go(0);
-        }),
-        error: err => Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: err.error.mensaje,
-        })
-      });
-      if(this.file!=undefined){
-        this.chapterService.updateFile(this.file, this.data.chapter.id).subscribe({
-          next: ( res => {
-            history.go(0);
-          }),
-          error: err => Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.error.mensaje,
-          })
-        });
-      }else {
-        history.go(0);
-      }
-
+      this.chapterService.editarCapitulo(this.formulario.value, this.data.chapter.id, this.file);
     } else {
 
       this.chapterService.create(this.formulario.value, this.data.idBook, this.file).subscribe({

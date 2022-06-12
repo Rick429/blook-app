@@ -22,3 +22,15 @@
   align-items: center !important;
   flex-direction: column !important;
 }
+
+::ng-deep .mat-form-field-readonly .mat-form-field-outline {
+  border-radius: 5px;
+  background-color: rgba(155, 151, 161, 0.541);
+  color: rgba(23, 131, 32, 0) !important;
+}
+
+::ng-deep .mat-form-field-write .mat-form-field-outline {
+  border-radius: 5px;
+  background-color: white;
+  color: #B1E457 !important;
+}
