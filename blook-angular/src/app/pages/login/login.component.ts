@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem(TOKEN, loginResult.token);
         localStorage.setItem(AVATAR, loginResult.avatar);
         localStorage.setItem(ROL, loginResult.role);
+        localStorage.setItem('seleccionado', 'Libros');
         this.router.navigate(['/books']);
     });
   }

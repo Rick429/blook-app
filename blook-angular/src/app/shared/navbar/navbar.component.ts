@@ -55,13 +55,13 @@ export class NavbarComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.select =this.select;
+    this.select =localStorage.getItem('seleccionado') ??"";
   }
 
   seleccionar(element:any){
     this.select = element.name;
     this.router.navigateByUrl(element.url);
-
+    localStorage.setItem('seleccionado', this.select);
   }
 
 }
