@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   open: boolean = true;
-  select: string | undefined ;
+  select!: string  ;
   currentUrl!: string;
   pantalla1: any ={
     name: "Usuarios",
@@ -44,6 +44,7 @@ export class NavbarComponent implements OnInit {
 
   listAux: any[] = [];
   constructor(private router: Router) {
+    this.select = this.currentUrl;
     this.listAux.push(this.pantalla1);
     this.listAux.push(this.pantalla2);
     this.listAux.push(this.pantalla3);
