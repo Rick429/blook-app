@@ -6,7 +6,6 @@ import 'package:blook_app_flutter/blocs/delete_book_bloc/delete_book_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_chapter_bloc/delete_chapter_bloc.dart';
 import 'package:blook_app_flutter/blocs/remove_favorite_bloc/remove_favorite_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
-import 'package:blook_app_flutter/models/comment_response.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
 import 'package:blook_app_flutter/repository/chapter_repository/chapter_repository.dart';
@@ -41,9 +40,6 @@ class _BookScreenState extends State<BookScreen> {
   @override
   void initState() {
     PreferenceUtils.init();
-    /* PreferenceUtils.setString("name", "");
-                PreferenceUtils.setString("description", "");
-                PreferenceUtils.setString("coveredit", ""); */
     bookRepository = BookRepositoryImpl();
     chapterRepository = ChapterRepositoryImpl();
     commentRepository = CommentRepositoryImpl();
@@ -111,7 +107,7 @@ class _BookScreenState extends State<BookScreen> {
                 }
                 return buildOne(context, state.book);
               } else {
-                return const Text('Not support');
+                return const Text('No se pudo cargar el libro');
               }
             },
           ),

@@ -44,53 +44,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  Future<bool> _onWillPop() async {
-    return (await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            content:
-              const Text('¿Esta seguro?'),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('No'),
-                  ),
-                  TextButton(
-                      onPressed: () => {
-                        PreferenceUtils.clear(),
-                Navigator.pushNamed(context, '/login'),
-                      },
-                      child: const Text(
-                        'Si',
-                        style: TextStyle(
-                          color: BlookStyle.redColor,
-                        ),
-                      )),
-                ],
-              ),
-            ],
-          ),
-        )) ??false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => _profileBloc),
-          BlocProvider(create: (context) => ImagePickBloc(userRepository))
-        ],
-        child: Scaffold(
-            backgroundColor: BlookStyle.blackColor,
-            appBar: const HomeAppBar(),
-            body: RefreshIndicator(
-                onRefresh: () async {},
-                child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: _createBody(context)))));
+      providers: [
+        BlocProvider(create: (context) => _profileBloc),
+        BlocProvider(create: (context) => ImagePickBloc(userRepository))
+      ],
+      child: Scaffold(
+        backgroundColor: BlookStyle.blackColor,
+        appBar: const HomeAppBar(),
+        body: RefreshIndicator(
+          onRefresh: () async {},
+          child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            child: _createBody(context),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _createBody(BuildContext context) {
@@ -120,16 +92,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           bloc: _profileBloc,
           builder: (context, state) {
             if (state is ProfileInitial) {
-              return Container(
-                  child: const Center(child: CircularProgressIndicator()));
+              return const Center(child: CircularProgressIndicator());
             } else if (state is UserLoggedFetchError) {
-              return ErrorPage(message: state.message, retry: () {
-                   context.watch<ProfileBloc>().add(const FetchUserLogged());
-              });
+              return ErrorPage(
+                  message: state.message,
+                  retry: () {
+                    context.watch<ProfileBloc>().add(const FetchUserLogged());
+                  });
             } else if (state is UserLoggedFetched) {
               return _userItem(state.userLogged);
             } else {
-              return const Text('Not support');
+              return const Text('No se pudo cargar los datos');
             }
           },
         ),
@@ -151,11 +124,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-          IconButton(onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ProfileEditScreen(name: userLogged.name, lastName: userLogged.lastname, email: userLogged.email, id: userLogged.id)));
-          }, icon: Icon(Icons.edit, color: BlookStyle.whiteColor,))
-        ],),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ProfileEditScreen(
+                        name: userLogged.name,
+                        lastName: userLogged.lastname,
+                        email: userLogged.email,
+                        id: userLogged.id)));
+              },
+              icon: const Icon(
+                Icons.edit,
+                color: BlookStyle.whiteColor,
+              ),
+            )
+          ],
+        ),
         Container(
           height: 40,
           margin: const EdgeInsets.all(8),
@@ -175,9 +159,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(utf8.decode(userLogged.name.codeUnits),
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeTwo)),
+                child: Text(
+                  utf8.decode(userLogged.name.codeUnits),
+                  style: BlookStyle.textCustom(
+                      BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                ),
               )
             ],
           ),
@@ -201,9 +187,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(utf8.decode(userLogged.lastname.codeUnits),
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeTwo)),
+                child: Text(
+                  utf8.decode(userLogged.lastname.codeUnits),
+                  style: BlookStyle.textCustom(
+                      BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                ),
               ),
             ],
           ),
@@ -258,77 +246,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Container(
           margin: const EdgeInsets.fromLTRB(8, 50, 8, 8),
           child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: BlookStyle.redColor,
-                elevation: 15.0,
-              ),
-              onPressed: () {
-                 showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Cerrar sesión"),
-            content:
-              const Text('¿Estas seguro que quieres salir?'),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('No'),
-                  ),
-                  TextButton(
-                      onPressed: () => {
-                        PreferenceUtils.clear(),
-                Navigator.pushNamed(context, '/login'),
-                      },
-                      child: const Text(
-                        'Si',
-                        style: TextStyle(
-                          color: BlookStyle.redColor,
-                        ),
-                      )),
-                ],
-              ),
-            ],
-          ));
-        
-              },
-              child: Text("Cerrar sesión",
-                  style: BlookStyle.textCustom(
-                      BlookStyle.whiteColor, BlookStyle.textSizeThree))),
+            style: ElevatedButton.styleFrom(
+              primary: BlookStyle.redColor,
+              elevation: 15.0,
+            ),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: BlookStyle.quaternaryColor,
+                        title: const Text("Cerrar sesión",
+                                  style: TextStyle(
+                                    color: BlookStyle.whiteColor,
+                                  ),),
+                        content: const Text('¿Estas seguro que quieres salir?',
+                                  style: TextStyle(
+                                    color: BlookStyle.whiteColor,
+                                  ),),
+                        actions: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text('No',
+                                  style: TextStyle(
+                                    color: BlookStyle.whiteColor,
+                                  ),),
+                              ),
+                              TextButton(
+                                onPressed: () => {
+                                  PreferenceUtils.clear(),
+                                  Navigator.pushNamed(context, '/login'),
+                                },
+                                child: const Text(
+                                  'Si',
+                                  style: TextStyle(
+                                    color: BlookStyle.whiteColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ));
+            },
+            child: Text(
+              "Cerrar sesión",
+              style: BlookStyle.textCustom(
+                  BlookStyle.whiteColor, BlookStyle.textSizeThree),
+            ),
+          ),
         ),
       ],
     );
   }
 
   Widget avatar(String avatarUrl) {
-    if(avatarUrl.isEmpty){
+    if (avatarUrl.isEmpty) {
       return Container(
-                width: 130,
-                height: 130,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: 
-                        AssetImage("assets/images/upload.png"))));
+          width: 130,
+          height: 130,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage("assets/images/upload.png"))));
     } else {
-     return Container(
-                width: 130,
-                height: 130,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: NetworkImage(
-                          PreferenceUtils.getString("avatar")!,
-                         /*  headers: {
+      return Container(
+          width: 130,
+          height: 130,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(
+                    PreferenceUtils.getString("avatar")!,
+                    /*  headers: {
                             'Authorization':
                                 'Bearer ${PreferenceUtils.getString('token')}'
-                          }, */))));
+                          }, */
+                  ))));
     }
-   
   }
 
   Widget buildProfile(BuildContext context, state) {
@@ -342,12 +342,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     BlookStyle.whiteColor, BlookStyle.textSizeFive)),
           ),
           GestureDetector(
-            onTap: () {
-              BlocProvider.of<ImagePickBloc>(context)
-                  .add(const SelectImageEvent(ImageSource.gallery));
-            },
-            child: avatar(PreferenceUtils.getString('avatar')!)
-          ),
+              onTap: () {
+                BlocProvider.of<ImagePickBloc>(context)
+                    .add(const SelectImageEvent(ImageSource.gallery));
+              },
+              child: avatar(PreferenceUtils.getString('avatar')!)),
         ],
       ),
     );

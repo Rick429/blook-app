@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:blook_app_flutter/blocs/register_bloc/register_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/models/register_dto.dart';
@@ -9,7 +11,6 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../models/error_response.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -29,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController password2Controller = TextEditingController();
   late AuthRepository authRepository;
   bool _obscureText = true;
-   Icon iconpass = const Icon(Icons.remove_red_eye_outlined);
+  Icon iconpass = const Icon(Icons.remove_red_eye_outlined);
 
   @override
   void initState() {
@@ -38,17 +39,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
     PreferenceUtils.init();
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: BlookStyle.quaternaryColor,
+            content: const Text(
+              '¿Deseas salir de la aplicación?',
+              style: TextStyle(
+                color: BlookStyle.whiteColor,
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text(
+                      'No',
+                      style: TextStyle(
+                        color: BlookStyle.whiteColor,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () => exit(0),
+                      child: const Text(
+                        'Si',
+                        style: TextStyle(
+                          color: BlookStyle.whiteColor,
+                        ),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) {
           return RegisterBloc(authRepository);
         },
-        child: Scaffold(
-            backgroundColor: BlookStyle.blackColor,
-            body: RefreshIndicator(
-                onRefresh: () async {},
-                child: SingleChildScrollView(child: _createBody(context)))));
+        child: WillPopScope(
+          onWillPop: _onWillPop,
+          child: Scaffold(
+              backgroundColor: BlookStyle.blackColor,
+              body: RefreshIndicator(
+                  onRefresh: () async {},
+                  child: SingleChildScrollView(child: _createBody(context)))),
+        ));
   }
 
   Widget _createBody(BuildContext context) {
@@ -59,7 +103,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return state is RegisterSuccessState || state is RegisterErrorState;
         }, listener: (context, state) {
           if (state is RegisterSuccessState) {
-            PreferenceUtils.setString(Constant.token, state.loginResponse.token);
+            PreferenceUtils.setString(
+                Constant.token, state.loginResponse.token);
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const MenuScreen()),
@@ -101,8 +146,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
-      if(_obscureText){
-        iconpass= const Icon(Icons.remove_red_eye_outlined);
+      if (_obscureText) {
+        iconpass = const Icon(Icons.remove_red_eye_outlined);
       } else {
         iconpass = const Icon(Icons.remove_red_eye);
       }
@@ -245,10 +290,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(100.0),
                       ),
                       suffixIcon: GestureDetector(
-                        onTap: () {
-                          _toggle();
-                        },
-                        child: iconpass),
+                          onTap: () {
+                            _toggle();
+                          },
+                          child: iconpass),
                       suffixIconColor: Colors.white,
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
@@ -278,10 +323,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(100.0),
                       ),
                       suffixIcon: GestureDetector(
-                        onTap: () {
-                          _toggle();
-                        },
-                        child: iconpass),
+                          onTap: () {
+                            _toggle();
+                          },
+                          child: iconpass),
                       suffixIconColor: Colors.white,
                       hintStyle: BlookStyle.textCustom(
                           BlookStyle.formColor, BlookStyle.textSizeTwo),
@@ -328,7 +373,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         textAlign: TextAlign.center,
                       )),
                 ),
-                 Container(
+                Container(
                   padding: const EdgeInsets.all(10),
                   child: GestureDetector(
                     child: Text(

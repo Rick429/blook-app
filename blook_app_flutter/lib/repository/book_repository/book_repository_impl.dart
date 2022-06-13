@@ -180,19 +180,6 @@ class BookRepositoryImpl extends BookRepository {
         contentType: MediaType('application', 'json'), filename: "book",
         )
         );
-/*    if(filename.contains("http")){
-       final image = await  _client.get(Uri.parse(filename), headers: {
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
-    });
-  /* Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path; */
-    var fil = filename.split("/")[4];
-  /* File file = new File(appDocPath + "/" + fil); */
-  /* var fel = appDocPath + "/" + fil; */
-     request.files.add(await http.MultipartFile.fromBytes('file', image.bodyBytes, contentType: MediaType('application', 'octet-stream'), filename: fil));
-   } else {
-     request.files.add(await http.MultipartFile.fromPath('file',filename));
-   } */
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
       'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
@@ -231,8 +218,6 @@ class BookRepositoryImpl extends BookRepository {
       throw error;
     } 
   }
-
-
 }
 
   

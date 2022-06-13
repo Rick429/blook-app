@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/comments_bloc/comments_bloc.dart';
 import 'package:blook_app_flutter/blocs/delete_comment_bloc/delete_comment_bloc.dart';
 import 'package:blook_app_flutter/blocs/edit_comment_dto/edit_comment_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
-import 'package:blook_app_flutter/models/create_comment_dto.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository_impl.dart';
 import 'package:blook_app_flutter/ui/comment_menu.dart';
@@ -14,7 +12,6 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/comment_response.dart';
-import 'menu_screen.dart';
 
 class CommentsScren extends StatefulWidget {
   const CommentsScren({Key? key}) : super(key: key);
@@ -25,7 +22,6 @@ class CommentsScren extends StatefulWidget {
 
 class _CommentsScrenState extends State<CommentsScren> {
   bool _isEditingText = false;
-  late TextEditingController _editingController;
   String initialText = PreferenceUtils.getString("comment") ?? "";
   late CommentRepository commentRepository;
   late CommentsBloc _commentsbloc;
@@ -36,8 +32,7 @@ class _CommentsScrenState extends State<CommentsScren> {
     _commentsbloc = CommentsBloc(commentRepository)
       ..add(const FetchAllComments());
     super.initState();
-    _editingController =
-        TextEditingController(text: PreferenceUtils.getString("comment"));
+
   }
 
   @override
@@ -54,14 +49,14 @@ class _CommentsScrenState extends State<CommentsScren> {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: CommentMenu(),
+              child: const CommentMenu(),
             ),
             appBar: AppBar(
               backgroundColor: Colors.black,
               iconTheme: const IconThemeData(color: Colors.white),
               centerTitle: true,
               title: Text(
-                "COMENTARIOS",
+                "Reseñas",
                 style: BlookStyle.textCustom(
                     BlookStyle.whiteColor, BlookStyle.textSizeFive),
               ),
@@ -87,16 +82,16 @@ class _CommentsScrenState extends State<CommentsScren> {
               } else if (state is CommentsFetchError) {
                 return Center(
                   child: Text(
-                    "No hay ningún comentario, se el primero en escribir algo",
+                    "No hay ninguna reseña, sé el primero en escribir algo",
                     style: BlookStyle.textCustom(
                         BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                   ),
                 );
               } else if (state is CommentsFetched) {
-                PreferenceUtils.setString("hola", "");
+                PreferenceUtils.setString("commentF", "");
                 return _commentsList(context, state.comments);
               } else {
-                return const Text('Not support');
+                return const Text('No se ha podido cargar las reseñas');
               }
             },
           ),
@@ -107,7 +102,7 @@ class _CommentsScrenState extends State<CommentsScren> {
             if (state is EditCommentSuccessState) {
               Navigator.pushReplacement(
                 context,
-                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
+                PageRouteBuilder(pageBuilder: (_, __, ___) => const CommentsScren()),
               );
             } else if (state is EditCommentErrorState) {
               _showSnackbar(context, state.message);
@@ -128,7 +123,7 @@ class _CommentsScrenState extends State<CommentsScren> {
             if (state is DeleteSuccessState) {
               Navigator.pushReplacement(
                 context,
-                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
+                PageRouteBuilder(pageBuilder: (_, __, ___) => const CommentsScren()),
               );
             } else if (state is DeleteErrorState) {
               _showSnackbar(context, state.message);
@@ -145,24 +140,6 @@ class _CommentsScrenState extends State<CommentsScren> {
         ],
       ),
     );
-  }
-
-  AwesomeDialog _createDialog(context) {
-    return AwesomeDialog(
-      context: context,
-      dialogBackgroundColor: BlookStyle.quaternaryColor,
-      btnOkColor: BlookStyle.primaryColor,
-      dialogType: DialogType.SUCCES,
-      animType: AnimType.BOTTOMSLIDE,
-      title: 'Correcto',
-      desc: 'El comentario se ha editado correctamente',
-      titleTextStyle:
-          BlookStyle.textCustom(BlookStyle.whiteColor, BlookStyle.textSizeFour),
-      descTextStyle: BlookStyle.textCustom(
-          BlookStyle.whiteColor, BlookStyle.textSizeThree),
-      btnOkText: "Aceptar",
-      btnOkOnPress: () {},
-    )..show();
   }
 
   void _showSnackbar(BuildContext context, String message) {
@@ -303,14 +280,13 @@ class _CommentsScrenState extends State<CommentsScren> {
           onTap: () {
             setState(() {
               PreferenceUtils.setBool("exists", false);
-              PreferenceUtils.setString("hola", comment.comment);
+              PreferenceUtils.setString("commentF", comment.comment);
               Navigator.pushReplacement(
                 context,
-                PageRouteBuilder(pageBuilder: (_, __, ___) => CommentsScren()),
+                PageRouteBuilder(pageBuilder: (_, __, ___) => const CommentsScren()),
               );
               _isEditingText = true;
               initialText = comment.comment;
-              _editingController = TextEditingController(text: comment.comment);
             });
           },
           child: const Icon(Icons.edit, color: BlookStyle.whiteColor));
@@ -355,47 +331,4 @@ class _CommentsScrenState extends State<CommentsScren> {
     )..show();
   }
 
-  Widget _editTitleTextField(context, Comment comment) {
-    if (_isEditingText) {
-      return Container(
-        padding: const EdgeInsets.only(left: 8.0),
-        width: MediaQuery.of(context).size.width,
-        child: TextField(
-          style: BlookStyle.textCustom(
-              BlookStyle.whiteColor, BlookStyle.textSizeOne),
-          textAlign: TextAlign.left,
-          onSubmitted: (newValue) {
-            setState(() {
-              initialText = newValue;
-              final createCommentDto = CreateCommentDto(comment: newValue);
-
-              BlocProvider.of<EditCommentBloc>(context)
-                  .add(EditOneCommentEvent(createCommentDto, comment.bookId));
-
-              _isEditingText = false;
-            });
-          },
-          autofocus: true,
-          controller: _editingController,
-        ),
-      );
-    }
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _isEditingText = true;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.only(left: 8.0),
-        width: MediaQuery.of(context).size.width,
-        child: Text(
-          comment.comment,
-          style: BlookStyle.textCustom(
-              BlookStyle.whiteColor, BlookStyle.textSizeOne),
-          textAlign: TextAlign.left,
-        ),
-      ),
-    );
-  }
 }

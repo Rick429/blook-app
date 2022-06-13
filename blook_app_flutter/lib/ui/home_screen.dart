@@ -51,8 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
             appBar: const HomeAppBar(),
             body: RefreshIndicator(
                 onRefresh: () async {
-                  _topNewBooksBloc.add(FetchBooksWithType("new/"));
-                  _orderBooksBloc.add(FetchBooksWithType("order/"));
+                  _topNewBooksBloc.add(const FetchBooksWithType("new/"));
+                  _orderBooksBloc.add(const FetchBooksWithType("order/"));
                 },
                 child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             );
           } else {
-            return const Text('Not support');
+            return const Text('No se ha podido cargar los libros');
           }
         },
       ),
@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return ErrorPage(
               message: state.message,
               retry: () {
-                context.watch<BooksBloc>().add(FetchBooksWithType("order/"));
+                context.watch<BooksBloc>().add(const FetchBooksWithType("order/"));
               },
             );
           } else if (state is BooksFetched) {

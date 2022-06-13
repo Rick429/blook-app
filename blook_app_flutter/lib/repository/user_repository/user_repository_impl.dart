@@ -48,7 +48,7 @@ class UserRepositoryImpl extends UserRepository {
     if (response.statusCode == 200) {
       return User.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Fail to load user');
+      throw Exception('Error al cargar el usuario');
     }
   }
 

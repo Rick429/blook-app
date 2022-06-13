@@ -36,22 +36,29 @@ class _LoginScreenState extends State<LoginScreen> {
     return (await showDialog(
           context: context,
           builder: (context) => AlertDialog(
+            backgroundColor: BlookStyle.quaternaryColor,
             content:
-              const Text('¿Deseas salir de la aplicación?'),
+              const Text('¿Deseas salir de la aplicación?',
+                        style: TextStyle(
+                          color: BlookStyle.whiteColor,
+                        ),),
             actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('No'),
+                    child: const Text('No',
+                        style: TextStyle(
+                          color: BlookStyle.whiteColor,
+                        ),),
                   ),
                   TextButton(
                       onPressed: () => exit(0),
                       child: const Text(
                         'Si',
                         style: TextStyle(
-                          color: BlookStyle.redColor,
+                          color: BlookStyle.whiteColor,
                         ),
                       )),
                 ],

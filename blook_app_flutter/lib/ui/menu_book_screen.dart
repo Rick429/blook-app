@@ -1,8 +1,6 @@
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/ui/book_screen.dart';
-import 'package:blook_app_flutter/ui/comments_screen.dart';
 import 'package:blook_app_flutter/ui/pdf_viewer.dart';
-import 'package:blook_app_flutter/ui/report_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';

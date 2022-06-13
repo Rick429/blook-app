@@ -16,14 +16,13 @@ class CommentRepositoryImpl extends CommentRepository {
   @override
   createComment(CreateCommentDto createCommentDto, String idbook) async{
       var request = http.MultipartRequest(
-      'POST', Uri.parse('${Constant.baseurl}comment/${idbook}'),);
+      'POST', Uri.parse('${Constant.baseurl}comment/$idbook'),);
 
       request.files.add(http.MultipartFile.fromString('comment', jsonEncode(createCommentDto.toJson()),
         contentType: MediaType('application', 'json'), filename: "comment",
         )
         );
-    
-   
+  
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
       'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
@@ -51,7 +50,7 @@ class CommentRepositoryImpl extends CommentRepository {
     if (response.statusCode == 200) {
       return CommentResponse.fromJson(json.decode(response.body)).content;
     } else {
-      throw Exception('Fail to load comments');
+      throw Exception('Error al cargar los comentarios');
     }
   }
 
@@ -90,17 +89,16 @@ class CommentRepositoryImpl extends CommentRepository {
 
   @override
   Future<CommentExistsResponse>findCommentById(String id) async{
-     final response = await _client.get(Uri.parse('${Constant.baseurl}comment/exists/bool/${id}'), headers: {
+     final response = await _client.get(Uri.parse('${Constant.baseurl}comment/exists/bool/$id'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
      'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
     });
     if (response.statusCode == 200) {
       var res = CommentExistsResponse.fromJson(json.decode(response.body));
- 
       return res;
     } else {
-      throw Exception('Fail to load comment');
+      throw Exception('Ya tiene una reseña en este libro');
     }
   }
 }

@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/genre_response.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 
 class InfoBookScrenn extends StatefulWidget {

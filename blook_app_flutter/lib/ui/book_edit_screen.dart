@@ -111,7 +111,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
           } else if (state is GenresFetched) {
             return _genresList(context, state.genres);
           } else {
-            return const Text('Not support');
+            return const Text('Error al cargar los géneros');
           }
         },
       ),
@@ -139,7 +139,8 @@ class _BookEditScreenState extends State<BookEditScreen> {
               return Container();
             }
             return Container();
-          }),
+          },
+          ),
     ]);
   }
 

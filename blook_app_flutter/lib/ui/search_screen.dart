@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:blook_app_flutter/blocs/search_bloc/search_bloc.dart';
 import 'package:blook_app_flutter/models/book_response.dart';
 import 'package:blook_app_flutter/models/search_dto.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
-import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     bookRepository = BookRepositoryImpl();
-  super.initState();
+    super.initState();
   }
 
   @override
@@ -49,33 +46,33 @@ class _SearchScreenState extends State<SearchScreen> {
       backgroundColor: BlookStyle.blackColor,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: SizedBox(child: BlocProvider(
-          create: (context) {
-            return SearchBloc(bookRepository);
-          },
-          child: _createBody(context)),
-    )));
+        child: SizedBox(
+          child: BlocProvider(
+              create: (context) {
+                return SearchBloc(bookRepository);
+              },
+              child: _createBody(context)),
+        ),
+      ),
+    );
   }
 
   Widget _createBody(BuildContext context) {
     return BlocBuilder<SearchBloc, SearchState>(
-          builder: (context, state) {
-            if (state is SearchInitial) {
-              return buildForm(context);
-            } else if (state is SearchErrorState) {
-              return buildForm(context);
-            } else if (state is SearchSuccessState) {
-              return Column(children: [
-                buildForm(context),
-                _buildList(context, state.books)
-              ],);
-            } else {
-              return const Text('Not support');
-            }
-          },
-    
-  
-      );
+      builder: (context, state) {
+        if (state is SearchInitial) {
+          return buildForm(context);
+        } else if (state is SearchErrorState) {
+          return buildForm(context);
+        } else if (state is SearchSuccessState) {
+          return Column(
+            children: [buildForm(context), _buildList(context, state.books)],
+          );
+        } else {
+          return const Text('Not support');
+        }
+      },
+    );
   }
 
   void _showSnackbar(BuildContext context, String message) {
@@ -87,114 +84,112 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget buildForm(BuildContext context) {
     return Form(
-                key: _formKey,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 340,
-                      height: 50,
-                      margin: const EdgeInsets.all(10),
-                      child: TextFormField(
-                        style: BlookStyle.textCustom(
-                            BlookStyle.blackColor, BlookStyle.textSizeTwo),
-                        controller: searchController,
-                        textAlignVertical: TextAlignVertical.bottom,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: BlookStyle.whiteColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          hintStyle: BlookStyle.textCustom(
-                              BlookStyle.blackColor, BlookStyle.textSizeTwo),
-                          hintText: 'Buscar...',
-                        ),
-                        onSaved: (String? value) {},
-                        validator: (String? value) {
-                          return (value == null)
-                              ? 'Introduzca el nombre de un libro'
-                              : null;
-                        },
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          final searchDto = SearchDto(
-                              name: searchController.text
-                            );
-                          BlocProvider.of<SearchBloc>(context)
-                              .add(DoSearchEvent(searchDto));
-                        }       
-                      },
-                      child: const Icon(Icons.search,color: BlookStyle.primaryColor,))
-                  ],
+      key: _formKey,
+      child: Row(
+        children: [
+          Container(
+            width: 340,
+            height: 50,
+            margin: const EdgeInsets.all(10),
+            child: TextFormField(
+              style: BlookStyle.textCustom(
+                  BlookStyle.blackColor, BlookStyle.textSizeTwo),
+              controller: searchController,
+              textAlignVertical: TextAlignVertical.bottom,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: BlookStyle.whiteColor,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
-              
-            
-          
+                hintStyle: BlookStyle.textCustom(
+                    BlookStyle.blackColor, BlookStyle.textSizeTwo),
+                hintText: 'Buscar...',
+              ),
+              onSaved: (String? value) {},
+              validator: (String? value) {
+                return (value == null)
+                    ? 'Introduzca el nombre del libro'
+                    : null;
+              },
+            ),
+          ),
+          GestureDetector(
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  final searchDto = SearchDto(name: searchController.text);
+                  BlocProvider.of<SearchBloc>(context)
+                      .add(DoSearchEvent(searchDto));
+                }
+              },
+              child: const Icon(
+                Icons.search,
+                color: BlookStyle.primaryColor,
+              ))
+        ],
+      ),
     );
   }
 
   Widget _buildList(context, List<Book> booklist) {
     return Container(
-            padding: const EdgeInsets.only(bottom: 20),
-            height: 600,
-            child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-              itemCount: booklist.length,
-              itemBuilder: (context, index) {
-              return _bookItem(booklist.elementAt(index));
-              },
-              ),
-                
-      
+      padding: const EdgeInsets.only(bottom: 20),
+      height: 600,
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: booklist.length,
+        itemBuilder: (context, index) {
+          return _bookItem(booklist.elementAt(index));
+        },
+      ),
     );
   }
 
   Widget _bookItem(Book book) {
     return Column(
       children: [
-       GestureDetector(
+        GestureDetector(
           onTap: () {
-                PreferenceUtils.setString("idbook", book.id);
-                Navigator.pushNamed(context, "/book");
-              },
-         child: Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: BlookStyle.quaternaryColor,
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            book.cover,
+            PreferenceUtils.setString("idbook", book.id);
+            Navigator.pushNamed(context, "/book");
+          },
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: BlookStyle.quaternaryColor,
+            ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.network(
+                        book.cover,
                         /* headers: {
                           'Authorization':
                               'Bearer ${PreferenceUtils.getString('token')}'}, */
-                            width: 130,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 140,
-                      child: Text(book.name,
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeTwo),
-                        textAlign: TextAlign.start,
-                      ),
-                    )
-                  ],
+                        width: 130,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      )),
                 ),
-              ),
-       ),
-    ],);
+                SizedBox(
+                  height: 140,
+                  child: Text(
+                    book.name,
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeTwo),
+                    textAlign: TextAlign.start,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

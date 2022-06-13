@@ -53,9 +53,9 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
               iconTheme: const IconThemeData(color: Colors.white),
               centerTitle: true,
               title: Text(
-                    "AÑADIR CAPÍTULO",
-                    style: BlookStyle.textCustom(
-                        BlookStyle.whiteColor, BlookStyle.textSizeFive),
+                "AÑADIR CAPÍTULO",
+                style: BlookStyle.textCustom(
+                    BlookStyle.whiteColor, BlookStyle.textSizeFive),
               ),
             ),
             backgroundColor: BlookStyle.blackColor,
@@ -119,9 +119,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
       content: SizedBox(
         height: 100,
         child: Column(
-          children: [
-            for (SubErrores e in error.subErrores) Text(e.mensaje)
-          ],
+          children: [for (SubErrores e in error.subErrores) Text(e.mensaje)],
         ),
       ),
     );
@@ -175,7 +173,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                     final FilePickerResult? pickedFile =
                         await _picker.pickFiles(
                       type: FileType.custom,
-                      allowedExtensions: ['jpg', 'pdf', 'doc'],
+                      allowedExtensions: ['pdf'],
                     );
                     setState(() {
                       PreferenceUtils.setString(
@@ -206,30 +204,33 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.fromLTRB(10, 200, 10, 8),
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: BlookStyle.primaryColor,
-                      elevation: 15.0,
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final createChapterDto =
-                            CreateChapterDto(name: nameController.text);
-                        if (!PreferenceUtils.getString("image")!
-                            .endsWith('.pdf')) {
-                          _createDialogC(context);
-                        } else {
-                          BlocProvider.of<ChapterNewBloc>(context).add(
-                              CreateChapterEvent(
-                                  PreferenceUtils.getString("image")!,
-                                  createChapterDto,
-                                  PreferenceUtils.getString("idbook")!));
-                          
-                        }
+                  style: ElevatedButton.styleFrom(
+                    primary: BlookStyle.primaryColor,
+                    elevation: 15.0,
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      final createChapterDto =
+                          CreateChapterDto(name: nameController.text);
+                      if (!PreferenceUtils.getString("image")!
+                          .endsWith('.pdf')) {
+                        _createDialogC(context);
+                      } else {
+                        BlocProvider.of<ChapterNewBloc>(context).add(
+                          CreateChapterEvent(
+                              PreferenceUtils.getString("image")!,
+                              createChapterDto,
+                              PreferenceUtils.getString("idbook")!),
+                        );
                       }
-                    },
-                    child: Text("Publicar",
-                        style: BlookStyle.textCustom(
-                            BlookStyle.whiteColor, BlookStyle.textSizeThree))),
+                    }
+                  },
+                  child: Text(
+                    "Publicar",
+                    style: BlookStyle.textCustom(
+                        BlookStyle.whiteColor, BlookStyle.textSizeThree),
+                  ),
+                ),
               )
             ],
           ),

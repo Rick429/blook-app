@@ -7,7 +7,6 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../models/error_response.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -148,7 +147,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           hintStyle: BlookStyle.textCustom(
                               BlookStyle.formColor, BlookStyle.textSizeTwo),
                           hintText:
-                              '¿Quieres reportar un error? Escribelo \nRecuerda no incluir datos sensibles',
+                              '¿Quieres reportar algo? Escribelo \nRecuerda no incluir datos sensibles',
                         ),
                         onSaved: (String? value) {},
                       ),

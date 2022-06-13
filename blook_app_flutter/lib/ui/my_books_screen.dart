@@ -157,8 +157,6 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
               scrollDirection: Axis.vertical,
               itemCount: mybooks.length,
               itemBuilder: (context, index) {
-                print(index);
-                print("size $pagesize");
                 if (sortopt != "") {
                   context
                       .watch<MyBooksBloc>()
@@ -261,7 +259,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
         context: context,
         builder: (context) {
           return Container(
-            decoration: BoxDecoration(color: BlookStyle.quaternaryColor),
+            decoration: const BoxDecoration(color: BlookStyle.quaternaryColor),
             height: 200,
             child: Padding(
               padding: const EdgeInsets.only(top: 40),

@@ -1,9 +1,7 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PdfViewer extends StatefulWidget {
   final String document;
@@ -60,15 +58,7 @@ class _PdfViewerState extends State<PdfViewer> {
                   }, */
                 ),
               ),
-             /*  PDFViewer(
-                document: pdfDocument,) */
-            /* SfPdfViewer.network(
-                document,
-                headers: {
-                  'Authorization':
-                      'Bearer ${PreferenceUtils.getString('token')}'
-                },
-              ), */
+
       ),
     );
   }

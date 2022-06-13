@@ -18,7 +18,7 @@ class GenreRepositoryImpl extends GenreRepository {
     if (response.statusCode == 200) {
       return GenreResponse.fromJson(json.decode(response.body)).content;
     } else {
-      throw Exception('Fail to load genres');
+      throw Exception('Error al cargar los géneros');
     }
   }
 }

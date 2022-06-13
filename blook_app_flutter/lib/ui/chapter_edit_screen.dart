@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/edit_chapter_bloc/edit_chapter_bloc.dart';
 import 'package:blook_app_flutter/models/create_chapter_dto.dart';
@@ -11,7 +10,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../models/error_response.dart';
 
 typedef OnPickImageCallback = void Function(

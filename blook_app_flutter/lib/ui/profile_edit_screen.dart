@@ -7,7 +7,6 @@ import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../models/error_response.dart';
 
 class ProfileEditScreen extends StatefulWidget {

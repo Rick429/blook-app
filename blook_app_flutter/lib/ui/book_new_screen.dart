@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:blook_app_flutter/blocs/book_new_bloc/book_new_bloc.dart';
 import 'package:blook_app_flutter/blocs/genres_bloc/genres_bloc.dart';
@@ -11,7 +10,6 @@ import 'package:blook_app_flutter/repository/book_repository/book_repository.dar
 import 'package:blook_app_flutter/repository/book_repository/book_repository_impl.dart';
 import 'package:blook_app_flutter/repository/genre_repository/genre_repository.dart';
 import 'package:blook_app_flutter/repository/genre_repository/genre_repository_impl.dart';
-import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/error_page.dart';
@@ -143,9 +141,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
       content: SizedBox(
         height: 100,
         child: Column(
-          children: [
-            for (SubErrores e in error.subErrores) Text(e.mensaje)
-          ],
+          children: [for (SubErrores e in error.subErrores) Text(e.mensaje)],
         ),
       ),
     );
@@ -208,26 +204,24 @@ class _BookNewScreenState extends State<BookNewScreen> {
           final XFile? pickedFile =
               await _picker.pickImage(source: ImageSource.gallery);
           setState(() {
-  
-              PreferenceUtils.setString("cover", pickedFile!.path);
-
+            PreferenceUtils.setString("cover", pickedFile!.path);
           });
         },
         child: Image.asset("assets/images/upload.png", height: 200),
       );
     } else {
       return GestureDetector(
-        onTap: () async {
-          final XFile? pickedFile =
-              await _picker.pickImage(source: ImageSource.gallery);
-          setState(() {
-    
+          onTap: () async {
+            final XFile? pickedFile =
+                await _picker.pickImage(source: ImageSource.gallery);
+            setState(() {
               PreferenceUtils.setString("cover", pickedFile!.path);
-            
-          });
-        },
-        child: Image.file(File(PreferenceUtils.getString("cover")!), height: 200,)
-      );
+            });
+          },
+          child: Image.file(
+            File(PreferenceUtils.getString("cover")!),
+            height: 200,
+          ));
     }
   }
 
