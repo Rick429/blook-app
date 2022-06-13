@@ -133,8 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      utf8.decode(book.name.codeUnits),
+                    child: Text(book.name,
                       style: BlookStyle.textPrincipal,
                       overflow: TextOverflow.ellipsis,
                     ),

@@ -267,6 +267,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 title: const Text("Géneros"),
+                buttonText: const Text("Seleccionar géneros"),
                 items: genresList
                     .map((e) =>
                         MultiSelectItem(e, utf8.decode(e.name.codeUnits)))
