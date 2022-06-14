@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:blook_app_flutter/ui/books_screen.dart';
 import 'package:blook_app_flutter/ui/favorite_screen.dart';
 import 'package:blook_app_flutter/ui/my_books_screen.dart';
 import 'package:blook_app_flutter/ui/profile_screen.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'home_screen.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -20,6 +22,7 @@ class _MenuScreenState extends State<MenuScreen> {
   List<Widget> pages = [
     const HomeScreen(),
     const FavoriteScreen(),
+    const BooksScreen(),
     const MyBooksScreen(),
     const ProfileScreen(),
   ];
@@ -108,7 +111,7 @@ class _MenuScreenState extends State<MenuScreen> {
               },
             ),
             GestureDetector(
-              child: Icon(Icons.bookmark,
+              child: SvgPicture.asset("assets/images/books.svg",height: 30,
                   color: _currentIndex == 2
                       ? BlookStyle.primaryColor
                       : BlookStyle.whiteColor),
@@ -119,13 +122,24 @@ class _MenuScreenState extends State<MenuScreen> {
               },
             ),
             GestureDetector(
-              child: Icon(Icons.person,
+              child: SvgPicture.asset("assets/images/book.svg",height: 30,
                   color: _currentIndex == 3
                       ? BlookStyle.primaryColor
                       : BlookStyle.whiteColor),
               onTap: () {
                 setState(() {
                   _currentIndex = 3;
+                });
+              },
+            ),
+            GestureDetector(
+              child: Icon(Icons.person,
+                  color: _currentIndex == 4
+                      ? BlookStyle.primaryColor
+                      : BlookStyle.whiteColor),
+              onTap: () {
+                setState(() {
+                  _currentIndex = 4;
                 });
               },
             ),

@@ -7,7 +7,6 @@ import 'package:blook_app_flutter/models/error_response.dart';
 import 'package:blook_app_flutter/models/favorite_response.dart';
 import 'package:blook_app_flutter/models/search_dto.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
-import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -59,7 +58,7 @@ class BookRepositoryImpl extends BookRepository {
     if (response.statusCode == 200) {
       return BookResponse.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Fail to load books');
+      throw Exception('Error al cargar los libros');
     }
   }
 
@@ -73,7 +72,7 @@ class BookRepositoryImpl extends BookRepository {
     if (response.statusCode == 200) {
       return Book.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Fail to load book');
+      throw Exception('Error al cargar el libro');
     }
   }
 
@@ -220,6 +219,23 @@ class BookRepositoryImpl extends BookRepository {
       throw error;
     } 
   }
+
+   @override
+  Future <BookResponse> fetchAllBooks(int size, String sortedList) async{
+     final response = await _client.get(Uri.
+     parse('${Constant.baseurl}book/all?size=$size&sort=$sortedList'),
+      headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
+    });
+    if (response.statusCode == 200) {
+      return BookResponse.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Error al cargar los libros');
+    }
+  }
+
 }
 
   

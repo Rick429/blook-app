@@ -29,4 +29,6 @@ abstract class BookRepository {
 
   Future<Book> editCoverBook(String filename, String id);
 
+  Future<BookResponse>fetchAllBooks(int size, String sortedList);
+
 }
