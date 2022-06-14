@@ -15,6 +15,7 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -44,7 +45,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
   final ImagePicker _picker = ImagePicker();
   late GenresBloc _genresbloc;
   late List<Object?> _selectedgenres;
-
+  final box = GetStorage();
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
   }
@@ -57,8 +58,7 @@ class _BookEditScreenState extends State<BookEditScreen> {
         text: utf8.decode(widget.libroEditado.description.codeUnits));
     bookRepository = BookRepositoryImpl();
     genreRepository = GenreRepositoryImpl();
-    PreferenceUtils.init();
-    PreferenceUtils.setString("coveredit", "");
+    box.write("coveredit", "");
     _genresbloc = GenresBloc(genreRepository)..add(const FetchAllGenres());
     super.initState();
   }
@@ -295,10 +295,10 @@ class _BookEditScreenState extends State<BookEditScreen> {
                         generos: _selectedgenres);
 
                     BlocProvider.of<EditBookBloc>(context).add(EditOneBookEvent(
-                        PreferenceUtils.getString("coveredit")!,
+                        box.read("coveredit"),
                         createBookDto,
                         widget.libroEditado.id));
-                    PreferenceUtils.setString("idbook", widget.libroEditado.id);
+                    box.write("idbook", widget.libroEditado.id);
                   }
                 },
                 child: Text("Guardar",
@@ -311,13 +311,13 @@ class _BookEditScreenState extends State<BookEditScreen> {
   }
 
   Widget coverUrl(String cover) {
-    if (PreferenceUtils.getString("coveredit") == "") {
+    if (box.read("coveredit") == "") {
       return GestureDetector(
         onTap: () async {
           final XFile? pickedFile =
               await _picker.pickImage(source: ImageSource.gallery);
           setState(() {
-            PreferenceUtils.setString("coveredit", pickedFile!.path);
+            box.write("coveredit", pickedFile!.path);
           });
         },
         child: Image.network(
@@ -335,11 +335,11 @@ class _BookEditScreenState extends State<BookEditScreen> {
             final XFile? pickedFile =
                 await _picker.pickImage(source: ImageSource.gallery);
             setState(() {
-              PreferenceUtils.setString("coveredit", pickedFile!.path);
+              box.write("coveredit", pickedFile!.path);
             });
           },
           child: Image.file(
-            File(PreferenceUtils.getString("coveredit")!),
+            File(box.read("coveredit")),
             height: 200,
           ));
     }

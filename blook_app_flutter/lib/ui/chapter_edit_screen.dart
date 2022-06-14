@@ -9,6 +9,7 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/error_response.dart';
 
@@ -29,7 +30,8 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController nameController;
   late ChapterRepository chapterRepository;
-
+  final box = GetStorage();
+  
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
   }
@@ -37,7 +39,7 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
   @override
   void initState() {
     chapterRepository = ChapterRepositoryImpl();
-    PreferenceUtils.setString('image', '...');
+    box.write('image', '...');
     nameController = TextEditingController(text:utf8.decode(widget.nombreCapitulo.codeUnits));
     super.initState();
   }
@@ -178,7 +180,7 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
                       allowedExtensions: [/* 'jpg',  */'pdf'/* , 'doc' */],
                     );
                     setState(() {
-                      PreferenceUtils.setString(
+                      box.write(
                           'image', pickedFile!.files[0].path ?? "");
                     });
                   },
@@ -197,7 +199,7 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
                     color: BlookStyle.secondaryColor.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(20)),
                 child: Text(
-                  PreferenceUtils.getString('image')!,
+                  box.read('image'),
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                 ),
@@ -214,13 +216,13 @@ class _ChapterEditScreenState extends State<ChapterEditScreen> {
                       if (_formKey.currentState!.validate()) {
                         final createChapterDto =
                             CreateChapterDto(name: nameController.text);
-                        if (!PreferenceUtils.getString("image")!
-                            .endsWith('.pdf')&&PreferenceUtils.getString("image")!='...') {
+                        if (!box.read("image")
+                            .endsWith('.pdf')&&box.read("image")!='...') {
                           _createDialogC(context);
                         } else {
                           BlocProvider.of<EditChapterBloc>(context).add(
                               EditOneChapterEvent(
-                                  PreferenceUtils.getString("image")!,
+                                  box.read("image")!,
                                   createChapterDto,
                                   widget.idCapitulo));       
                         }

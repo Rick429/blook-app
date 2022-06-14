@@ -7,6 +7,7 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final box = GetStorage();
   late BookRepository bookRepository;
   final _formKey = GlobalKey<FormState>();
   TextEditingController searchController = TextEditingController();
@@ -151,7 +153,7 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         GestureDetector(
           onTap: () {
-            PreferenceUtils.setString("idbook", book.id);
+            box.write("idbook", book.id);
             Navigator.pushNamed(context, "/book");
           },
           child: Container(

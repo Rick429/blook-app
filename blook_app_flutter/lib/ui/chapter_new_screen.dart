@@ -10,6 +10,7 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../models/error_response.dart';
@@ -29,6 +30,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   late ChapterRepository chapterRepository;
+  final box = GetStorage();
 
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
@@ -37,7 +39,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
   @override
   void initState() {
     chapterRepository = ChapterRepositoryImpl();
-    PreferenceUtils.setString('image', '...');
+    box.write('image', '...');
     super.initState();
   }
 
@@ -75,7 +77,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                 state is CreateChapterErrorState;
           }, listener: (context, state) {
             if (state is CreateChapterSuccessState) {
-              PreferenceUtils.setString(Constant.file, state.pickedFile);
+              box.write(Constant.file, state.pickedFile);
               Navigator.pushNamed(context, '/');
               _createDialog(context);
             } else if (state is CreateChapterErrorState) {
@@ -176,7 +178,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                       allowedExtensions: ['pdf'],
                     );
                     setState(() {
-                      PreferenceUtils.setString(
+                      box.write(
                           'image', pickedFile!.files[0].path ?? "");
                     });
                   },
@@ -195,7 +197,7 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                     color: BlookStyle.secondaryColor.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(20)),
                 child: Text(
-                  PreferenceUtils.getString('image')!,
+                  box.read('image'),
                   style: BlookStyle.textCustom(
                       BlookStyle.whiteColor, BlookStyle.textSizeTwo),
                 ),
@@ -212,15 +214,15 @@ class _ChapterNewScreenState extends State<ChapterNewScreen> {
                     if (_formKey.currentState!.validate()) {
                       final createChapterDto =
                           CreateChapterDto(name: nameController.text);
-                      if (!PreferenceUtils.getString("image")!
+                      if (!box.read("image")
                           .endsWith('.pdf')) {
                         _createDialogC(context);
                       } else {
                         BlocProvider.of<ChapterNewBloc>(context).add(
                           CreateChapterEvent(
-                              PreferenceUtils.getString("image")!,
+                              box.read("image"),
                               createChapterDto,
-                              PreferenceUtils.getString("idbook")!),
+                              box.read("idbook")),
                         );
                       }
                     }

@@ -10,6 +10,7 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import '../models/error_response.dart';
 
 class CommentMenu extends StatefulWidget {
@@ -25,10 +26,12 @@ class _CommentMenuState extends State<CommentMenu> {
   late bool _editable;
   late CommentRepository commentRepository;
   late Future<CommentExistsResponse> exist;
+  final box = GetStorage();
+
   @override
   void initState() {
     setState(() {
-      if (PreferenceUtils.getBool("exists")) {
+      if (box.read("exists")) {
         _editable = false;
       } else {
         _editable = true;
@@ -36,8 +39,7 @@ class _CommentMenuState extends State<CommentMenu> {
     });
     commentRepository = CommentRepositoryImpl();
     super.initState();
-    commentController =
-        TextEditingController(text: PreferenceUtils.getString("commentF"));
+    commentController = TextEditingController(text: box.read("commentF"));
   }
 
   @override
@@ -145,8 +147,11 @@ class _CommentMenuState extends State<CommentMenu> {
                           final createCommentDto =
                               CreateCommentDto(comment: commentController.text);
                           BlocProvider.of<CommentNewBloc>(context).add(
-                              createCommentEvent(createCommentDto,
-                                  PreferenceUtils.getString("idbook")!));
+                            createCommentEvent(
+                              createCommentDto,
+                              box.read("idbook"),
+                            ),
+                          );
                         }
                       },
                       child: const Icon(

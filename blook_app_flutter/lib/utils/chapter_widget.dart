@@ -12,6 +12,7 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ChapterWidget extends StatefulWidget {
   final String idCapitulo;
@@ -31,16 +32,16 @@ class ChapterWidget extends StatefulWidget {
 }
 
 class _ChapterWidgetState extends State<ChapterWidget> {
+  final box = GetStorage();
 
   @override
   void initState() {
-    PreferenceUtils.init();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (PreferenceUtils.getString("nick") == widget.autorLibro) {
+    if (box.read("nick") == widget.autorLibro) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -66,7 +67,7 @@ class _ChapterWidgetState extends State<ChapterWidget> {
               onPressed: () {
                 _createDialog(context, widget.idCapitulo);
               },
-              icon: Icon(Icons.delete))
+              icon: const Icon(Icons.delete))
         ],
       );
     } else {

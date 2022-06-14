@@ -5,6 +5,7 @@ import 'package:blook_app_flutter/repository/book_repository/book_repository.dar
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get_storage/get_storage.dart';
 
 part 'book_event.dart';
 part 'book_state.dart';
@@ -12,6 +13,7 @@ part 'book_state.dart';
 class BookBloc extends Bloc<BookEvent, BookState> {
   final BookRepository bookRepository;
   final CommentRepository commentRepository;
+  final box = GetStorage();
 
   BookBloc(this.bookRepository, this.commentRepository) : super(BookInitial()) {
     on<FetchOneBook>(_BookFetched);
@@ -19,10 +21,8 @@ class BookBloc extends Bloc<BookEvent, BookState> {
 
   void _BookFetched(FetchOneBook event, Emitter<BookState> emit) async {
     try {
-      final book = await bookRepository.findBookById(PreferenceUtils.getString("idbook")!);
-      final favorite = await bookRepository.isFavorite(PreferenceUtils.getString("idbook")!);
-/*       final ex = await commentRepository.findCommentById(PreferenceUtils.getString("idbook")!);
-      PreferenceUtils.setBool("exists", ex.commentexist); */
+      final book = await bookRepository.findBookById(box.read("idbook"));
+      final favorite = await bookRepository.isFavorite(box.read("idbook"));
       emit(OneBookFetched(book, favorite));
       return;
     } on Exception catch (e) {

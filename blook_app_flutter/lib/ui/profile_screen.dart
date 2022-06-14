@@ -11,6 +11,7 @@ import 'package:blook_app_flutter/blocs/image_pick_bloc/image_pick_bloc.dart';
 import 'package:blook_app_flutter/constants.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/home_app_bar.dart';
+import 'package:get_storage/get_storage.dart';
 import '../utils/preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +30,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<XFile>? _imageFileList;
   late UserRepository userRepository;
   late ProfileBloc _profileBloc;
-
+  final box = GetStorage();
+    
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
   }
@@ -39,8 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     userRepository = UserRepositoryImpl();
-    PreferenceUtils.init();
-    _profileBloc = ProfileBloc(userRepository)..add(FetchUserLogged());
+    _profileBloc = ProfileBloc(userRepository)..add(const FetchUserLogged());
     super.initState();
   }
 
@@ -111,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _userItem(User userLogged) {
-    PreferenceUtils.setString('idUser', userLogged.id);
+    box.write('idUser', userLogged.id);
     return Column(
       children: [
         Center(
@@ -277,7 +278,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               TextButton(
                                 onPressed: () => {
-                                  PreferenceUtils.clear(),
+                                  box.erase(),
                                   Navigator.pushNamed(context, '/login'),
                                 },
                                 child: const Text(
@@ -322,7 +323,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               image: DecorationImage(
                   fit: BoxFit.fill,
                   image: NetworkImage(
-                    PreferenceUtils.getString("avatar")!,
+                    box.read("avatar")!,
                     /*  headers: {
                             'Authorization':
                                 'Bearer ${PreferenceUtils.getString('token')}'
@@ -346,7 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 BlocProvider.of<ImagePickBloc>(context)
                     .add(const SelectImageEvent(ImageSource.gallery));
               },
-              child: avatar(PreferenceUtils.getString('avatar')!)),
+              child: avatar(box.read('avatar'))),
         ],
       ),
     );

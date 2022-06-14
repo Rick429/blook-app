@@ -7,6 +7,7 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import '../models/error_response.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -17,13 +18,13 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
+  final box = GetStorage();
   final _formKey = GlobalKey<FormState>();
   TextEditingController commentController = TextEditingController();
   late ReportRepository reportRepository;
 
   @override
   void initState() {
-    PreferenceUtils.init();
     reportRepository = ReportRepositoryImpl();
     super.initState();
   }
@@ -166,7 +167,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                           final createReport = CreateReport(
-                              reportComment: commentController.text, typeReport: PreferenceUtils.getString('typereport')!);
+                              reportComment: commentController.text, typeReport: box.read('typereport')!);
                           BlocProvider.of<ReportBloc>(context)
                               .add(DoReportEvent(createReport));
                         }                        

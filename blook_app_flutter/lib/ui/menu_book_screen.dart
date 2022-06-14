@@ -4,6 +4,7 @@ import 'package:blook_app_flutter/ui/pdf_viewer.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class MenuBookScreen extends StatefulWidget {
   const MenuBookScreen({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class MenuBookScreen extends StatefulWidget {
 
 class _MenuBookScreenState extends State<MenuBookScreen> {
   int _currentIndex = 0;
-
+  final box = GetStorage();
   List<Widget> pages = [
     const BookScreen(),
   ];
@@ -53,7 +54,7 @@ class _MenuBookScreenState extends State<MenuBookScreen> {
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => PdfViewer(
-                              document: PreferenceUtils.getString("document") ??
+                              document: box.read("document") ??
                                   "")));
                     },
                     child: Text("Leer",
@@ -82,7 +83,7 @@ class _MenuBookScreenState extends State<MenuBookScreen> {
                       ? BlookStyle.primaryColor
                       : BlookStyle.whiteColor),
               onTap: () {
-                PreferenceUtils.setString(Constant.typereport, "LIBRO");
+                box.write(Constant.typereport, "LIBRO");
                 Navigator.pushNamed(context, '/report');
               },
             ),

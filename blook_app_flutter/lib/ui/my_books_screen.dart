@@ -8,6 +8,7 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/home_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 
 class MyBooksScreen extends StatefulWidget {
   const MyBooksScreen({Key? key}) : super(key: key);
@@ -21,14 +22,14 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
   late MyBooksBloc _mybooksbloc;
   late String title = "";
   late String sortopt = "name,desc";
+  final box = GetStorage();
 
   @override
   void initState() {
-    PreferenceUtils.init();
-    PreferenceUtils.setString("s", sortopt);
+    box.write("s", sortopt);
     bookRepository = BookRepositoryImpl();
     _mybooksbloc = MyBooksBloc(bookRepository)
-      ..add(FetchAllMyBooks(10, PreferenceUtils.getString("s")!));
+      ..add(FetchAllMyBooks(10, box.read("s")!));
     super.initState();
   }
 
@@ -182,7 +183,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
       children: [
         GestureDetector(
           onTap: () {
-            PreferenceUtils.setString("idbook", book.id);
+            box.write("idbook", book.id);
             Navigator.pushNamed(context, "/book");
           },
           child: Container(
@@ -279,7 +280,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                             setState(() {
                               title = "más reciente";
                               sortopt = "releaseDate,desc";
-                              PreferenceUtils.setString("s", sortopt);
+                              box.write("s", sortopt);
 
                               Navigator.pop(context);
                             });
@@ -301,7 +302,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                             setState(() {
                               title = "más antiguo";
                               sortopt = "releaseDate,asc";
-                              PreferenceUtils.setString("s", sortopt);
+                              box.write("s", sortopt);
                               books.sort((a, b) =>
                                   a.releaseDate.compareTo(b.releaseDate));
                               Navigator.pop(context);
@@ -329,7 +330,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                             setState(() {
                               title = "nombre de A-Z";
                               sortopt = "name,desc";
-                              PreferenceUtils.setString("s", sortopt);
+                              box.write("s", sortopt);
                               books.sort((a, b) => b.name.compareTo(a.name));
                               Navigator.pop(context);
                             });
@@ -351,7 +352,7 @@ class _MyBooksScreenState extends State<MyBooksScreen> {
                             setState(() {
                               title = "nombre de Z-A";
                               sortopt = "name,asc";
-                              PreferenceUtils.setString("s", sortopt);
+                              box.write("s", sortopt);
                               Navigator.pop(context);
                             });
                           },

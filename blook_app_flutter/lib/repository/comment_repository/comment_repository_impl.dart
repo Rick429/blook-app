@@ -6,13 +6,15 @@ import 'package:blook_app_flutter/models/create_comment_dto.dart';
 import 'package:blook_app_flutter/models/error_response.dart';
 import 'package:blook_app_flutter/repository/comment_repository/comment_repository.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class CommentRepositoryImpl extends CommentRepository {
   final Client _client = Client();
-
+  final box = GetStorage();
+  
   @override
   createComment(CreateCommentDto createCommentDto, String idbook) async{
       var request = http.MultipartRequest(
@@ -25,7 +27,7 @@ class CommentRepositoryImpl extends CommentRepository {
   
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
-      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+      'Authorization': 'Bearer ${box.read('token')}' 
      
     };
      request.headers.addAll(headers);
@@ -42,10 +44,10 @@ class CommentRepositoryImpl extends CommentRepository {
 
   @override
   Future<List<Comment>>fetchComments() async{
-     final response = await _client.get(Uri.parse('${Constant.baseurl}comment/all/${PreferenceUtils.getString("idbook")}?size=100'), headers: {
+     final response = await _client.get(Uri.parse('${Constant.baseurl}comment/all/${box.read("idbook")}?size=100'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
     if (response.statusCode == 200) {
       return CommentResponse.fromJson(json.decode(response.body)).content;
@@ -66,7 +68,7 @@ class CommentRepositoryImpl extends CommentRepository {
 
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
-      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+      'Authorization': 'Bearer ${box.read('token')}' 
     };
      request.headers.addAll(headers);
     var res = await request.send();
@@ -83,7 +85,7 @@ class CommentRepositoryImpl extends CommentRepository {
   @override
   Future<void> deleteComment(String id) async {
      _client.delete(Uri.parse('${Constant.baseurl}comment/$id'), headers: {
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
   }
 
@@ -92,7 +94,7 @@ class CommentRepositoryImpl extends CommentRepository {
      final response = await _client.get(Uri.parse('${Constant.baseurl}comment/exists/bool/$id'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
     if (response.statusCode == 200) {
       var res = CommentExistsResponse.fromJson(json.decode(response.body));

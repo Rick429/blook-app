@@ -8,6 +8,7 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/home_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({Key? key}) : super(key: key);
@@ -20,10 +21,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   late BookRepository bookRepository;
   late MyFavoriteBooksBloc _myfavoritebooksbloc;
   late String title = "";
-
+  final box = GetStorage();
+  
   @override
   void initState() {
-    PreferenceUtils.init();
     bookRepository = BookRepositoryImpl();
     _myfavoritebooksbloc = MyFavoriteBooksBloc(bookRepository)
       ..add(const FetchAllMyFavoriteBooks(10));
@@ -175,7 +176,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       children: [
         GestureDetector(
           onTap: () {
-            PreferenceUtils.setString("idbook", book.id);
+            box.write("idbook", book.id);
             Navigator.pushNamed(context, "/book");
           },
           child: Container(

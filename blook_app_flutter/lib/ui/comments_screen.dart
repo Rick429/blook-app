@@ -11,6 +11,7 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import '../models/comment_response.dart';
 
 class CommentsScren extends StatefulWidget {
@@ -21,13 +22,14 @@ class CommentsScren extends StatefulWidget {
 }
 
 class _CommentsScrenState extends State<CommentsScren> {
+    final box = GetStorage();
   bool _isEditingText = false;
-  String initialText = PreferenceUtils.getString("comment") ?? "";
+
   late CommentRepository commentRepository;
   late CommentsBloc _commentsbloc;
   @override
   void initState() {
-    PreferenceUtils.init();
+  
     commentRepository = CommentRepositoryImpl();
     _commentsbloc = CommentsBloc(commentRepository)
       ..add(const FetchAllComments());
@@ -88,7 +90,7 @@ class _CommentsScrenState extends State<CommentsScren> {
                   ),
                 );
               } else if (state is CommentsFetched) {
-                PreferenceUtils.setString("commentF", "");
+                box.write("commentF", "");
                 return _commentsList(context, state.comments);
               } else {
                 return const Text('No se ha podido cargar las reseñas');
@@ -230,9 +232,9 @@ class _CommentsScrenState extends State<CommentsScren> {
                     _deleteButton(context, comment),
                     GestureDetector(
                         onTap: () {
-                          PreferenceUtils.setString(
+                          box.write(
                               Constant.typereport, "COMENTARIO");
-                          PreferenceUtils.setString("idbook", comment.bookId);
+                          box.write("idbook", comment.bookId);
                           Navigator.pushNamed(context, '/report');
                         },
                         child: const Icon(Icons.report_problem_rounded,
@@ -266,7 +268,7 @@ class _CommentsScrenState extends State<CommentsScren> {
           image: DecorationImage(
             fit: BoxFit.fill,
             image: NetworkImage(
-              PreferenceUtils.getString("avatar")!,
+              box.read("avatar")!,
             ),
           ),
         ),
@@ -275,18 +277,18 @@ class _CommentsScrenState extends State<CommentsScren> {
   }
 
   Widget _editButton(context, Comment comment) {
-    if (comment.nick == PreferenceUtils.getString("nick")) {
+    if (comment.nick == box.read("nick")) {
       return GestureDetector(
           onTap: () {
             setState(() {
-              PreferenceUtils.setBool("exists", false);
-              PreferenceUtils.setString("commentF", comment.comment);
+              box.write("exists", false);
+              box.write("commentF", comment.comment);
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(pageBuilder: (_, __, ___) => const CommentsScren()),
               );
               _isEditingText = true;
-              initialText = comment.comment;
+         
             });
           },
           child: const Icon(Icons.edit, color: BlookStyle.whiteColor));
@@ -296,7 +298,7 @@ class _CommentsScrenState extends State<CommentsScren> {
   }
 
   Widget _deleteButton(BuildContext context, Comment comment) {
-    if (comment.nick == PreferenceUtils.getString("nick")) {
+    if (comment.nick == box.read("nick")) {
       return GestureDetector(
           onTap: () {
             _createDeleteDialog(context, comment.bookId);

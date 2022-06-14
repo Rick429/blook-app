@@ -8,11 +8,20 @@ import 'package:blook_app_flutter/ui/menu_screen.dart';
 import 'package:blook_app_flutter/ui/register_screen.dart';
 import 'package:blook_app_flutter/ui/report_screen.dart';
 import 'package:blook_app_flutter/ui/search_screen.dart';
-import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
-void main() {
-  PreferenceUtils.init();
+Future<void> main() async {
+  await GetStorage.init();
+   /* final box = GetStorage();
+   var tok = box.read('token');
+   if(box.read('token')!=""){
+    var hasExpired = JwtDecoder.getTokenTime(tok)*-1;
+    if(hasExpired.inSeconds<= 21600){
+      box.write('token', "");
+    }
+   } */
   runApp(const MyApp());
 }
 
@@ -21,12 +30,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  final box = GetStorage();
     return MaterialApp(
       title: 'Blook App Flutter',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
       ),
-      initialRoute: '/login',
+    initialRoute: "/login" /* box.read('token')==""?"/login":"/" */,
+      
       routes: {
         '/': (context) => const MenuScreen(),
         '/login': (context) => const LoginScreen(),
@@ -42,4 +54,5 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+
 }

@@ -14,6 +14,7 @@ import 'package:blook_app_flutter/utils/preferences.dart';
 import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -40,7 +41,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
   late List<Genre> lista;
   late GenresBloc _genresbloc;
   late List<Object?> _selectedgenres = [];
-
+  final box = GetStorage();
   set _imageFile(XFile? value) {
     _imageFileList = value == null ? null : <XFile>[value];
   }
@@ -49,8 +50,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
   void initState() {
     bookRepository = BookRepositoryImpl();
     genreRepository = GenreRepositoryImpl();
-    PreferenceUtils.init();
-    PreferenceUtils.setString("cover", "");
+    box.write("cover", "");
     _genresbloc = GenresBloc(genreRepository)..add(const FetchAllGenres());
     super.initState();
   }
@@ -107,7 +107,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
           return state is BookNewInitial || state is CreateBookSuccessState;
         }, builder: (context, state) {
           if (state is CreateBookSuccessState) {
-            PreferenceUtils.setString("idbook", state.book.id);
+            box.write("idbook", state.book.id);
             return buildForm(context, state);
           }
           return buildForm(context, state);
@@ -182,9 +182,9 @@ class _BookNewScreenState extends State<BookNewScreen> {
                     name: nameController.text,
                     description: descriptionController.text,
                     generos: _selectedgenres);
-                if (PreferenceUtils.getString("cover") != "") {
+                if (box.read("cover") != "") {
                   BlocProvider.of<BookNewBloc>(context).add(CreateBookEvent(
-                      PreferenceUtils.getString("cover")!, createBookDto));
+                      box.read("cover"), createBookDto));
                 } else {
                   _createDialogC(context);
                 }
@@ -204,7 +204,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
           final XFile? pickedFile =
               await _picker.pickImage(source: ImageSource.gallery);
           setState(() {
-            PreferenceUtils.setString("cover", pickedFile!.path);
+            box.write("cover", pickedFile!.path);
           });
         },
         child: Image.asset("assets/images/upload.png", height: 200),
@@ -215,11 +215,11 @@ class _BookNewScreenState extends State<BookNewScreen> {
             final XFile? pickedFile =
                 await _picker.pickImage(source: ImageSource.gallery);
             setState(() {
-              PreferenceUtils.setString("cover", pickedFile!.path);
+              box.write("cover", pickedFile!.path);
             });
           },
           child: Image.file(
-            File(PreferenceUtils.getString("cover")!),
+            File(box.read("cover")),
             height: 200,
           ));
     }
@@ -233,7 +233,7 @@ class _BookNewScreenState extends State<BookNewScreen> {
             key: _formKey,
             child: Column(
               children: [
-                coverUrl(context, PreferenceUtils.getString("cover") ?? ""),
+                coverUrl(context, box.read("cover") ?? ""),
                 Container(
                   height: 50,
                   margin: const EdgeInsets.all(10),

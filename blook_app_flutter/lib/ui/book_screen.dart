@@ -23,6 +23,7 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 
 class BookScreen extends StatefulWidget {
   const BookScreen({Key? key}) : super(key: key);
@@ -36,10 +37,10 @@ class _BookScreenState extends State<BookScreen> {
   late BookBloc _oneBookBloc;
   late ChapterRepository chapterRepository;
   late CommentRepository commentRepository;
-
+  final box = GetStorage();
+  
   @override
   void initState() {
-    PreferenceUtils.init();
     bookRepository = BookRepositoryImpl();
     chapterRepository = ChapterRepositoryImpl();
     commentRepository = CommentRepositoryImpl();
@@ -97,13 +98,13 @@ class _BookScreenState extends State<BookScreen> {
                   },
                 );
               } else if (state is OneBookFetched) {
-                PreferenceUtils.setBool(
+                box.write(
                     "favorite", state.favoriteResponse.favorito);
                 if (state.book.chapters.isNotEmpty) {
-                  PreferenceUtils.setString(
+                  box.write(
                       "document", state.book.chapters.first.file);
                 } else {
-                  PreferenceUtils.setString("document", "");
+                  box.write("document", "");
                 }
                 return buildOne(context, state.book);
               } else {
@@ -209,7 +210,7 @@ class _BookScreenState extends State<BookScreen> {
   }
 
   Widget favorite(context) {
-    if (PreferenceUtils.getBool("favorite")) {
+    if (box.read("favorite")) {
       return SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Row(
@@ -221,7 +222,7 @@ class _BookScreenState extends State<BookScreen> {
                 onTap: () {
                   BlocProvider.of<RemoveFavoriteBloc>(context).add(
                       RemoveFavoriteBookEvent(
-                          PreferenceUtils.getString("idbook")!));
+                          box.read("idbook")));
                 },
                 child: const Icon(
                   Icons.favorite,
@@ -278,13 +279,13 @@ class _BookScreenState extends State<BookScreen> {
   }
 
   Widget deleteBook(BuildContext context, Book book) {
-    if (book.autor == PreferenceUtils.getString("nick")) {
+    if (book.autor == box.read("nick")) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           IconButton(
             onPressed: () {
-              PreferenceUtils.setString("idBook", book.id);
+              box.write("idBook", book.id);
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => BookEditScreen(
                         libroEditado: book,
@@ -319,10 +320,10 @@ class _BookScreenState extends State<BookScreen> {
   }
 
   Widget _createChapter(Book book) {
-    if (book.autor == PreferenceUtils.getString("nick")) {
+    if (book.autor == box.read("nick")) {
       return GestureDetector(
         onTap: () {
-          PreferenceUtils.setString("idBook", book.id);
+          box.write("idBook", book.id);
           Navigator.pushNamed(context, '/chapternew');
         },
         child: Container(

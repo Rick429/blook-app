@@ -10,6 +10,7 @@ import 'package:blook_app_flutter/widgets/error_page.dart';
 import 'package:blook_app_flutter/widgets/home_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,11 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
   late BookRepository bookRepository;
   late BooksBloc _topNewBooksBloc;
   late BooksBloc _orderBooksBloc;
-
+  final box = GetStorage();
+  
   @override
   void initState() {
     bookRepository = BookRepositoryImpl();
-    PreferenceUtils.init();
     _topNewBooksBloc = BooksBloc(bookRepository)
       ..add(const FetchBooksWithType("new/"));
     _orderBooksBloc = BooksBloc(bookRepository)
@@ -164,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 130,
               child: ElevatedButton(
                 onPressed: () {
-                  PreferenceUtils.setString("idbook", book.id);
+                  box.write("idbook", book.id);
                   Navigator.pushNamed(context, "/book");
                 },
                 child: Text(
@@ -233,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _bookItem(BuildContext context, Book book) {
     return GestureDetector(
       onTap: () {
-        PreferenceUtils.setString("idbook", book.id);
+        box.write("idbook", book.id);
         Navigator.pushNamed(context, "/book");
       },
       child: SizedBox(

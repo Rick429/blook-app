@@ -9,6 +9,7 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final box = GetStorage();
   late AuthRepository authRepository;
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
@@ -27,7 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    PreferenceUtils.init();
     authRepository = AuthRepositoryImpl();
     super.initState();
   }

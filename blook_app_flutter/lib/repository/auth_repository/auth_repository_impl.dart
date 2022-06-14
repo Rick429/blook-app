@@ -5,6 +5,7 @@ import 'package:blook_app_flutter/models/login_dto.dart';
 import 'package:blook_app_flutter/models/login_response.dart';
 import 'package:blook_app_flutter/models/register_dto.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
@@ -13,7 +14,8 @@ import 'auth_repository.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   final Client _client = Client();
-
+  final box = GetStorage();
+  
   @override
   Future<LoginResponse> login(LoginDto loginDto) async {
     Map<String, String> headers = {
@@ -26,11 +28,11 @@ class AuthRepositoryImpl extends AuthRepository {
         body: jsonEncode(loginDto.toJson()));
     if (response.statusCode == 201) {
       LoginResponse userLogged = LoginResponse.fromJson(json.decode(response.body));
-      PreferenceUtils.setString('nick', userLogged.nick);
+      box.write('nick', userLogged.nick);
       if(userLogged.avatar.isEmpty){
-        PreferenceUtils.setString('avatar', '');
+        box.write('avatar', '');
       }else {
-        PreferenceUtils.setString('avatar', userLogged.avatar);
+        box.write('avatar', userLogged.avatar);
       }
       return userLogged;
     } else {
@@ -61,11 +63,11 @@ class AuthRepositoryImpl extends AuthRepository {
     final respStr = await res.stream.bytesToString();
     if (res.statusCode == 201) {
       LoginResponse userLogged = LoginResponse.fromJson(json.decode(respStr));
-      PreferenceUtils.setString('nick', userLogged.nick);
+      box.write('nick', userLogged.nick);
       if(userLogged.avatar.isEmpty){
-        PreferenceUtils.setString('avatar', '');
+        box.write('avatar', '');
       }else {
-        PreferenceUtils.setString('avatar', userLogged.avatar);
+        box.write('avatar', userLogged.avatar);
       }
       return userLogged;
     } else {

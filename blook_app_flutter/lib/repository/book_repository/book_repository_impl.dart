@@ -8,6 +8,7 @@ import 'package:blook_app_flutter/models/favorite_response.dart';
 import 'package:blook_app_flutter/models/search_dto.dart';
 import 'package:blook_app_flutter/repository/book_repository/book_repository.dart';
 import 'package:blook_app_flutter/utils/preferences.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -16,7 +17,8 @@ typedef void OnDownloadProgressCallback(int receivedBytes, int totalBytes);
 typedef void OnUploadProgressCallback(int sentBytes, int totalBytes);
 class BookRepositoryImpl extends BookRepository {
   final Client _client = Client();
-
+  final box = GetStorage();
+  
   @override
   Future<Book> createBook(CreateBookDto createBookDto, String filename) async{
     var request = http.MultipartRequest(
@@ -30,7 +32,7 @@ class BookRepositoryImpl extends BookRepository {
       request.files.add(await http.MultipartFile.fromPath('file',filename));
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
-      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+      'Authorization': 'Bearer ${box.read('token')}' 
      
     };
      request.headers.addAll(headers);
@@ -48,11 +50,11 @@ class BookRepositoryImpl extends BookRepository {
   @override
   Future <BookResponse> fetchMyBooks(int size, String sortedList) async{
      final response = await _client.get(Uri.
-     parse('${Constant.baseurl}book/all/user/${PreferenceUtils.getString("nick")}?size=$size&sort=$sortedList'),
+     parse('${Constant.baseurl}book/all/user/${box.read("nick")}?size=$size&sort=$sortedList'),
       headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
     if (response.statusCode == 200) {
       return BookResponse.fromJson(json.decode(response.body));
@@ -66,7 +68,7 @@ class BookRepositoryImpl extends BookRepository {
      final response = await _client.get(Uri.parse('${Constant.baseurl}book/${id}'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
     if (response.statusCode == 200) {
       return Book.fromJson(json.decode(response.body));
@@ -80,26 +82,26 @@ class BookRepositoryImpl extends BookRepository {
      final response = await _client.post(Uri.parse('${Constant.baseurl}book/favorite/${id}'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
     if (response.statusCode == 201) {
       return Book.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Fail to load book');
+      throw Exception('Error al marcar el libro como favorito');
     }
   }
 
   @override
   Future<BookResponse>fetchMyFavoriteBooks(int size) async{
-     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/favorite/${PreferenceUtils.getString("nick")}?size=$size'), headers: {
+     final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/favorite/${box.read("nick")}?size=$size'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
     if (response.statusCode == 200) {
       return BookResponse.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Fail to load books');
+      throw Exception('Error al cargar la lista de favoritos');
     }
   }
 
@@ -108,12 +110,12 @@ class BookRepositoryImpl extends BookRepository {
      final response = await _client.get(Uri.parse('${Constant.baseurl}book/all/$type'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
     if (response.statusCode == 200) {
       return BookResponse.fromJson(json.decode(response.body)).content;
     } else {
-      throw Exception('Fail to load books');
+      throw Exception('Error al cargar lo libros');
     }
   }
 
@@ -128,7 +130,7 @@ class BookRepositoryImpl extends BookRepository {
     
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
-      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+      'Authorization': 'Bearer ${box.read('token')}' 
      
     };
      request.headers.addAll(headers);
@@ -146,14 +148,14 @@ class BookRepositoryImpl extends BookRepository {
   @override
   void deleteBook(String id){
      _client.delete(Uri.parse('${Constant.baseurl}book/$id'), headers: {
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
   }
 
    @override
   void removeFavorite(String id){
     var req = _client.post(Uri.parse('${Constant.baseurl}book/favorite/remove/$id'), headers: {
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
   }
 
@@ -162,12 +164,12 @@ class BookRepositoryImpl extends BookRepository {
      final response = await _client.get(Uri.parse('${Constant.baseurl}book/favorite/bool/$id'), headers: {
      'Content-Type': 'application/json',
      'Accept': 'application/json',
-     'Authorization': 'Bearer ${PreferenceUtils.getString(Constant.token)}'
+     'Authorization': 'Bearer ${box.read(Constant.token)}'
     });
     if (response.statusCode == 200) {
       return FavoriteResponse.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Fail to load');
+      throw Exception('Error al comprobar si el libro es favorito');
     }
   }
 
@@ -182,7 +184,7 @@ class BookRepositoryImpl extends BookRepository {
         );
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
-      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+      'Authorization': 'Bearer ${box.read('token')}' 
     };
      request.headers.addAll(headers);
     var res = await request.send();
@@ -205,7 +207,7 @@ class BookRepositoryImpl extends BookRepository {
 
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
-      'Authorization': 'Bearer ${PreferenceUtils.getString('token')}' 
+      'Authorization': 'Bearer ${box.read('token')}' 
     };
      request.headers.addAll(headers);
     var res = await request.send();

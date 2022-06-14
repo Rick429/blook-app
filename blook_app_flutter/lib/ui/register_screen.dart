@@ -11,6 +11,7 @@ import 'package:blook_app_flutter/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_storage/get_storage.dart';
 import '../models/error_response.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -31,12 +32,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late AuthRepository authRepository;
   bool _obscureText = true;
   Icon iconpass = const Icon(Icons.remove_red_eye_outlined);
+  final box = GetStorage();
 
   @override
   void initState() {
     super.initState();
     authRepository = AuthRepositoryImpl();
-    PreferenceUtils.init();
   }
 
   Future<bool> _onWillPop() async {
@@ -103,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return state is RegisterSuccessState || state is RegisterErrorState;
         }, listener: (context, state) {
           if (state is RegisterSuccessState) {
-            PreferenceUtils.setString(
+            box.write(
                 Constant.token, state.loginResponse.token);
             Navigator.pushReplacement(
               context,
