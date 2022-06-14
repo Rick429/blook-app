@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       final loginResponse = await authRepository.login(event.loginDto);
       box.write('token', loginResponse.token);
-      box.write('nick', loginResponse.token);
+      box.write('nick', loginResponse.nick);
       emit(LoginSuccessState(loginResponse));
       return;
     } on Exception catch (e) {

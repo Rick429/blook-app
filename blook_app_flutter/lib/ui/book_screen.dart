@@ -98,8 +98,7 @@ class _BookScreenState extends State<BookScreen> {
                   },
                 );
               } else if (state is OneBookFetched) {
-                box.write(
-                    "favorite", state.favoriteResponse.favorito);
+                
                 if (state.book.chapters.isNotEmpty) {
                   box.write(
                       "document", state.book.chapters.first.file);
