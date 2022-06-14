@@ -2,6 +2,7 @@ package com.salesianostriana.blook.errors;
 
 import com.salesianostriana.blook.errors.exceptions.BadRequestException;
 import com.salesianostriana.blook.errors.exceptions.EntityNotFound;
+import com.salesianostriana.blook.errors.exceptions.FavoriteException;
 import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
 import com.salesianostriana.blook.errors.models.ApiError;
 import com.salesianostriana.blook.errors.models.ApiSubError;

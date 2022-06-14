@@ -4,10 +4,7 @@ import com.salesianostriana.blook.dtos.BookDtoConverter;
 import com.salesianostriana.blook.dtos.CreateBookDto;
 import com.salesianostriana.blook.dtos.GetBookDto;
 import com.salesianostriana.blook.enums.UserRole;
-import com.salesianostriana.blook.errors.exceptions.EntityNotFound;
-import com.salesianostriana.blook.errors.exceptions.ForbiddenException;
-import com.salesianostriana.blook.errors.exceptions.ListEntityNotFoundException;
-import com.salesianostriana.blook.errors.exceptions.OneEntityNotFound;
+import com.salesianostriana.blook.errors.exceptions.*;
 import com.salesianostriana.blook.models.Book;
 import com.salesianostriana.blook.models.Genre;
 import com.salesianostriana.blook.models.UserEntity;
@@ -134,8 +131,12 @@ public class BookService {
             if(b.isEmpty()) {
                 throw new OneEntityNotFound(idbook.toString(), Book.class);
             } else {
-                u.get().addFavoriteBook(b.get());
-                return bookRepository.save(b.get());
+                if(!b.get().getUsersLibroFavorito().contains(u.get())){
+                    u.get().addFavoriteBook(b.get());
+                    return bookRepository.save(b.get());
+                }else{
+                    throw new FavoriteException("El libro ya esta marcado como favorito");
+                }
             }
         }
     }
@@ -198,8 +199,12 @@ public class BookService {
             if(b.isEmpty()) {
                 throw new OneEntityNotFound(idbook.toString(), Book.class);
             } else {
-                u.get().removeFavoriteBook(b.get());
-                bookRepository.save(b.get());
+                if(b.get().getUsersLibroFavorito().contains(u.get())){
+                    u.get().removeFavoriteBook(b.get());
+                    bookRepository.save(b.get());
+                }else{
+                    throw new FavoriteException("El libro no esta marcado como favorito");
+                }
             }
         }
     }
