@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 
@@ -9,7 +10,7 @@ import Swal from 'sweetalert2';
 })
 export class ToolbarComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -25,7 +26,6 @@ export class ToolbarComponent implements OnInit {
       cancelButtonText:'No',
       confirmButtonText: 'Si'
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         this.authService.logout();
       } else if (result.isDenied) {
@@ -33,4 +33,13 @@ export class ToolbarComponent implements OnInit {
       }
     })
   }
+
+  seleccionar(){
+    localStorage.setItem('seleccionado', 'perfil');
+    this.router.navigateByUrl("perfil").then(r=>{
+      history.go(0);
+    });
+
+  }
+
 }

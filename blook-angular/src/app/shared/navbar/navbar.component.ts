@@ -56,6 +56,17 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.select =localStorage.getItem('seleccionado') ??"";
+    if (window.localStorage) {
+      window.addEventListener('storage', event => {
+        if (event.storageArea === localStorage) {
+          if (window.localStorage.getItem('seleccionado') == "perfil") {
+            alert("Sidebar si existe en localStorage!!");
+          //Elimina Sidebar
+            localStorage.removeItem('seleccionado');
+          }
+        }
+      }, false);
+    }
   }
 
   seleccionar(element:any){

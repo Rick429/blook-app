@@ -34,7 +34,7 @@ export class PerfilComponent implements OnInit {
   constructor(private authService: AuthService, private userService: UserService) { }
 
   ngOnInit(): void {
-    localStorage.setItem('seleccionado', 'Perfil');
+
     this.authService.userLogged().subscribe({
       next: (m => {
         this.formulario.patchValue(m);
