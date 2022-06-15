@@ -24,6 +24,8 @@ class BookBloc extends Bloc<BookEvent, BookState> {
     try {
       final book = await bookRepository.findBookById(box.read("idbook"));
       final favorite = await bookRepository.isFavorite(box.read("idbook"));
+      final ex = await commentRepository.findCommentById(box.read("idbook")!);
+      box.write("exists", ex.commentexist);
       box.write("favorite", favorite.favorito);
       emit(OneBookFetched(book, favorite));
       return;

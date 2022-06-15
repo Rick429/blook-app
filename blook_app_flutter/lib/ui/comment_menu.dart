@@ -31,11 +31,9 @@ class _CommentMenuState extends State<CommentMenu> {
   @override
   void initState() {
     setState(() {
-      if (box.read("exists")) {
-        _editable = false;
-      } else {
-        _editable = true;
-      }
+  
+        _editable = !box.read("exists");
+ 
     });
     commentRepository = CommentRepositoryImpl();
     super.initState();
