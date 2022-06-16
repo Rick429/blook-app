@@ -1,0 +1,39 @@
+<section >
+  <form class="container" [formGroup]="formulario">
+    <div class="op">
+    <h2 *ngIf="this.data!=null" class="titulo">Editar Libro</h2>
+    <h2 *ngIf="this.data==null" class="titulo">Crear Libro</h2>
+    <a class="closebutton" (click)="cancelar()"><img src="../../../assets/img/close.svg"></a>
+  </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Titulo</mat-label>
+      <input matInput placeholder="name" formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descripción</mat-label>
+      <input matInput placeholder="description" formControlName="description">
+    </mat-form-field>
+
+    <input type="file" placeholder="cover" name="file" id="file" (change)="onFileChanged($event)" />
+
+    <mat-form-field appearance="outline">
+      <mat-label>Géneros</mat-label>
+      <mat-select [(ngModel)]="genreSelect"  name="genreSelect" [ngModelOptions]="{standalone: true}" multiple>
+        <mat-option *ngFor="let genre of genresList" [value]="genre">{{genre.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="linea" *ngIf="data!=null">
+      <button (click)="eliminar()" class="buttondelete" mat-flat-button color="delete" >
+        <a><img img src="../../../assets/img/delete.svg"></a>
+        Eliminar
+      </button>
+    </div>
+  </form>
+  <div class="rectangule">
+    <button (click)="editarCrear()" class="buttonsave" mat-flat-button color="save">
+      Guardar
+    </button>
+  </div>
+</section>

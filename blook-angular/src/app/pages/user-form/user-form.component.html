@@ -1,0 +1,37 @@
+<section >
+  <form class="container" [formGroup]="formulario">
+    <div class="op">
+    <h2 class="titulo">Editar usuario</h2>
+    <a class="closebutton" (click)="cancelar()"><img src="../../../assets/img/close.svg"></a>
+  </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="nombre" formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Apellidos</mat-label>
+      <input matInput placeholder="apellidos" formControlName="lastname">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Correo electrónico</mat-label>
+      <input matInput placeholder="email" formControlName="email">
+    </mat-form-field>
+
+    <input type="file" placeholder="cover" name="file" id="file" (change)="onFileChanged($event)" />
+
+    <div class="linea" *ngIf="data!=null">
+      <button (click)="eliminar()" class="buttondelete" mat-flat-button color="delete" >
+        <a><img img src="../../../assets/img/delete.svg"></a>
+        Eliminar
+      </button>
+    </div>
+  </form>
+  <div class="rectangule">
+    <button (click)="editarCrear()" class="buttonsave" mat-flat-button color="save">
+      Guardar
+    </button>
+  </div>
+</section>

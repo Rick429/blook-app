@@ -1,0 +1,61 @@
+<section fxLayout="column" fxLayoutAlign="space-between center" >
+  <form class="container" [formGroup]="formulario">
+      <h2>Mi Perfil</h2>
+    <img *ngIf="avatar!=''" class="borde" src="{{avatar}}" />
+    <img *ngIf="avatar==''" class="borde" src="../../../assets/img/perfil.jpg" />
+    <h2>{{user.nick}}</h2>
+    <div fxLayout="row" fxLayoutAlign="space-between center" style="width:500px;">
+      <div style="width:220px; height: 65px;" *ngIf="editar"></div>
+      <input *ngIf="!editar" type="file" placeholder="cover" name="file" id="file" (change)="onFileChanged($event)" />
+      <button (click)="editarPerfil()" class="buttondelete" mat-flat-button >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+
+  <div fxFlexAlign="start">
+      <mat-form-field [ngClass]="{'mat-form-field-readonly': editar, 'mat-form-field-write': !editar}" fxFlex="49" appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput [readonly]="editar" placeholder="nombre" formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field [ngClass]="{'mat-form-field-readonly': editar, 'mat-form-field-write': !editar}" fxFlex="49" appearance="outline">
+        <mat-label>Apellidos</mat-label>
+        <input matInput [readonly]="editar" placeholder="Apellidos" formControlName="lastname">
+      </mat-form-field>
+  </div>
+  <div fxFlexAlign="start">
+      <mat-form-field [ngClass]="{'mat-form-field-readonly': editar, 'mat-form-field-write': !editar}" fxFlex="98%" appearance="outline">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput [readonly]="editar" placeholder="Correo electrónico" formControlName="email">
+      </mat-form-field>
+
+  </div>
+  </form>
+  <form [formGroup]="formularioPassword">
+    <div fxFlexAlign="start">
+        <mat-form-field [ngClass]="{'mat-form-field-readonly': editar, 'mat-form-field-write': !editar}" fxFlex="49" appearance="outline">
+          <mat-label>Contraseña actual</mat-label>
+          <input matInput [readonly]="editar" placeholder="Contraseña actual" formControlName="password">
+        </mat-form-field>
+
+        <mat-form-field [ngClass]="{'mat-form-field-readonly': editar, 'mat-form-field-write': !editar}" fxFlex="49" appearance="outline">
+          <mat-label>Nueva contraseña</mat-label>
+          <input matInput [readonly]="editar" placeholder="Nueva contraseña" formControlName="passwordNew">
+        </mat-form-field>
+    </div>
+    <div fxFlexAlign="start">
+        <mat-form-field [ngClass]="{'mat-form-field-readonly': editar, 'mat-form-field-write': !editar}" fxFlex="98%" appearance="outline">
+          <mat-label>Confirmar contraseña</mat-label>
+          <input matInput [readonly]="editar" placeholder="Confirmar contraseña" formControlName="passwordNew2">
+        </mat-form-field>
+    </div>
+  </form>
+  <div *ngIf="!editar" class="rectangule">
+    <button (click)="guardar()" class="buttonsave" mat-flat-button color="save">
+      Guardar
+    </button>
+  </div>
+  <div *ngIf="editar" class="rectangule-trasparent">
+
+  </div>
+</section>

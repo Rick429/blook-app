@@ -1,0 +1,16 @@
+mat-toolbar{
+  background-color: #212936;
+}
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.mat-white {
+  background-color: #B1E457;
+  color: white;
+  border-radius: 25px;
+  padding: 10px;
+}

@@ -1,0 +1,59 @@
+<section class="main-container">
+  <h1 class="title-pages">Comentarios</h1>
+
+    <div class="h1-table-options">
+        <div class="aligned">
+            <div class="search-box" [formGroup]="formulario">
+                <button class="btn-search"><img src="../../../assets/img/search.svg"></button>
+                <input (change)="buscar()" type="text" formControlName="comment" class="input-search" placeholder="Buscar">
+            </div>
+        </div>
+    </div>
+
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="user_id">
+    <th colspan="2" mat-header-cell *matHeaderCellDef> ID usuario </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.user_id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="book_id" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> ID Libro </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.book_id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="comment" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Comentario </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.comment}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nick" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Nick </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.nick}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="avatar" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Avatar </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.avatar}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="created_date" >
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Fecha de comentario </th>
+    <td colspan="2" mat-cell *matCellDef="let element"> {{element.created_date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th colspan="2" mat-header-cell *matHeaderCellDef> Acciones </th>
+    <td colspan="2" mat-cell *matCellDef="let element">
+      <button mat-button (click)="eliminarComentario(element)"  matTooltip="Eliminar comentario"><mat-icon>delete</mat-icon></button>
+    </td>
+
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator class="mat-elevation-z8 mat-paginator" [pageSizeOptions]="[5, 10, 15]" [pageSize]="5" [length]="totalElements" (page)="nextPage($event)"  showFirstLastButtons></mat-paginator>
+</section>
