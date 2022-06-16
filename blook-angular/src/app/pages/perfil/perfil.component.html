@@ -31,7 +31,7 @@
 
   </div>
   </form>
-  <form [formGroup]="formularioPassword">
+  <form [formGroup]="formularioPassword" *ngIf="!editar">
     <div fxFlexAlign="start">
         <mat-form-field [ngClass]="{'mat-form-field-readonly': editar, 'mat-form-field-write': !editar}" fxFlex="49" appearance="outline">
           <mat-label>Contraseña actual</mat-label>
