@@ -55,9 +55,9 @@ public class InitData {
         String filename1 =  storageService.store(bytePdf1, "libro1-1-18.pdf", "pdf");
         byte[] bytePdf2 = Files.readAllBytes(Paths.get("libro1-19-26.pdf"));
         String filename2 =  storageService.store(bytePdf2, "libro1-19-26.pdf", "pdf");
-        String uri = "https://api-blook.herokuapp.com/download/" + filename;
-        String uri1 = "https://api-blook.herokuapp.com/download/" + filename1;
-        String uri2 = "https://api-blook.herokuapp.com/download/" + filename2;
+        String uri = "http://10.0.2.2:8080/download/" + filename;
+        String uri1 = "http://10.0.2.2:8080/download/" + filename1;
+        String uri2 = "http://10.0.2.2:8080/download/" + filename2;
 
         Book b1 = Book.builder()
                 .autorLibroPublicado(u)
@@ -83,8 +83,8 @@ public class InitData {
         String filename3 =  storageService.store(byteImg2, "libro2.png", "png");
         byte[] bytePdf3 = Files.readAllBytes(Paths.get("libro2-1-13.pdf"));
         String filename4 =  storageService.store(bytePdf3, "libro2-1-13.pdf", "pdf");
-        String uri3 = "https://api-blook.herokuapp.com/download/" + filename3;
-        String uri4 = "https://api-blook.herokuapp.com/download/" + filename4;
+        String uri3 = "http://10.0.2.2:8080/download/" + filename3;
+        String uri4 = "http://10.0.2.2:8080/download/" + filename4;
         Book b2 = Book.builder()
                 .autorLibroPublicado(u)
                 .cover(uri3)
@@ -103,8 +103,8 @@ public class InitData {
         String filename5 =  storageService.store(byteImg3, "libro3.png", "png");
         byte[] bytePdf4 = Files.readAllBytes(Paths.get("libro3-1-15.pdf"));
         String filename6 =  storageService.store(bytePdf4, "libro3-1-15.pdf", "pdf");
-        String uri5 = "https://api-blook.herokuapp.com/download/" + filename5;
-        String uri6 = "https://api-blook.herokuapp.com/download/" + filename6;
+        String uri5 = "http://10.0.2.2:8080/download/" + filename5;
+        String uri6 = "http://10.0.2.2:8080/download/" + filename6;
         Book b3 = Book.builder()
                 .autorLibroPublicado(u)
                 .cover(uri5)
@@ -123,8 +123,8 @@ public class InitData {
         String filename7 =  storageService.store(byteImg5, "libro4.png", "png");
         byte[] bytePdf6 = Files.readAllBytes(Paths.get("libro4-1-16.pdf"));
         String filename8 =  storageService.store(bytePdf6, "libro4-1-16.pdf", "pdf");
-        String uri7 = "https://api-blook.herokuapp.com/download/" + filename7;
-        String uri8 = "https://api-blook.herokuapp.com/download/" + filename8;
+        String uri7 = "http://10.0.2.2:8080/download/" + filename7;
+        String uri8 = "http://10.0.2.2:8080/download/" + filename8;
         Book b4 = Book.builder()
                 .autorLibroPublicado(u)
                 .cover(uri7)
