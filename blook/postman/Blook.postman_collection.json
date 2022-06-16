@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "51254c48-48aa-4b86-84bd-74f033367e1e",
 		"name": "Blook",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17654596"
 	},
 	"item": [
 		{
@@ -36,12 +37,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/auth/register",
+							"raw": "localhost:8080/blook/auth/register",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"auth",
 								"register"
 							]
@@ -76,12 +78,13 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/auth/login",
+							"raw": "localhost:8080/blook/auth/login",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"auth",
 								"login"
 							]
@@ -91,6 +94,18 @@
 				},
 				{
 					"name": "3.-Usuario logueado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"idUser\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -105,12 +120,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/me",
+							"raw": "localhost:8080/blook/me",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"me"
 							]
 						}
@@ -138,20 +154,20 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/C:/Users/Rick/Downloads/dexdhca-956ea6b1-15f1-4fcc-aa45-77c91b088363.png"
+									"src": "/C:/Users/cespedes.peric21/Pictures/blook/libro1.png"
 								}
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/user/avatar/",
+							"raw": "localhost:8080/blook/user/avatar",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"user",
-								"avatar",
-								""
+								"avatar"
 							]
 						}
 					},
@@ -178,19 +194,20 @@
 								{
 									"key": "user",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/Rick/Pictures/blook/postman/editUser.json"
 								}
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/user/",
+							"raw": "localhost:8080/blook/user/{{idUser}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"user",
-								""
+								"{{idUser}}"
 							]
 						}
 					},
@@ -212,14 +229,165 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/user/all",
+							"raw": "localhost:8080/blook/user/all",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"user",
 								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.-Cambiar contraseña",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user",
+									"value": "{\n    \"password\":\"admin\",\n    \"passwordNew\":\"administrador\",\n    \"passwordNew2\":\"administrador\"\n}",
+									"contentType": "application/json",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/blook/user/change/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"user",
+								"change",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8.- Buscar users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search",
+									"type": "file",
+									"src": "/C:/Users/Rick/Pictures/blook/postman/searchUserDto.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/blook/user/find/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"user",
+								"find",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9.-Dar rol de admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/blook/user/give/admin/{{idUser}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"user",
+								"give",
+								"admin",
+								"{{idUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10.- Quitar rol de admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/blook/user/remove/admin/{{idUser}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"user",
+								"remove",
+								"admin",
+								"{{idUser}}"
 							]
 						}
 					},
@@ -273,12 +441,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/book/",
+							"raw": "localhost:8080/blook/book/",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								""
 							]
@@ -302,12 +471,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/{{idBook}}",
+							"raw": "localhost:8080/blook/book/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"{{idBook}}"
 							]
@@ -346,12 +516,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/book/{{idBook}}",
+							"raw": "localhost:8080/blook/book/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"{{idBook}}"
 							]
@@ -375,12 +546,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/{{idBook}}",
+							"raw": "localhost:8080/blook/book/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"{{idBook}}"
 							]
@@ -404,12 +576,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/all",
+							"raw": "localhost:8080/blook/book/all",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"all"
 							]
@@ -433,16 +606,27 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/all/user/user",
+							"raw": "localhost:8080/blook/book/all/user/admin?size=100&sort=name,desc",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"all",
 								"user",
-								"user"
+								"admin"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "100"
+								},
+								{
+									"key": "sort",
+									"value": "name,desc"
+								}
 							]
 						}
 					},
@@ -464,12 +648,13 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/favorite/{{idBook}}",
+							"raw": "localhost:8080/blook/book/favorite/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"favorite",
 								"{{idBook}}"
@@ -494,16 +679,27 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/all/favorite/usuario",
+							"raw": "localhost:8080/blook/book/all/favorite/admin?size=100&sort=name,desc",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"all",
 								"favorite",
-								"usuario"
+								"admin"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "100"
+								},
+								{
+									"key": "sort",
+									"value": "name,desc"
+								}
 							]
 						}
 					},
@@ -525,12 +721,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/all/new",
+							"raw": "localhost:8080/blook/book/all/new",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"all",
 								"new"
@@ -555,12 +752,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/book/all/order",
+							"raw": "localhost:8080/blook/book/all/order",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"all",
 								"order"
@@ -595,16 +793,155 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/book/search/all/",
+							"raw": "localhost:8080/blook/book/search/all/",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"book",
 								"search",
 								"all",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "12.- Eliminar favorito",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/blook/book/favorite/remove/{{idBook}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"book",
+								"favorite",
+								"remove",
+								"{{idBook}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "13.-Comprobar favorito",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/blook/book/favorite/bool/{{idBook}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"book",
+								"favorite",
+								"bool",
+								"{{idBook}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "14.- Editar cover libro",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Rick/Pictures/blook/postman/fry.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/blook/book/cover/{{idBook}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"book",
+								"cover",
+								"{{idBook}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "15.- Existe comentario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/blook/comment/exists/bool/{{idBook}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"comment",
+								"exists",
+								"bool",
+								"{{idBook}}"
 							]
 						}
 					},
@@ -658,12 +995,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/chapter/{{idBook}}",
+							"raw": "localhost:8080/blook/chapter/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"chapter",
 								"{{idBook}}"
 							]
@@ -687,12 +1025,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/chapter/{{idChapter}}",
+							"raw": "localhost:8080/blook/chapter/{{idChapter}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"chapter",
 								"{{idChapter}}"
 							]
@@ -731,12 +1070,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/chapter/{{idChapter}}",
+							"raw": "localhost:8080/blook/chapter/{{idChapter}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"chapter",
 								"{{idChapter}}"
 							]
@@ -747,17 +1087,100 @@
 				{
 					"name": "4.- Eliminar capitulo",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/chapter/{{idChapter}}",
+							"raw": "localhost:8080/blook/chapter/{{idChapter}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"chapter",
 								"{{idChapter}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.- Listar todos los capitulos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/blook/chapter/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"chapter",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.- Buscar capitulo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search",
+									"type": "file",
+									"src": "/C:/Users/Rick/Pictures/blook/postman/searchChapterDto.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/blook/chapter/search/all/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"chapter",
+								"search",
+								"all",
+								""
 							]
 						}
 					},
@@ -806,12 +1229,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/genre/",
+							"raw": "localhost:8080/blook/genre/",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"genre",
 								""
 							]
@@ -835,12 +1259,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/genre/{{idGenre}}",
+							"raw": "localhost:8080/blook/genre/{{idGenre}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"genre",
 								"{{idGenre}}"
 							]
@@ -874,12 +1299,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/genre/{{idGenre}}",
+							"raw": "localhost:8080/blook/genre/{{idGenre}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"genre",
 								"{{idGenre}}"
 							]
@@ -903,12 +1329,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/genre/{{idGenre}}",
+							"raw": "localhost:8080/blook/genre/{{idGenre}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"genre",
 								"{{idGenre}}"
 							]
@@ -932,14 +1359,59 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/genre/all",
+							"raw": "localhost:8080/blook/genre/all",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"genre",
 								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.- Buscar generos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search",
+									"type": "file",
+									"src": "/C:/Users/Rick/Pictures/blook/postman/searchGenreDto.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/blook/genre/find/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"genre",
+								"find",
+								""
 							]
 						}
 					},
@@ -976,12 +1448,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/comment/{{idBook}}",
+							"raw": "localhost:8080/blook/comment/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"comment",
 								"{{idBook}}"
 							]
@@ -1005,12 +1478,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/comment/{{idBook}}",
+							"raw": "localhost:8080/blook/comment/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"comment",
 								"{{idBook}}"
 							]
@@ -1044,12 +1518,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/comment/{{idBook}}",
+							"raw": "localhost:8080/blook/comment/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"comment",
 								"{{idBook}}"
 							]
@@ -1063,12 +1538,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/comment/{{idBook}}",
+							"raw": "localhost:8080/blook/comment/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"comment",
 								"{{idBook}}"
 							]
@@ -1092,15 +1568,90 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/comment/all/{{idBook}}",
+							"raw": "localhost:8080/blook/comment/all/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"comment",
 								"all",
 								"{{idBook}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.- Listar todos los comentarios",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/blook/comment/all",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"comment",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7.-Buscar comentario",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search",
+									"type": "file",
+									"src": "/C:/Users/Rick/Pictures/blook/postman/searchDto.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/blook/comment/search/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"comment",
+								"search",
+								""
 							]
 						}
 					},
@@ -1113,6 +1664,18 @@
 			"item": [
 				{
 					"name": "1.- Crear reporte",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"idReport\", jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1137,12 +1700,13 @@
 							]
 						},
 						"url": {
-							"raw": "localhost:8080/report/{{idBook}}",
+							"raw": "localhost:8080/blook/report/{{idBook}}",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"report",
 								"{{idBook}}"
 							]
@@ -1166,14 +1730,121 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/report/all",
+							"raw": "localhost:8080/blook/report/all",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"blook",
 								"report",
 								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.- Buscar reportes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "search",
+									"type": "file",
+									"src": "/C:/Users/Rick/Pictures/blook/postman/reportSearch.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/blook/report/find/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"report",
+								"find",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.-Finalizar reporte",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/blook/report/close/{{idReport}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"report",
+								"close",
+								"{{idReport}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.- Reabrir reporte",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenUser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/blook/report/open/{{idReport}}",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blook",
+								"report",
+								"open",
+								"{{idReport}}"
 							]
 						}
 					},
@@ -1197,6 +1868,14 @@
 		},
 		{
 			"key": "idGenre",
+			"value": ""
+		},
+		{
+			"key": "idUser",
+			"value": ""
+		},
+		{
+			"key": "idReport",
 			"value": ""
 		}
 	]
